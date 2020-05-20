@@ -1,0 +1,23 @@
+<script>
+  $(function(){
+    $('.login-contributor').click(function(){
+      let data = {
+        "email": $('#email').val(),
+        "password": $("#password").val()
+      }
+      $.ajax({
+        url: "{{url_for('editor_api.login')}}",
+        type: "post",
+        data: JSON.stringify(data),
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (result) {
+          window.location.href = "{{url_for('editor_interface.grades')}}"
+        },
+        error: function (result) {
+          alert(result.responseJSON.message)
+        }
+      })
+    })
+  })
+</script>

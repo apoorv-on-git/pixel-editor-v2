@@ -1,0 +1,9 @@
+venv
+venv/
+
+# .pyc files
+*.pyc
+
+*.swp
+
+key.py
