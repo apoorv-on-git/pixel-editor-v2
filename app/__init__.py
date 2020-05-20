@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_login import LoginManager
-from firebase_admin import credentials, initialize_app
+from firebase_admin import credentials, initialize_app, firestore
 from app.key import cred_json
 import os
 
@@ -14,7 +14,8 @@ def create_app(script_info=None):
     app.config.from_object(app_settings)
     login_manager.init_app(app)
     cred = credentials.Certificate(cred_json)
-    db = initialize_app(cred)
+    db_app = initialize_app(cred)
+    db = firestore.client()
 
     #registering blueprints
     from app.views.contributor import contributor
