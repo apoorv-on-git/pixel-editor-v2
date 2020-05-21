@@ -12,7 +12,7 @@
         dataType: 'json',
         contentType: 'application/json',
         success: function (result) {
-          
+          window.location.href = `{{url_for('contributor.dashboard')}}`
         },
         error: function (result) {
           alert(result.responseJSON.message)

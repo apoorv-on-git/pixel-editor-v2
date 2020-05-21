@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, session
-# from flask_login import login_required, login_user, current_user, logout_user
+from app.utils.role_util import *
 from app.db_controllers.auth_controller import *
 
 contributor_api = Blueprint('contributor_api', __name__, url_prefix="/contributor-api")
@@ -13,21 +13,21 @@ def login():
                 'status': 'error',
                 'message': 'Both email and password are required!'
         }), 400
-    response = login_user(email, password)
-    # admin = Admin.query.filter_by(email=email).first()
-    # if admin and password==admin.password:
-    #     login_user(admin)
-    #     session['user_login_type']='admin'
-    #     return jsonify({
-    #             'status': 'success',
-    #     }), 200
-    # elif not admin:
-    #     return jsonify({
-    #             'status': 'error',
-    #             'message': 'User does not exist',
-    #     }), 404
-    # else:
-    #     return jsonify({
-    #             'status': 'error',
-    #             'message': 'Wrong credentials.',
-    #     }), 400
+    response = login_firebase_user(email, password)
+    if response.get("success") and response.get("type").lower() == "contributor":
+        session["document_id"] = response.get("document_id")
+        session["email"] = response.get("email")
+        session["user_type"] = response.get("type")
+        return jsonify({
+            "status": "success",
+        }), 200
+    elif response.get("success"):
+        return jsonify({
+            "status": "error",
+            "message": "This login is only for contributors!"
+        }), 400
+    else:
+        return jsonify({
+            "status": "error",
+            "message": response.get("error")
+        }), 400
