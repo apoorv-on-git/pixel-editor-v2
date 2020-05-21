@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from app.utils.role_util import required_role
+# from app.utils.role_util import required_role
 
 contributor = Blueprint('contributor', __name__, url_prefix="/")
 

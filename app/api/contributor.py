@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request, session
-from flask_login import login_required, login_user, current_user, logout_user
+# from flask_login import login_required, login_user, current_user, logout_user
+from app.db_controllers.auth_controller import *
 
 contributor_api = Blueprint('contributor_api', __name__, url_prefix="/contributor-api")
 
@@ -12,6 +13,7 @@ def login():
                 'status': 'error',
                 'message': 'Both email and password are required!'
         }), 400
+    response = login_user(email, password)
     # admin = Admin.query.filter_by(email=email).first()
     # if admin and password==admin.password:
     #     login_user(admin)

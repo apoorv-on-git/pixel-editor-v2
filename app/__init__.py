@@ -1,7 +1,5 @@
 from flask import Flask
 from flask_login import LoginManager
-from firebase_admin import credentials, initialize_app, firestore
-from app.key import cred_json
 import os
 
 # instantiate the extensions
@@ -12,10 +10,7 @@ def create_app(script_info=None):
     app = Flask(__name__)
     app_settings = os.getenv('APP_SETTINGS')
     app.config.from_object(app_settings)
-    login_manager.init_app(app)
-    cred = credentials.Certificate(cred_json)
-    db_app = initialize_app(cred)
-    db = firestore.client()
+    # login_manager.init_app(app)
 
     #registering blueprints
     from app.views.contributor import contributor
@@ -25,5 +20,5 @@ def create_app(script_info=None):
 
     @app.shell_context_processor
     def ctx():
-        return {'app': app, 'db': db}
+        return {'app': app}
     return app

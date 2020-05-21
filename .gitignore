@@ -7,3 +7,5 @@ venv/
 *.swp
 
 key.py
+
+__pycache__
