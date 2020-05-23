@@ -1,5 +1,43 @@
 <script>
   $(function(){
+    function detectMob() {
+      const toMatch = [
+        /Android/i,
+        /webOS/i,
+        /iPhone/i,
+        /iPad/i,
+        /iPod/i,
+        /BlackBerry/i,
+        /Windows Phone/i
+      ];
+      return toMatch.some((toMatchItem) => {
+        return navigator.userAgent.match(toMatchItem);
+      });
+    }
+    let is_mobile = detectMob();
+    if (is_mobile) {
+      $('body').empty();
+      let html = `
+                    <style>
+                      body {
+                        background-color: #eaf8fe;
+                      }
+                      * {
+                        font-family: 'Comfortaa', Helvetica, Arial;
+                      }
+                    </style>
+                    <div class="col-sm-12 col-md-12 col-lg-12 mt-5 text-center">
+                      <span style="font-size: 3em; color: #656b6a;">PixelEditor</span>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center mt-5">
+                      <img src="/static/images/not_supported.gif" style="width: 50%; height: auto;">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 mt-5">
+                      <h3 style="color: #656b6a;">This website does not support mobile! Please use a desktop.</h3>
+                    </div>
+                `
+      $("body").append(html)
+    }
     $('.login-contributor').click(function(){
       let data = {
         "email": $('#email').val(),
@@ -11,11 +49,22 @@
         data: JSON.stringify(data),
         dataType: 'json',
         contentType: 'application/json',
+        beforeSend: function(){
+          $('.main-container').addClass('blur');
+          $(':button').prop('disabled', true);
+          $("#loader").show();
+        },
         success: function (result) {
           window.location.href = `{{url_for('contributor.dashboard')}}`
         },
         error: function (result) {
           alert(result.responseJSON.message)
+          $("#loader").hide();
+        },
+        complete:function(data){
+          $('.main-container').removeClass('blur');
+          $(':button').prop('disabled', false);
+          $("#loader").hide();
         }
       })
     })
