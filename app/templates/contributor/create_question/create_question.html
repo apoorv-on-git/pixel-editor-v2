@@ -1,0 +1,86 @@
+{% extends "contributor/main.jinja" %}
+{% block main %}
+
+{% include("contributor/create_question/create_question_script.jinja") %}
+{% include("contributor/create_question/create_question_style.jinja") %}
+<div>
+  <div class="row mb-5">
+    <div class="col-sm-12 col-md-12 col-lg-12 text-center mt-4">
+      <h4><b>{{level_name}}</b></h4>
+    </div>
+  </div>
+  <div class="row editor-container-main">
+    <div class="col-sm-12 col-md-12 col-lg-6 question-form-container pb-5">
+      <div class="row formula-container pr-3">
+        <div class="col-sm-12 col-md-12 col-lg-12 ml-3" style="flex: wrap;">
+          {% for name, formula in formula_list.items() %}
+            <button class="formula-button-1" data-value="{{formula}}">{{name}}</button>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <textarea rows="5" class="form-control form-input latex-input" name="question_text" id="question_text" placeholder="Question text"></textarea>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-sm-11 col-md-6 col-lg-6 blue-btn btn question-upload">
+          <span>Upload an image for question</span>
+          <input type="file" class="upload-question-image" />
+        </div>
+        <!-- <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
+          <i class="fa fa-trash fa-lg hidden delete-question-image"></i>
+        </div> -->
+      </div>
+      <div class="row mt-4 pr-5">
+        <div class="col-sm-11 col-md-11 col-lg-11 input-group">
+          <input type="text" class="form-control form-input-option latex-input" name="option_a_text" id="option_a_text" placeholder="Option A" />
+          <span class="input-group-addon hide">
+            <span>Upload</span>
+            <input type="file" class="upload-image-a" />
+          </span>
+        </div>
+        <!-- <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
+          <i class="fa fa-trash fa-lg hidden delete-option-a-image"></i>
+        </div> -->
+      </div>
+      <div class="row mt-4 pr-5">
+        <div class="col-sm-11 col-md-11 col-lg-11 input-group" >
+          <input type="text" class="form-control form-input-option latex-input" name="option_b_text" id="option_b_text" placeholder="Option B" />
+          <span class="input-group-addon hide">
+            <span>Upload</span>
+            <input type="file" class="upload-image-b" />
+          </span>
+        </div>
+        <!-- <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
+          <i class="fa fa-trash fa-lg hidden delete-option-b-image"></i>
+        </div> -->
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <p class="guide-text">You can upload an image as an option too.</p>
+        </div>
+      </div>
+      <div class="row mb-5 mt-4">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <select class="form-control form-input" name="correct_option" id="correct_option">
+            <option value="">Correct answer</option>
+            {% for option in ['a', 'b'] %}
+            <option value="{{option}}">Option {{option | upper}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-6 pdf-container p-5">
+      <embed src="https://pixel-editor-db.s3.ap-south-1.amazonaws.com/pdf/G3_C1.pdf" width="100%" height="100%" />
+    </div>
+  </div>
+  <div class="row mt-3 pb-5">
+    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+      <button class="fancy-button" id="preview_question">Preview question</button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

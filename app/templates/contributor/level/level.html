@@ -1,0 +1,24 @@
+{% extends "contributor/main.jinja" %}
+{% block main %}
+
+{% include("contributor/level/level_script.jinja") %}
+{% include("contributor/level/level_style.jinja") %}
+
+{% set card_color = ["#ffa0ad", "#d1ffaa", "#a2d4ff", "#fff583"] %}
+
+<div class="container mb-5">
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+      <h3>Select a level for which you want to submit questions</h3>
+    </div>
+  </div>
+  <div class="row mt-5">
+    {% for level_key, level_name in levels.items() %}
+      <div class="col-sm-12 col-md-6 col-lg-6 level-card text-center" onclick="create_question({{loop.index}})" style="background-color: {{card_color[loop.index-1]}}">
+        <h5>{{level_name}}</h5>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

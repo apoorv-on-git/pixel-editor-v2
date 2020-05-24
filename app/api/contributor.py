@@ -31,3 +31,15 @@ def login():
             "status": "error",
             "message": response.get("error")
         }), 400
+
+@contributor_api.route("/logout", methods=["POST"])
+@required_role_as_contributor()
+def logout():
+    session["document_id"] = None
+    session["email"] = None
+    session["user_type"] = None
+    return jsonify(
+        {
+            "status": "success",
+        }, 200
+    )

@@ -1,0 +1,5 @@
+<script>
+  function create_question(level) {
+    window.location.href = `{{url_for('contributor.create_question')}}?grade={{grade}}&chapter={{chapter}}&level=${level}`
+  }
+</script>
