@@ -1,3 +1,38 @@
 <script>
-
+  $(function(){
+    $('.upload-profile-image').change(function(){
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          $('.profile-image-display').attr('src', e.target.result)
+        };
+        reader.readAsDataURL(this.files[0]);
+        var fd = new FormData();
+        fd.append('profile_image', $('.upload-profile-image')[0].files[0])
+        $.ajax({
+          url: "{{url_for('contributor_api.update_profile_image')}}",
+          type: 'post',
+          contentType: false,
+          processData: false,
+          data: fd,
+          beforeSend: function(){
+            $('.main-container').addClass('blur');
+            $(':button').prop('disabled', true);
+            $("#loader").show();
+          },
+          success: function (result) {
+            ;
+          },
+          error: function (result) {
+            alert(result.responseJSON.message);
+          },
+          complete:function(data){
+            $('.main-container').removeClass('blur');
+            $(':button').prop('disabled', false);
+            $("#loader").hide();
+          }
+        });
+      }
+    })
+  })
 </script>

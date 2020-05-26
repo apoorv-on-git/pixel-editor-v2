@@ -33,7 +33,7 @@
         </div> -->
       </div>
       <div class="row mt-4 pr-5">
-        <div class="col-sm-11 col-md-11 col-lg-11 input-group">
+        <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
           <input type="text" class="form-control form-input-option latex-input" name="option_a_text" id="option_a_text" placeholder="Option A" />
           <span class="input-group-addon hide">
             <span>Upload</span>
@@ -45,7 +45,7 @@
         </div> -->
       </div>
       <div class="row mt-4 pr-5">
-        <div class="col-sm-11 col-md-11 col-lg-11 input-group" >
+        <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
           <input type="text" class="form-control form-input-option latex-input" name="option_b_text" id="option_b_text" placeholder="Option B" />
           <span class="input-group-addon hide">
             <span>Upload</span>
@@ -73,11 +73,11 @@
       </div>
     </div>
     <div class="col-sm-12 col-md-12 col-lg-6 pdf-container p-5">
-      <embed src="https://pixel-editor-db.s3.ap-south-1.amazonaws.com/pdf/G3_C1.pdf" width="100%" height="100%" />
+      <embed src="{{pdf_url}}" width="100%" height="100%" />
     </div>
   </div>
-  <div class="row mt-3 pb-5">
-    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+  <div class="row mt-5 pb-5">
+    <div class="col-sm-12 col-md-12 col-lg-12 text-center" style="height: 100;">
       <button class="fancy-button" id="preview_question">Preview question</button>
     </div>
   </div>

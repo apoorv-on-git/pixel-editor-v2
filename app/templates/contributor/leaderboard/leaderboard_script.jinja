@@ -1,0 +1,10 @@
+<script>
+  $(function(){
+    $('li a').click(function(){
+      $('li a').each(function(){
+        $(this).parent().removeClass('active')
+      })
+      $(this).parent().addClass('active')
+    })
+  })
+</script>

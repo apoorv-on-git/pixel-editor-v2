@@ -4,8 +4,6 @@
 {% include("contributor/level/level_script.jinja") %}
 {% include("contributor/level/level_style.jinja") %}
 
-{% set card_color = ["#ffa0ad", "#d1ffaa", "#a2d4ff", "#fff583"] %}
-
 <div class="container mb-5">
   <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 text-center">
@@ -13,9 +11,35 @@
     </div>
   </div>
   <div class="row mt-5">
-    {% for level_key, level_name in levels.items() %}
-      <div class="col-sm-12 col-md-6 col-lg-6 level-card text-center" onclick="create_question({{loop.index}})" style="background-color: {{card_color[loop.index-1]}}">
-        <h5>{{level_name}}</h5>
+    {% for level in levels %}
+      {% set percentage = (0 / 50) * 100 %}
+      {% set color = "#7cd049" %}
+      {% if percentage > 100 %}
+        {% set percentage = 100 %}
+        {% set color = "ed3833" %}
+      {% endif %}
+      <!-- Get total questions contributed by community, out of total goal of 50 questions per level -->
+      <!-- A way to check if the user has entered all 5 questions for a particular level or not -->
+      <!-- If entered 5 questions, need to make the color gray and disable button click-->
+      <div class="col-sm-12 col-md-6 col-lg-6 level-card text-center" onclick="create_question({{loop.index}})" style="background-color: {{level.get('level_color')}}">
+        <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="text-center mb-3"><h3>Level {{level.get("level_number")}}</h3></div>
+            <h5>{{level.get("level_name")}}</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-6">
+        <div class="row mt-5">
+          <div class="progress-bg">
+          	<div class="progress-bar" style="width: {{percentage}}%; background-color: {{color}};">
+            <h3 class="raised">0 Contributed</h3>
+            </div>
+          </div>
+          <div class="mt-2">
+            <p class="goal" style="font-size: 1em;"><b>Goal: 50</b></p>
+          </div>
+        </div>
       </div>
     {% endfor %}
   </div>

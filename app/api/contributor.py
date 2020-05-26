@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request, session
 from app.utils.role_util import *
 from app.db_controllers.auth_controller import *
+from app.db_controllers.contributor_controller import *
+from app.utils.s3 import *
 
 contributor_api = Blueprint('contributor_api', __name__, url_prefix="/contributor-api")
 
@@ -43,3 +45,24 @@ def logout():
             "status": "success",
         }, 200
     )
+
+@contributor_api.route("/upload-profile-image", methods=["POST"])
+@required_role_as_contributor()
+def update_profile_image():
+    try:
+        profile_image = request.files.get('profile_image')
+        if profile_image:
+            url_endpoint = f"profile_images/{session.get('document_id')}.{profile_image.filename.split('.')[-1]}"
+            delete_from_s3(url_endpoint)
+            upload_to_s3(url_endpoint, profile_image)
+            firebase_update_profile_image(session.get('document_id'), f"{os.environ.get('S3_URL')}{url_endpoint}")
+        return jsonify(
+            {
+                "status": "success",
+            }, 200
+        )
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 400
