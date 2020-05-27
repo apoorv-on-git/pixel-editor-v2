@@ -1,3 +1,186 @@
 <script>
-
+  var input_focus = ""
+  var json = {
+                "question": "",
+                "question_image": "#",
+                "option_a": "",
+                "option_b": "",
+                "option_c": "",
+                "option_d": "",
+                "correct_option": ""
+              }
+  $(function(){
+    $("#question_text").summernote();
+    $(".note-editable").addClass("latex-input")
+    $('.latex-input').focus(function(){
+      if (!$(this).hasClass("note-editable")) {
+        input_focus = $(this).attr("id")
+      }
+    })
+    $(".note-editable").focus(function(){
+      input_focus = "note-editable";
+    })
+    $('.formula-button-1').click(function(){
+      if (input_focus) {
+        if (input_focus !== 'note-editable') {
+          let input_value = $(`#${input_focus}`).val();
+          let formula = $(this).data('value')
+          $(`#${input_focus}`).val(input_value + formula)
+          $(`#${input_focus}`).keyup()
+        } else {
+          let formula = $(this).data('value')
+          $("#question_text").summernote('editor.saveRange');
+          $("#question_text").summernote('editor.restoreRange');
+          $("#question_text").summernote('editor.focus');
+          $("#question_text").summernote('editor.insertText', formula);
+          $(".note-editable").keyup()
+        }
+      }
+    })
+    $('.upload-question-image').change(function(){
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          $('.delete-question-image').removeClass('hidden')
+          update_json()
+        };
+        reader.readAsDataURL(this.files[0]);
+        var filename = $('.upload-question-image').val().split('\\').pop()
+        $(".question-image-name").empty()
+        $(".question-image-name").append(`<p class="guide-text" style="margin-left: 20%;">${filename}</p>`)
+      }
+    })
+    $('.delete-question-image').click(function(){
+      $('.upload-question-image').val('')
+      $('.delete-question-image').addClass('hidden')
+      $(".question-image-name").empty()
+      update_json()
+    })
+    $('.upload-image-a').change(function(){
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $('.delete-option-a-image').removeClass('hidden')
+          update_json()
+        }
+        reader.readAsDataURL(this.files[0])
+        var filename = $('.upload-image-a').val().split('\\').pop()
+        $("#option_a_text").val(filename)
+        $("#option_a_text").attr('readonly', true)
+      }
+    })
+    $('.delete-option-a-image').click(function(){
+      $(".upload-image-a").val('')
+      $(".delete-option-a-image").addClass('hidden')
+      $("#option_a_text").val("")
+      $("#option_a_text").attr('readonly', false)
+      update_json()
+    })
+    $('.upload-image-b').change(function(){
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $('.delete-option-b-image').removeClass('hidden')
+          update_json()
+        }
+        reader.readAsDataURL(this.files[0])
+        var filename = $('.upload-image-b').val().split('\\').pop()
+        $("#option_b_text").val(filename)
+        $("#option_b_text").attr('readonly', true)
+      }
+    })
+    $('.delete-option-b-image').click(function(){
+      $(".upload-image-b").val('')
+      $(".delete-option-b-image").addClass('hidden')
+      $("#option_b_text").val("")
+      $("#option_b_text").attr('readonly', false)
+      update_json()
+    })
+    $('.upload-image-c').change(function(){
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $('.delete-option-c-image').removeClass('hidden')
+          update_json()
+        }
+        reader.readAsDataURL(this.files[0])
+        var filename = $('.upload-image-c').val().split('\\').pop()
+        $("#option_c_text").val(filename)
+        $("#option_c_text").attr('readonly', true)
+      }
+    })
+    $('.delete-option-c-image').click(function(){
+      $(".upload-image-c").val('')
+      $(".delete-option-c-image").addClass('hidden')
+      $("#option_c_text").val("")
+      $("#option_c_text").attr('readonly', false)
+      update_json()
+    })
+    $('.upload-image-d').change(function(){
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $('.delete-option-d-image').removeClass('hidden')
+          update_json()
+        }
+        reader.readAsDataURL(this.files[0])
+        var filename = $('.upload-image-d').val().split('\\').pop()
+        $("#option_d_text").val(filename)
+        $("#option_d_text").attr('readonly', true)
+      }
+    })
+    $('.delete-option-d-image').click(function(){
+      $(".upload-image-d").val('')
+      $(".delete-option-d-image").addClass('hidden')
+      $("#option_d_text").val("")
+      $("#option_d_text").attr('readonly', false)
+      update_json()
+    })
+    $('.note-editable').keyup(function(){
+      update_json()
+    })
+    $('#option_a_text').keyup(function(){
+      let current_value = $(this).val()
+      if (!current_value) {
+        current_value = "Option A"
+      }
+      update_json()
+    })
+    $('#option_b_text').keyup(function(){
+      let current_value = $(this).val()
+      if (!current_value) {
+        current_value = "Option B"
+      }
+      update_json()
+    })
+    $('#option_c_text').keyup(function(){
+      let current_value = $(this).val()
+      if (!current_value) {
+        current_value = "Option C"
+      }
+      update_json()
+    })
+    $('#option_d_text').keyup(function(){
+      let current_value = $(this).val()
+      if (!current_value) {
+        current_value = "Option D"
+      }
+      update_json()
+    })
+    $('#correct_option').change(function(){
+      update_json()
+    })
+  })
+  $(document).ready(function(){
+    update_json()
+  })
+  function update_json() {
+    json.question = $('#question_text').val();
+    json.question_image = $('.upload-question-image').val() ? "QUESTION.png" : "#";
+    json.option_a = $('.upload-image-a').val() ? "OPTION_A.png" : $('#option_a_text').val();
+    json.option_b = $('.upload-image-b').val() ? "OPTION_B.png" : $('#option_b_text').val();
+    json.option_c = $('.upload-image-c').val() ? "OPTION_C.png" : $('#option_c_text').val();
+    json.option_d = $('.upload-image-d').val() ? "OPTION_D.png" : $('#option_d_text').val();
+    json.correct_option = `option_${$('#correct_option').val()}`
+  }
 </script>

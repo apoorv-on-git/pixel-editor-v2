@@ -28,9 +28,14 @@
           <span>Upload an image for question</span>
           <input type="file" class="upload-question-image" />
         </div>
-        <!-- <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
           <i class="fa fa-trash fa-lg hidden delete-question-image"></i>
-        </div> -->
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-11 col-md-11 col-lg-11 question-image-name">
+
+        </div>
       </div>
       <div class="row mt-4 pr-5">
         <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
@@ -40,9 +45,9 @@
             <input type="file" class="upload-image-a" />
           </span>
         </div>
-        <!-- <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
           <i class="fa fa-trash fa-lg hidden delete-option-a-image"></i>
-        </div> -->
+        </div>
       </div>
       <div class="row mt-4 pr-5">
         <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
@@ -52,9 +57,33 @@
             <input type="file" class="upload-image-b" />
           </span>
         </div>
-        <!-- <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
           <i class="fa fa-trash fa-lg hidden delete-option-b-image"></i>
-        </div> -->
+        </div>
+      </div>
+      <div class="row mt-4 pr-5">
+        <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
+          <input type="text" class="form-control form-input-option latex-input" name="option_c_text" id="option_c_text" placeholder="Option C" />
+          <span class="input-group-addon hide">
+            <span>Upload</span>
+            <input type="file" class="upload-image-c" />
+          </span>
+        </div>
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
+          <i class="fa fa-trash fa-lg hidden delete-option-c-image"></i>
+        </div>
+      </div>
+      <div class="row mt-4 pr-5">
+        <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
+          <input type="text" class="form-control form-input-option latex-input" name="option_d_text" id="option_d_text" placeholder="Option D" />
+          <span class="input-group-addon hide">
+            <span>Upload</span>
+            <input type="file" class="upload-image-d" />
+          </span>
+        </div>
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
+          <i class="fa fa-trash fa-lg hidden delete-option-d-image"></i>
+        </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
@@ -65,7 +94,7 @@
         <div class="col-sm-12 col-md-12 col-lg-12">
           <select class="form-control form-input" name="correct_option" id="correct_option">
             <option value="">Correct answer</option>
-            {% for option in ['a', 'b'] %}
+            {% for option in ['a', 'b', 'c', 'd'] %}
             <option value="{{option}}">Option {{option | upper}}</option>
             {% endfor %}
           </select>

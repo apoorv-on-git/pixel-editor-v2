@@ -1,4 +1,7 @@
 <style>
+  .hidden {
+    display: none;
+  }
   .editor-container-main {
     border-bottom: 3px solid #3696de;
   }
@@ -155,5 +158,35 @@
   .fancy-button:active::before {
     box-shadow: 0 0 0 2px #b18597, 0 0 #ffe3e2;
     transform: translate3d(0, 0, -1em);
+  }
+  .popover-content {
+    display: none;
+  }
+  .note-btn {
+    height: 6vh;
+  }
+  .note-editor {
+    margin-left: 15%;
+  }
+  .note-editable {
+    height: 30vh;
+  }
+  .note-btn-group {
+    max-height: 7vh;
+  }
+  .note-btn-group button {
+    margin: 0;
+  }
+  .note-toolbar {
+    background-color: #eee;
+  }
+  .note-style,
+  .note-fontname,
+  .note-table,
+  .note-insert,
+  #content > main > div > div.row.editor-container-main > div.col-sm-12.col-md-12.col-lg-6.question-form-container.pb-5 > div:nth-child(2) > div > div > div.note-toolbar-wrapper.panel-default > div > div.note-btn-group.btn-group.note-font > button:nth-child(3),
+  #content > main > div > div.row.editor-container-main > div.col-sm-12.col-md-12.col-lg-6.question-form-container.pb-5 > div:nth-child(2) > div > div > div.note-toolbar-wrapper.panel-default > div > div.note-btn-group.btn-group.note-view > button.note-btn.btn.btn-default.btn-sm.btn-fullscreen,
+  #content > main > div > div.row.editor-container-main > div.col-sm-12.col-md-12.col-lg-6.question-form-container.pb-5 > div:nth-child(2) > div > div > div.note-toolbar-wrapper.panel-default > div > div.note-btn-group.btn-group.note-view > button:nth-child(3) {
+    display: none;
   }
 </style>
