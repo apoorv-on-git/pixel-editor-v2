@@ -31,6 +31,15 @@ def leaderboard():
                             grade_breakdown=grade_breakdown
                         )
 
+@contributor.route("/star-questions")
+@required_role_as_contributor()
+def star_questions():
+    star_questions = get_star_questions()
+    return render_template( "/contributor/star_questions/star_questions.html",
+                            star_questions=star_questions,
+                            grade_breakdown=grade_breakdown
+                        )
+
 @contributor.route("/levels")
 @required_role_as_contributor()
 def levels():

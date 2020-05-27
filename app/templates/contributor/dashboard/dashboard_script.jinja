@@ -1,4 +1,29 @@
 <script>
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+   var data = google.visualization.arrayToDataTable([
+        ["date", "total", "individual"],
+        ["21/05/2020", 200, 20],
+        ["22/05/2020", 190, 3],
+        ["23/05/2020", 150, 32],
+        ["24/05/2020", 248, 12],
+        ["25/05/2020", 89, 1],
+        ["26/05/2020", 67, 11],
+        ["27/05/2020", 198, 0],
+   ]);
+
+   var options = {
+     title: 'Contributions Per Day',
+     curveType: 'function',
+     legend: { position: 'bottom' }
+   };
+
+   var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+   chart.draw(data, options);
+  }
   $(function(){
     $('.upload-profile-image').change(function(){
       if (this.files && this.files[0]) {

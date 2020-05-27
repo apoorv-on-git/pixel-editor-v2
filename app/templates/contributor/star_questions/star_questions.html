@@ -1,0 +1,67 @@
+{% extends "contributor/main.jinja" %}
+{% block main %}
+
+{% include("contributor/star_questions/star_questions_script.jinja") %}
+{% include("contributor/star_questions/star_questions_style.jinja") %}
+
+<div>
+  <div class="row text-center">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <h1>Star Questions</h1>
+    </div>
+  </div>
+  <div class="p-5">
+    {% for star_question in star_questions %}
+    <div class="row mb-5 star-question-row">
+      <div class="col-sm-12 col-md-12 col-lg-12">
+        <div class="row mt-3 text-center">
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <h4>{{star_question.get('contributor_name')}}</h4>
+          </div>
+        </div>
+        <div class="row mt-3 text-center">
+          <div class="col-sm-12 col-md-12 col-lg-12" style="font-size: 2em; color: #ffe105;">
+            <i class="fa fa-star" style="text-shadow: 0 0 3px #000;" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div class="row mt-2 text-center">
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <p>{{star_question.get('question_text')}}</p>
+          </div>
+        </div>
+        {% if star_question.get('question_image') != "#" %}
+        <div class="row text-center mt-3">
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <img src="{{star_question.get('question_image')}}" width="30%" />
+          </div>
+        </div>
+        {% endif %}
+        {% for option_key, option_value in star_question.get('options').items() %}
+        <div class="row text-center mt-1">
+          {% if star_question.get('correct_answer') == option_key %}
+          <div class="col-sm-12 col-md-12 col-lg-12 option-container green-container">
+          {% else %}
+          <div class="col-sm-12 col-md-12 col-lg-12 option-container normal-container">
+          {% endif %}
+            {% if 'amazonaws' in option_value %}
+            <img src="{{option_value}}" width="25%" />
+            {% else %}
+            <p>{{option_value}}</p>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+        <div class="row tag-row text-right mt-3">
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            {% for tag in star_question.get('tags') %}
+            <span class="question-tag">{{tag}}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

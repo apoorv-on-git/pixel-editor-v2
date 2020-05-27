@@ -4,10 +4,10 @@
 {% include("contributor/dashboard/dashboard_script.jinja") %}
 {% include("contributor/dashboard/dashboard_style.jinja") %}
 
-<div>
+<div class="mb-5">
   <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-      <img src="{{user_data.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="100">
+      <img src="{{user_data.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="100" height="100" />
       <span class="profile-img-upload">Upload</span>
       <input type="file" class="upload-profile-image" />
     </div>
@@ -46,6 +46,16 @@
     <div class="col-sm-12 col-md-12 col-lg-12">
       <h2>Today's Goal</h2>
       <h4>{{user_data.get('daily_goal')}}</h4>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+      <h2>Analytics</h2>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+      <div id="curve_chart" style="height: 50vh;"></div>
     </div>
   </div>
 </div>

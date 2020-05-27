@@ -15,6 +15,8 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -256,6 +258,24 @@
         background-color: #c8e9f7;
       }
     </style>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        messageStyle: 'none',
+        extensions: ['text2jax.js'],
+        jax: ['input/TeX', 'output/HTML-CSS'],
+        tex2jax: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          processEscape: true,
+          ignoreClass: "note-editable"
+        },
+        TeX: {
+          extensions: ['AMSmath.js', 'AMSsymbols.js', 'noErrors.js', 'noUndefined.js']
+        }
+      });
+
+      MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    </script>
     <script>
       $(document).ready(function(){
         $('#sidebarCollapse').on('click', function () {
@@ -346,53 +366,6 @@
                     </ul>
                   </li>
                 {% endfor %}
-                <!-- <li class="active">
-                    <a href="#grade_3_menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Grade 3</a>
-                    <ul class="collapse list-unstyled" id="grade_3_menu">
-                        <li>
-                            <a href="{{url_for('contributor.levels')}}?grade=3&chapter=1">Views, Patters and Symmetry</a>
-                        </li>
-                        <li>
-                            <a href="{{url_for('contributor.levels')}}?grade=3&chapter=2">Numbers</a>
-                        </li>
-                        <li>
-                            <a href="{{url_for('contributor.levels')}}?grade=3&chapter=3">Addition and Subtraction</a>
-                        </li>
-                        <li>
-                            <a href="{{url_for('contributor.levels')}}?grade=3&chapter=4">Long and Short</a>
-                        </li>
-                        <li>
-                            <a href="{{url_for('contributor.levels')}}?grade=3&chapter=5">Shapes & Designs</a>
-                        </li>
-                        <li>
-                            <a href="{{url_for('contributor.levels')}}?grade=3&chapter=6">Addition & Subtraction - II</a>
-                        </li>
-                        <li>
-                            <a href="{{url_for('contributor.levels')}}?grade=3&chapter=7">Time</a>
-                        </li>
-                        <li>
-                            <a href="{{url_for('contributor.levels')}}?grade=3&chapter=8">Weights</a>
-                        </li>
-                        <li>
-                            <a href="{{url_for('contributor.levels')}}?grade=3&chapter=9">Multiplication</a>
-                        </li>
-                        <li>
-                            <a href="{{url_for('contributor.levels')}}?grade=3&chapter=10">Patterns</a>
-                        </li>
-                        <li>
-                            <a href="{{url_for('contributor.levels')}}?grade=3&chapter=11">Measuring Volume</a>
-                        </li>
-                        <li>
-                            <a href="{{url_for('contributor.levels')}}?grade=3&chapter=12">Division</a>
-                        </li>
-                        <li>
-                            <a href="{{url_for('contributor.levels')}}?grade=3&chapter=13">Charts</a>
-                        </li>
-                        <li>
-                            <a href="{{url_for('contributor.levels')}}?grade=3&chapter14">Money</a>
-                        </li>
-                    </ul>
-                </li> -->
                 <!-- <li>
                     <a href="#">About</a>
                 </li> -->
@@ -411,6 +384,11 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('contributor.star_questions')}}">
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                </a>
+                            </li>
                             <li class="nav-item active">
                                 <a class="nav-link" href="{{url_for('contributor.dashboard')}}">Dashboard</a>
                             </li>

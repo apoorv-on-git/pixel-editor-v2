@@ -32,3 +32,8 @@ def get_leaderboard_data(document_id):
                             }
                         ]
     return leaderboard_data_1, leaderboard_data_2
+
+def get_star_questions():
+    document_ref = firebase_db.collection("star_questions")
+    star_questions_data = document_ref.order_by("marked_at", direction=firestore.Query.DESCENDING).limit(10).get()
+    return [star_question_data.to_dict() for star_question_data in star_questions_data]
