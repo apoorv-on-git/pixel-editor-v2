@@ -66,3 +66,18 @@ def update_profile_image():
             "status": "error",
             "message": str(e)
         }), 400
+
+@contributor_api.route("/save-preview-question", methods=["POST"])
+@required_role_as_contributor()
+def save_preview_question():
+    try:
+        save_preview_question(session.get('document_id'))
+        return jsonify({
+            "message": "Saved successfully!",
+            "status": "success"
+        }), 204
+    except ValueError as e:
+        return jsonify({
+            "message": str(e),
+            "status": "error"
+        }), 400

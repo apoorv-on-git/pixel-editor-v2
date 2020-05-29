@@ -170,6 +170,41 @@
     $('#correct_option').change(function(){
       update_json()
     })
+    $("#preview_question").click(function(){
+      json.grade = "{{grade}}";
+      json.chapter = "{{chapter}}";
+      json.level = "{{level}}";
+      var fd = new FormData();
+      fd.append('json', JSON.stringify(json))
+      fd.append('question_image', $('.upload-question-image')[0].files[0])
+      fd.append('option_a', $('.upload-image-a')[0].files[0])
+      fd.append('option_b', $('.upload-image-b')[0].files[0])
+      fd.append('option_c', $('.upload-image-c')[0].files[0])
+      fd.append('option_d', $('.upload-image-d')[0].files[0])
+      $.ajax({
+        url: "{{url_for('contributor_api.save_preview_question')}}",
+        type: "post",
+        contentType: false,
+        processData: false,
+        data: fd,
+        beforeSend: function(){
+          $('.main-container').addClass('blur');
+          $(':button').prop('disabled', true);
+          $("#loader").show();
+        },
+        success: function (result) {
+          location.href = location.href
+        },
+        error: function (result) {
+          alert(result.responseJSON.message)
+        },
+        complete:function(data){
+          $('.main-container').removeClass('blur');
+          $(':button').prop('disabled', false);
+          $("#loader").hide();
+        }
+      })
+    })
   })
   $(document).ready(function(){
     update_json()
