@@ -193,7 +193,7 @@
           $("#loader").show();
         },
         success: function (result) {
-          location.href = location.href
+          window.location.reload();
         },
         error: function (result) {
           alert(result.responseJSON.message)

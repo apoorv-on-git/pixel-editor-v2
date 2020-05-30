@@ -1,8 +1,8 @@
 {% extends "contributor/main.jinja" %}
 {% block main %}
 
-{% include("contributor/create_question/create_question_script.jinja") %}
-{% include("contributor/create_question/create_question_style.jinja") %}
+{% include("contributor/question/create_question/create_question_script.jinja") %}
+{% include("contributor/question/question_style.jinja") %}
 <div>
   <div class="row mb-5">
     <div class="col-sm-12 col-md-12 col-lg-12 text-center mt-4">
@@ -105,7 +105,7 @@
       <embed src="{{pdf_url}}" width="100%" height="100%" />
     </div>
   </div>
-  <div class="row mt-5 pb-5">
+  <div class="row mt-5 pb-5" id="before_preview_container">
     <div class="col-sm-12 col-md-12 col-lg-12 text-center" style="height: 100;">
       <button class="fancy-button" id="preview_question">Preview question</button>
     </div>

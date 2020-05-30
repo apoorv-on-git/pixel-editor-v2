@@ -3,6 +3,8 @@ from app.utils.role_util import *
 from app.db_controllers.auth_controller import *
 from app.db_controllers.contributor_controller import *
 from app.utils.s3 import *
+from app.db_controllers.helper import *
+import json
 
 contributor_api = Blueprint('contributor_api', __name__, url_prefix="/contributor-api")
 
@@ -71,9 +73,31 @@ def update_profile_image():
 @required_role_as_contributor()
 def save_preview_question():
     try:
-        save_preview_question(session.get('document_id'))
+        firebase_save_preview_question(session.get('document_id'))
         return jsonify({
             "message": "Saved successfully!",
+            "status": "success"
+        }), 204
+    except ValueError as e:
+        return jsonify({
+            "message": str(e),
+            "status": "error"
+        }), 400
+
+@contributor_api.route("/delete-preview-image", methods=["POST"])
+@required_role_as_contributor()
+def delete_preview_image():
+    try:
+        delete_url = request.json.get("delete_url")
+        if session.get("document_id") not in delete_url:
+            return jsonify({
+                "message": "This is not an image",
+                "status": "error"
+            }), 400
+        url_endpoint = f"images/{delete_url.split('images/')[-1]}"
+        delete_from_s3(url_endpoint)
+        return jsonify({
+            "message": "Image deleted successfully!",
             "status": "success"
         }), 204
     except ValueError as e:

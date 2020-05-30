@@ -1,6 +1,19 @@
-from app.utils.s3 import upload_to_s3
+from app.data.grade_breakdown import data as grade_breakdown
+from app.utils.s3 import *
 from flask import request
 import os
+
+def get_grade_breakdown_dict(grade, chapter, level):
+    grade_dict = next((grade_dict for grade_dict in grade_breakdown if grade_dict.get('grade_number') == int(grade)), None)
+    if not grade_dict:
+        raise ValueError("Invalid Grade!")
+    chapter_dict = next((chapter_dict for chapter_dict in grade_dict.get("chapters") if chapter_dict.get('chapter_number') == int(chapter)), None)
+    if not chapter_dict:
+        raise ValueError("Invalid Chapter!")
+    level_dict = next((level_dict for level_dict in chapter_dict.get("levels") if level_dict.get('level_number') == int(level)), None)
+    if not level_dict:
+        raise ValueError("Invalid Level!")
+    return grade_dict, chapter_dict, level_dict
 
 def file_allowed(extension):
     if extension.lower() not in ["jpg", "jpeg", "png"]:

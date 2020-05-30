@@ -47,26 +47,30 @@ def check_preview_question(document_id):
     user_data = user_data.to_dict()
     return user_data.get("preview_question")
 
-def save_preview_question(document_id):
-    data = json.loads(request.form.get('json'))
-    grade, chapter, level = int(data.get("grade")), int(data.get("chapter")), int(data.get("level"))
-    question_image = handle_image_upload('question_image', document_id) or "#"
-    option_a = handle_image_upload('option_a', document_id) or data.get('option_a')
-    option_b = handle_image_upload('option_b', document_id) or data.get('option_b')
-    option_c = handle_image_upload('option_c', document_id) or data.get('option_c')
-    option_d = handle_image_upload('option_d', document_id) or data.get('option_d')
-    preview_question = dict(
-                                grade=grade,
-                                chapter=chapter,
-                                level=level,
-                                question_text=data.get("question_text"),
-                                question_image=question_image,
-                                options=dict(
-                                                option_a=option_a,
-                                                option_b=option_b,
-                                                option_c=option_c,
-                                                option_d=option_d
-                                            ),
-                                correct_option=data.get("correct_option")
-                        )
-    save_preview_question = document_ref.document(document_id).update({"preview_question": preview_question})
+def firebase_save_preview_question(document_id):
+    try:
+        data = json.loads(request.form.get('json'))
+        grade, chapter, level = int(data.get("grade")), int(data.get("chapter")), int(data.get("level"))
+        question_image = handle_image_upload('question_image', document_id) or "#"
+        option_a = handle_image_upload('option_a', document_id) or data.get('option_a')
+        option_b = handle_image_upload('option_b', document_id) or data.get('option_b')
+        option_c = handle_image_upload('option_c', document_id) or data.get('option_c')
+        option_d = handle_image_upload('option_d', document_id) or data.get('option_d')
+        preview_question = dict(
+                                    grade=grade,
+                                    chapter=chapter,
+                                    level=level,
+                                    question_text=data.get("question"),
+                                    question_image=question_image,
+                                    options=dict(
+                                                    option_a=option_a,
+                                                    option_b=option_b,
+                                                    option_c=option_c,
+                                                    option_d=option_d
+                                                ),
+                                    correct_option=data.get("correct_option")
+                            )
+        document_ref = firebase_db.collection('users')
+        save_preview_question = document_ref.document(document_id).update({"preview_question": preview_question})
+    except Exception as e:
+        raise e
