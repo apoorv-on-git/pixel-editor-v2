@@ -2,79 +2,79 @@
   .hidden {
     display: none;
   }
-  .editor-container-main {
-    border-bottom: 3px solid #3696de;
-  }
-  .question-form-container {
-    border-right: 3px solid #3696de;
-  }
-  .formula-button {
-    margin: 1em;
-    border: 2px solid #3696de;
+  .formula-button-1 {
     padding: 0.5em;
-    border-radius: 1em;
+    border-radius: 0.5em;
     background-color: #ffffff;
-    width: 100%;
-    height: 4em;
+    margin-top: 0.5em;
+    border: 2px solid #eee;
+    color: #848ea8;
   }
-  .formula-button:hover {
+  .popover-content {
+    display: none;
+  }
+  .note-editor {
+    border-radius: 1em;
+    border: 0.5px solid #eee !important;
+  }
+  .note-toolbar {
+    border-radius: 1em 1em 0 0;
+  }
+  .note-statusbar {
+    width: 95%;
+    margin-left: 2.5%;
+  }
+  .note-editable {
+    height: 20vh;
+  }
+  .note-btn-group {
+    max-height: 7vh;
+  }
+  .note-btn-group button {
+    margin: 0;
+  }
+  .note-toolbar {
     background-color: #eee;
   }
-  .formula-button-1 {
-    border: 2px solid #000;
-    padding: 0.5em;
-    border-radius: 1em;
-    background-color: #ffffff;
-    margin: 0.2em;
+  .note-style,
+  .note-fontname,
+  .note-table,
+  .note-insert,
+  #content > main > div > div.row.editor-container-main > div.col-sm-12.col-md-12.col-lg-6.question-form-container.pb-5 > div:nth-child(2) > div > div > div.note-toolbar-wrapper.panel-default > div > div.note-btn-group.btn-group.note-font > button:nth-child(3),
+  #content > main > div > div.row.editor-container-main > div.col-sm-12.col-md-12.col-lg-6.question-form-container.pb-5 > div:nth-child(2) > div > div > div.note-toolbar-wrapper.panel-default > div > div.note-btn-group.btn-group.note-view > button.note-btn.btn.btn-default.btn-sm.btn-fullscreen,
+  #content > main > div > div.row.editor-container-main > div.col-sm-12.col-md-12.col-lg-6.question-form-container.pb-5 > div:nth-child(2) > div > div > div.note-toolbar-wrapper.panel-default > div > div.note-btn-group.btn-group.note-view > button:nth-child(3) {
+    display: none;
   }
-  .formula-container {
-    padding-left: 5%;
+  .dropdown-toggle::after {
+    display: none !important;
   }
-  .form-input {
-    width: 90% !important;
-    margin-left: 5%;
+  .question-img-upload {
+    background-color: #5dca88;
+    padding: 1em 4em;
+    border-radius: 2em;
+    color: #fff;
   }
-  .form-input-option {
-    width: 50% !important;
-    margin-left: 5%;
+  .question-img-upload:hover {
+    cursor: pointer;
   }
-  .blue-btn:hover,
-  .blue-btn:active,
-  .blue-btn:focus,
-  .blue-btn {
-    background: transparent;
-    border: solid 1px #27a9e0;
-    border-radius: 3px;
-    color: #27a9e0;
-    font-size: 16px;
-    margin-bottom: 20px;
-    outline: none !important;
-    padding: 10px 20px;
-    margin-left: 17%;
+  .option-img-upload {
+    border-radius: 2em;
+    color: #000;
   }
-  .question-upload {
-    position: relative;
-    overflow: hidden;
-    height: 43px;
-    margin-top: 0;
+  .option-img-upload:hover {
+    cursor: pointer;
   }
-  .question-upload input.upload-question-image {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0;
-    padding: 0;
-    font-size: 20px;
+  input.upload-question-image {
     cursor: pointer;
     opacity: 0;
-    filter: alpha(opacity=0);
-    width: 100%;
-    height: 42px;
+    width: 80%;
+    position: absolute;
+    left: 10%;
+    height: 3em;
+    top: -0.75em;
   }
-  .delete-icon {
-    display: inline;
-    margin-top: 1em;
-    color: red;
+  .input-group {
+    padding-right: 0;
   }
   .input-group-addon:last-child {
     border-left: 0;
@@ -100,6 +100,9 @@
   .input-group-addon input.upload-image-b,
   .input-group-addon input.upload-image-c,
   .input-group-addon input.upload-image-d {
+    width: 22%;
+    margin-right: 4%;
+    height: 42px;
     position: absolute;
     top: 0;
     right: 0;
@@ -108,85 +111,22 @@
     font-size: 20px;
     cursor: pointer;
     opacity: 0;
-    filter: alpha(opacity=0);
-    width: 15%;
-    margin-right: 1%;
-    height: 42px;
+  }
+  .form-input-option {
+    width: 60%;
+  }
+  .delete-icon {
+    display: inline;
+    color: red;
   }
   .guide-text {
     font-size: 0.7em;
-    margin-left: 5%;
   }
-  .fancy-button {
-    font-weight: 600;
-    color: #382b22;
-    text-transform: uppercase;
-    padding: 1.25em 2em;
-    background: #fff0f0;
-    border: 2px solid #b18597;
-    border-radius: 0.75em;
-    transform-style: preserve-3d;
-    transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
-  }
-  .fancy-button::before {
-    position: absolute;
-    content: '';
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #f9c4d2;
-    border-radius: inherit;
-    box-shadow: 0 0 0 2px #b18597, 0 0.625em 0 0 #ffe3e2;
-    transform: translate3d(0, 0.75em, -1em);
-    transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
-  }
-  .fancy-button:hover {
-    background: #ffe9e9;
-    transform: translate(0, 0.25em);
-  }
-  .fancy-button:hover::before {
-    box-shadow: 0 0 0 2px #b18597, 0 0.5em 0 0 #ffe3e2;
-    transform: translate3d(0, 0.5em, -1em);
-  }
-  .fancy-button:active {
-    background: #ffe9e9;
-    transform: translate(0em, 0.75em);
-  }
-  .fancy-button:active::before {
-    box-shadow: 0 0 0 2px #b18597, 0 0 #ffe3e2;
-    transform: translate3d(0, 0, -1em);
-  }
-  .popover-content {
-    display: none;
-  }
-  .note-btn {
-    height: 6vh;
-  }
-  .note-editor {
-    margin-left: 15%;
-  }
-  .note-editable {
-    height: 30vh;
-  }
-  .note-btn-group {
-    max-height: 7vh;
-  }
-  .note-btn-group button {
-    margin: 0;
-  }
-  .note-toolbar {
-    background-color: #eee;
-  }
-  .note-style,
-  .note-fontname,
-  .note-table,
-  .note-insert,
-  #content > main > div > div.row.editor-container-main > div.col-sm-12.col-md-12.col-lg-6.question-form-container.pb-5 > div:nth-child(2) > div > div > div.note-toolbar-wrapper.panel-default > div > div.note-btn-group.btn-group.note-font > button:nth-child(3),
-  #content > main > div > div.row.editor-container-main > div.col-sm-12.col-md-12.col-lg-6.question-form-container.pb-5 > div:nth-child(2) > div > div > div.note-toolbar-wrapper.panel-default > div > div.note-btn-group.btn-group.note-view > button.note-btn.btn.btn-default.btn-sm.btn-fullscreen,
-  #content > main > div > div.row.editor-container-main > div.col-sm-12.col-md-12.col-lg-6.question-form-container.pb-5 > div:nth-child(2) > div > div > div.note-toolbar-wrapper.panel-default > div > div.note-btn-group.btn-group.note-view > button:nth-child(3) {
-    display: none;
+  .action-button-style {
+    width: 40%;
+    background-color: #5dca88;
+    color: white;
+    padding: 1em;
+    border-radius: 3em;
   }
 </style>

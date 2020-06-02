@@ -3,6 +3,8 @@ from firebase_admin import firestore
 import json
 from app.db_controllers.helper import *
 from flask import request
+import datetime
+from google.cloud.firestore_v1 import Increment
 
 firebase_db = firestore.client()
 
@@ -51,11 +53,7 @@ def firebase_save_preview_question(document_id):
     try:
         data = json.loads(request.form.get('json'))
         grade, chapter, level = int(data.get("grade")), int(data.get("chapter")), int(data.get("level"))
-        question_image = handle_image_upload('question_image', document_id) or "#"
-        option_a = handle_image_upload('option_a', document_id) or data.get('option_a')
-        option_b = handle_image_upload('option_b', document_id) or data.get('option_b')
-        option_c = handle_image_upload('option_c', document_id) or data.get('option_c')
-        option_d = handle_image_upload('option_d', document_id) or data.get('option_d')
+        question_image, option_a, option_b, option_c, option_d = handle_submitted_images(data, document_id)
         preview_question = dict(
                                     grade=grade,
                                     chapter=chapter,
@@ -72,5 +70,39 @@ def firebase_save_preview_question(document_id):
                             )
         document_ref = firebase_db.collection('users')
         save_preview_question = document_ref.document(document_id).update({"preview_question": preview_question})
+    except Exception as e:
+        raise e
+
+def firebase_submit_question(document_id):
+    try:
+        data = json.loads(request.form.get('json'))
+        grade, chapter, level = int(data.get("grade")), int(data.get("chapter")), int(data.get("level"))
+        question_image, option_a, option_b, option_c, option_d = handle_submitted_images(data, document_id)
+        question_image, option_a, option_b, option_c, option_d = get_files_renamed(question_image, option_a, option_b, option_c, option_d)
+        question = dict(
+                            board_type = "NCERT",
+                            contributor_id = document_id,
+                            state = "under_review",
+                            date_created = datetime.datetime.utcnow(),
+                            date_approved = "",
+                            question_text = data.get("question"),
+                            question_image = question_image,
+                            options = dict(
+                                                option_a = option_a,
+                                                option_b = option_b,
+                                                option_c = option_c,
+                                                option_d = option_d
+                                        ),
+                            correct_option = data.get("correct_option"),
+                            question_type = "MCQ",
+                            feedback = "",
+                            approved_by = "",
+                            deployed_by = ""
+                    )
+        level_collection_id = f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}"
+        document_ref = firebase_db.collection("users")
+        document_ref.document(document_id).update({"preview_question": firestore.DELETE_FIELD})
+        document_ref.document(document_id).collection("levels").document(level_collection_id).collection("question_bank").document().create(question)
+        document_ref.document(document_id).update({"total_questions": Increment(1)})
     except Exception as e:
         raise e

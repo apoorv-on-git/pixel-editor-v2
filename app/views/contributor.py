@@ -61,6 +61,7 @@ def levels():
             }), 400
         return render_template( "/contributor/level/level.html",
                                 levels=chapter_dict.get("levels"),
+                                chapter_name=chapter_dict.get("chapter_name"),
                                 grade=grade,
                                 chapter=chapter,
                                 grade_breakdown=grade_breakdown

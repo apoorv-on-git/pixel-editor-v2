@@ -11,7 +11,10 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Comfortaa:300,400,700,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.min.css">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
@@ -19,44 +22,41 @@
     {% include("contributor/login/login_script.jinja") %}
     {% include("contributor/login/login_style.jinja") %}
     <div class="main-container">
-      <div class="box">
-        <div class="row mb-5 text-center">
-          <div class="col-sm-12 col-md-12 col-lg-12 mb-5">
-            <span class="page-heading">PixelEditor</span>
-          </div>
-          <div class="col-sm-12 col-md-12 col-lg-12 d-flex justify-content-center pl-5 pr-5">
-            <div class="login-form p-5">
-              <h1 class="text-white">Login</h1>
-              <input type="email" name="email" id="email" placeholder="Email" required />
-              <input type="password" name="password" id="password" placeholder="Password" required />
-              <button class="login-contributor mt-3">Login</button>
-              </button>
-            </div>
-          </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 text-center bg-white p-2">
+          <a href="/">
+            <img src="static/images/logo.png" width="30em" height="auto"/>
+            <span style="font-size: 1em;"><b>PixelEditor</b></span>
+          </a>
         </div>
       </div>
-      <div class="row footer-container p-5" id="footer">
-        <div class="col">
-          <nav class="navbar navbar-expand" style="justify-content:center">
-              <ul class="navbar-nav">
-                  <li class="nav-item">
-                      <a class="nav-link" href="#!">
-                          <i class="fa fa-facebook-square" style="font-size:40px"></i>
-                      </a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="https://twitter.com/PixelMath">
-                          <i class="fa fa-twitter-square" style="font-size:40px"></i>
-                      </a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="https://www.instagram.com/pixel_math/">
-                          <i class="fa fa-instagram" style="font-size:40px"></i>
-                      </a>
-                  </li>
-              </ul>
-          </nav>
-          <p id='footer-copyright' class="mt-4">Copyright &copy; 2019 PixelMath | Powered by CreatorsInk</p>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+            <img src="static/images/login.png" width="80%" height="auto"/>
+          </div>
+          <div class="col-sm-12 col-md-4 col-lg-4 align-self-center pt-5 pb-5">
+            <div class="row" id="contest_form_container">
+              <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                <h5>Login</h5>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12">
+                <div class="inputWithIcon">
+                  <input type="text" placeholder="Email" id="email">
+                  <i class="fa fa-envelope fa-lg fa-fw" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12">
+                <div class="inputWithIcon">
+                  <input type="password" placeholder="Password" id="password">
+                  <i class="fa fa-eye-slash fa-lg fa-fw" id="password_icon" onclick="show_hide_password();" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12 mt-3 text-center">
+                <button class='login-contributor' type="login" id="login"><b>Login</b></button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

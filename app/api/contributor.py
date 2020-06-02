@@ -69,6 +69,21 @@ def update_profile_image():
             "message": str(e)
         }), 400
 
+@contributor_api.route("/submit-question", methods=["POST"])
+@required_role_as_contributor()
+def submit_question():
+    try:
+        firebase_submit_question(session.get('document_id'))
+        return jsonify({
+            "message": "Saved successfully!",
+            "status": "success"
+        }), 204
+    except ValueError as e:
+        return jsonify({
+            "message": str(e),
+            "status": "error"
+        }), 400
+
 @contributor_api.route("/save-preview-question", methods=["POST"])
 @required_role_as_contributor()
 def save_preview_question():
@@ -94,7 +109,7 @@ def delete_preview_image():
                 "message": "This is not an image",
                 "status": "error"
             }), 400
-        url_endpoint = f"images/{delete_url.split('images/')[-1]}"
+        url_endpoint = f"preview_images/{delete_url.split('images/')[-1].split('?')[0]}"
         delete_from_s3(url_endpoint)
         return jsonify({
             "message": "Image deleted successfully!",

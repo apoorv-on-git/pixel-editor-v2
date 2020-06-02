@@ -1,8 +1,9 @@
+{% set question_image = preview_question.get("question_image") %}
 <script>
   var input_focus = ""
   var json = {
                 "question": "",
-                "question_image": "#",
+                "question_image": "{{question_image}}",
                 "option_a": "",
                 "option_b": "",
                 "option_c": "",
@@ -48,7 +49,7 @@
         reader.readAsDataURL(this.files[0]);
         var filename = $('.upload-question-image').val().split('\\').pop()
         $(".question-image-name").empty()
-        $(".question-image-name").append(`<p class="guide-text" style="margin-left: 20%;">${filename}</p>`)
+        $(".question-image-name").append(`<p class="guide-text" id="question_image_name" style="margin-left: 10%;">${filename}</p>`)
       }
     })
     $('.delete-question-image').click(function(){
@@ -182,7 +183,6 @@
       json.level = "{{level}}";
       var fd = new FormData();
       fd.append('json', JSON.stringify(json))
-      fd.append('old_json', JSON.stringify({{preview_question | tojson}}))
       fd.append('question_image', $('.upload-question-image')[0].files[0])
       fd.append('option_a', $('.upload-image-a')[0].files[0])
       fd.append('option_b', $('.upload-image-b')[0].files[0])
@@ -212,13 +212,48 @@
         }
       })
     })
+    $("#submit_question").click(function(){
+      json.grade = "{{grade}}";
+      json.chapter = "{{chapter}}";
+      json.level = "{{level}}";
+      var fd = new FormData();
+      fd.append('json', JSON.stringify(json))
+      fd.append('question_image', $('.upload-question-image')[0].files[0])
+      fd.append('option_a', $('.upload-image-a')[0].files[0])
+      fd.append('option_b', $('.upload-image-b')[0].files[0])
+      fd.append('option_c', $('.upload-image-c')[0].files[0])
+      fd.append('option_d', $('.upload-image-d')[0].files[0])
+      $.ajax({
+        url: "{{url_for('contributor_api.submit_question')}}",
+        type: "post",
+        contentType: false,
+        processData: false,
+        data: fd,
+        beforeSend: function(){
+          $('.main-container').addClass('blur');
+          $(':button').prop('disabled', true);
+          $("#loader").show();
+        },
+        success: function (result) {
+          window.location.reload();
+        },
+        error: function (result) {
+          alert(result.responseJSON.message)
+        },
+        complete:function(data){
+          $('.main-container').removeClass('blur');
+          $(':button').prop('disabled', false);
+          $("#loader").hide();
+        }
+      })
+    })
   })
   $(document).ready(function(){
     update_json()
   })
   function update_json() {
     json.question = $('#question_text').val();
-    json.question_image = $('.upload-question-image').val() ? "QUESTION.png" : "#";
+    json.question_image = $('#question_image_name').html() ? $('#question_image_name').html() : "#";
     json.option_a = $('.upload-image-a').val() ? "OPTION_A.png" : $('#option_a_text').val();
     json.option_b = $('.upload-image-b').val() ? "OPTION_B.png" : $('#option_b_text').val();
     json.option_c = $('.upload-image-c').val() ? "OPTION_C.png" : $('#option_c_text').val();

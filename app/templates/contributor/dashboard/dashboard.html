@@ -4,58 +4,75 @@
 {% include("contributor/dashboard/dashboard_script.jinja") %}
 {% include("contributor/dashboard/dashboard_style.jinja") %}
 
-<div class="mb-5">
-  <div class="row">
-    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-      <img src="{{user_data.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="100" height="100" />
-      <span class="profile-img-upload">Upload</span>
-      <input type="file" class="upload-profile-image" />
-    </div>
-  </div>
-  <div class="row mt-3">
-    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-      <h4>{{user_data.get('name')}}</h4>
-    </div>
-  </div>
-  <div class="row number-stat-container mt-5" style="margin-left: 1.5em !important;">
-    <div class="col-sm-12 col-md-6 col-lg-6 text-left">
+<div class="text-center">
+  <div class="row p-2">
+    <div class="col-sm-12 col-md-12 col-lg-12 white-container p-5">
+      <div class="overlap-box" style="background: #5dca88;"></div>
       <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
-          <p><b>Total Questions - </b>{{user_data.get('total_questions')}}</p>
+          <h1>Hello <b style="color: #5dca88">{{user_data.get('name')}}</b></h1>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-12">
-          <p><b>Total Approved Questions - </b>{{user_data.get('total_approved')}}</p>
+        <div class="col-sm-12 col-md-12 col-lg-12 text-center mt-3">
+          <img src="{{user_data.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="150" height="150" />
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-12">
-          <p><b>Total Star Questions - </b>{{user_data.get('total_star_questions')}}</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-12 col-md-6 col-lg-6 text-left">
-      <div class="row">
-        <div class="col-sm-12 col-md-12 col-lg-12">
-          <p><b>Total Questions Reviewed - </b>{{user_data.get('total_reviewed')}}</p>
-        </div>
-        <div class="col-sm-12 col-md-12 col-lg-12">
-          <p><b>Approval Rate - </b>{{user_data.get('approval_rate')}}%</p>
+        <div class="col-sm-12 col-md-12 col-lg-12 text-center mt-5">
+          <span class="profile-img-upload">Upload</span>
+          <input type="file" class="upload-profile-image" />
         </div>
       </div>
     </div>
   </div>
-  <div class="row mt-5 text-center">
-    <div class="col-sm-12 col-md-12 col-lg-12">
-      <h2>Today's Goal</h2>
-      <h4>{{user_data.get('daily_goal')}}</h4>
+  <div class="row p-2">
+    <div class="col-sm-12 col-md-4 col-lg-4 white-container p-3" style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;">
+      <div class="overlap-box" style="background: #7ccf4a;"></div>
+      <h5 class="heavy-font">Total Questions</h5>
+      <h3 class="mt-3 heavy-font">{{user_data.get('total_questions')}}</h3>
+      <hr class="hr-stats" />
+    </div>
+    <div class="col-sm-12 col-md-4 col-lg-4 white-container p-3" style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;">
+      <div class="overlap-box" style="background: #eee000;"></div>
+      <h5 class="heavy-font">Total Questions Reviewed</h5>
+      <h3 class="mt-3 heavy-font">{{user_data.get('total_reviewed')}}</h3>
+      <hr class="hr-stats"/>
+    </div>
+    <div class="col-sm-12 col-md-4 col-lg-4 white-container p-3" style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;">
+      <div class="overlap-box" style="background: #f40100;"></div>
+      <h5 class="heavy-font">Total Approved Questions</h5>
+      <h3 class="mt-3 heavy-font">{{user_data.get('total_approved')}}</h3>
+      <hr class="hr-stats"/>
+    </div>
+    <div class="col-sm-12 col-md-4 col-lg-4 white-container p-3" style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;">
+      <div class="overlap-box" style="background: #3697de;"></div>
+      <h5 class="heavy-font">Approval Rate</h5>
+      <h3 class="mt-3 heavy-font">{{user_data.get('approval_rate')}}%</h3>
+      <hr class="hr-stats"/>
+    </div>
+    <div class="col-sm-12 col-md-4 col-lg-4 white-container p-3" style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;">
+      <div class="overlap-box" style="background: #7ccf4a;"></div>
+      <h5 class="heavy-font">Total Star Questions</h5>
+      <h3 class="mt-3 heavy-font">{{user_data.get('total_star_questions')}}</h3>
+      <hr class="hr-stats"/>
     </div>
   </div>
   <div class="row mt-5">
-    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-      <h2>Analytics</h2>
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <h2>Today's Goal</h2>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-12 mt-3">
+      <h5>{{user_data.get('daily_goal')}}</h5>
     </div>
   </div>
-  <div class="row mt-2">
-    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-      <div id="curve_chart" style="height: 50vh;"></div>
+  <div class="row p-2 mt-5">
+    <div class="col-sm-12 col-md-12 col-lg-12 white-container p-5">
+      <div class="overlap-box" style="background: #5dca88;"></div>
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <h5 class="heavy-font">Analytics</h5>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+          <div id="curve_chart" style="height: 50vh;"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

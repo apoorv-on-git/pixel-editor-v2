@@ -58,8 +58,12 @@
           window.location.href = `{{url_for('contributor.dashboard')}}`
         },
         error: function (result) {
-          alert(result.responseJSON.message)
           $("#loader").hide();
+          Swal.fire(
+           'Uh Oh!',
+           result.responseJSON.message,
+           'error'
+          )
         },
         complete:function(data){
           $('.main-container').removeClass('blur');
@@ -69,4 +73,13 @@
       })
     })
   })
+  function show_hide_password() {
+    if ($("#password_icon").hasClass("fa-eye")) {
+      $("#password_icon").removeClass("fa-eye").addClass("fa-eye-slash")
+      $("#password").attr("type", "password");
+    } else {
+      $("#password_icon").removeClass("fa-eye-slash").addClass("fa-eye")
+      $("#password").attr("type", "text");
+    }
+  }
 </script>

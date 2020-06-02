@@ -4,7 +4,7 @@
 
   function drawChart() {
    var data = google.visualization.arrayToDataTable([
-        ["date", "total", "individual"],
+        ["date", "Total", "Individual"],
         ["21/05/2020", 200, 20],
         ["22/05/2020", 190, 3],
         ["23/05/2020", 150, 32],
@@ -15,9 +15,10 @@
    ]);
 
    var options = {
-     title: 'Contributions Per Day',
      curveType: 'function',
-     legend: { position: 'bottom' }
+     legend: { position: 'top', alignment: 'center', textStyle: {fontSize: 20} },
+     colors: ["#a39ef5", "#5dca88"],
+     lineWidth: 5
    };
 
    var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
@@ -59,5 +60,8 @@
         });
       }
     })
+  })
+  $(document).ready(function(){
+    $("#dashboard_navigator").addClass("active")
   })
 </script>

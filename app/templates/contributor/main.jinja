@@ -6,429 +6,103 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Comfortaa:300,400,700,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&display=swap" rel="stylesheet">
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.min.css">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-      * {
-        font-family: 'Comfortaa', Helvetica, Arial;
-        max-width: 100%;
-      }
-      #footer-copyright {
-        font-size:11px;
-        font-weight: bold;
-        text-align:center;
-        padding-bottom: 10px;
-      }
-      #footer a {
-        color: #444;
-      }
-      .footer-container {
-        background-color: #eaf8fe;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-      }
-      .navbar {
-        background-color: #eaf8fe !important;
-      }
-      .navbar-heading {
-        font-size: 1.75em;
-        color: #656b6a;
-      }
-      .nav-link {
-        color: #656b6a !important;
-      }
-      .nav-link:hover {
-        color: #000 !important;
-        cursor: pointer;
-      }
-      main {
-        min-height: 60vh;
-      }
-      .navbar-button {
-        margin: 10px;
-        margin-left: -1vw;
-        font-size: 2em;
-      }
-      .custom-btn {
-        padding: 10px 25px;
-        font-family: "Roboto", sans-serif;
-        font-weight: 500;
-        background: transparent;
-        outline: none !important;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        position: relative;
-        display: inline-block;
-      }
-      .btn-4-active, .btn-4-inactive {
-        width: 100%;
-        min-height: 40px;
-        line-height: 42px;
-        padding: 0;
-        border: none;
-      }
-      .btn-4-active span, .btn-4-inactive span {
-        position: relative;
-        display: block;
-        width: 100%;
-        height: 100%;
-      }
-      .btn-4-active:before,
-      .btn-4-active:after,
-      .btn-4-inactive:before,
-      .btn-4-inactive:after {
-        position: absolute;
-        content: "";
-        right: 0;
-        top: 0;
-        background: #000;
-        transition: all 0.3s ease;
-      }
-      .btn-4-active:before, .btn-4-inactive:before {
-        height: 50%;
-        width: 2px;
-      }
-      .btn-4-active:after, .btn-4-inactive:after {
-        width: 20%;
-        height: 2px;
-      }
-      .btn-4-active:hover:before {
-        height: 100%;
-      }
-      .btn-4-active:hover:after {
-        width: 100%;
-      }
-      .btn-4-active span:before,
-      .btn-4-active span:after,
-      .btn-4-inactive span:before,
-      .btn-4-inactive span:after {
-        position: absolute;
-        content: "";
-        left: 0;
-        bottom: 0;
-        background: #000;
-        transition: all 0.3s ease;
-      }
-      .btn-4-active span:before, .btn-4-inactive span:before {
-        width: 2px;
-        height: 50%;
-      }
-      .btn-4-active span:after, .btn-4-inactive span:after {
-        width: 20%;
-        height: 2px;
-      }
-      .btn-4-active span:hover:before {
-        height: 100%;
-      }
-      .btn-4-active span:hover:after {
-        width: 100%;
-      }
-      .btn-4-inactive:hover {
-        color: #eee;
-        cursor: not-allowed;
-      }
-      .btn-4-inactive span:before,
-      .btn-4-inactive span:after {
-        background: #eee;
-      }
-      .btn-4-inactive:before,
-      .btn-4-inactive:after {
-        background: #eee;
-      }
-      .blur {
-        filter: blur(5px);
-        -webkit-filter: blur(5px);
-        -moz-filter: blur(5px);
-        -o-filter: blur(5px);
-        -ms-filter: blur(5px);
-      }
-      #loader {
-        position: fixed;
-        display: none;
-        align-items: center;
-        width: 50%;
-        top: 30%;
-        left: 35%;
-        z-index: 999;
-      }
-      .loading-gif {
-        width: 50%;
-        height: auto;
-      }
-      @media (max-width: 768px) {
-        #sidebar {
-          margin-left: -250px;
-        }
-        #sidebar.active {
-          margin-left: 0;
-        }
-        #sidebarCollapse span {
-          display: none;
-        }
-      }
-      #content {
-        width: 100%;
-        min-height: 100vh;
-        transition: all 0.3s;
-      }
-      .text-sidebar {
-        color: #444;
-      }
-      .wrapper {
-        display: flex;
-        width: 100%;
-        align-items: stretch;
-      }
-      #sidebar {
-        min-width: 250px;
-        max-width: 250px;
-        background: #eaf8fe;
-        color: #444;
-        transition: all 0.3s;
-      }
-      #sidebar.active {
-        margin-left: -250px;
-      }
-      #sidebar .sidebar-header {
-        padding: 20px;
-        background:#eaf8fe /*#6d7fcc*/;
-      }
-      #sidebar ul.components {
-        padding: 20px 0;
-      }
-      #sidebar ul p {
-        color: #444;
-        padding: 10px;
-      }
-      #sidebar ul li a {
-        padding: 10px;
-        font-size: 1.1em;
-        display: block;
-      }
-      #sidebar ul li a:hover {
-        color: #000;
-        background: #89d6f4;
-      }
-      #sidebar ul li.active>a, a[aria-expanded="true"] {
-        color: #444;
-        background: #eaf8fe;
-      }
-      a[data-toggle="collapse"] {
-          position: relative;
-      }
-      .dropdown-toggle::after {
-        display: block;
-        position: absolute;
-        top: 50%;
-        right: 20px;
-        transform: translateY(-50%);
-      }
-      ul ul a {
-          font-size: 0.9em !important;
-          padding-left: 30px !important;
-      }
-      a,
-      a:hover,
-      a:focus {
-        color: inherit;
-        text-decoration: none;
-        transition: all 0.3s;
-      }
-      .navbar {
-        background: #fff;
-        border: none;
-        border-radius: 0;
-        margin-bottom: 40px;
-      }
-      .img-fluid {
-        max-width: 3em;
-      }
-      .sub-menu-1 {
-        background-color: #c8e9f7;
-      }
-      .row {
-        margin-left: 0 !important;
-      }
-    </style>
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        messageStyle: 'none',
-        extensions: ['text2jax.js'],
-        jax: ['input/TeX', 'output/HTML-CSS'],
-        tex2jax: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']],
-          displayMath: [['$$', '$$'], ['\\[', '\\]']],
-          processEscape: true,
-          ignoreClass: "note-editable"
-        },
-        TeX: {
-          extensions: ['AMSmath.js', 'AMSsymbols.js', 'noErrors.js', 'noUndefined.js']
-        }
-      });
-      MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-    </script>
-    <script>
-      $(document).ready(function(){
-        $('#sidebarCollapse').on('click', function () {
-          $('#sidebar').toggleClass('active');
-        });
-        function detectMob() {
-          const toMatch = [
-            /Android/i,
-            /webOS/i,
-            /iPhone/i,
-            /iPad/i,
-            /iPod/i,
-            /BlackBerry/i,
-            /Windows Phone/i
-          ];
-          return toMatch.some((toMatchItem) => {
-            return navigator.userAgent.match(toMatchItem);
-          });
-        }
-        let is_mobile = detectMob();
-        if (is_mobile) {
-          $('body').empty();
-          let html = `
-                        <style>
-                          body {
-                            background-color: #eaf8fe;
-                          }
-                          * {
-                            font-family: 'Comfortaa', Helvetica, Arial;
-                          }
-                        </style>
-                        <div class="col-sm-12 col-md-12 col-lg-12 mt-5 text-center">
-                          <span style="font-size: 3em; color: #656b6a;">PixelEditor</span>
-                        </div>
-                        <div class="col-sm-12 col-md-12 col-lg-12 text-center mt-5">
-                          <img src="/static/images/not_supported.gif" style="width: 50%; height: auto;">
-                        </div>
-                        <div class="col-sm-12 col-md-12 col-lg-12 mt-5">
-                          <h3 style="color: #656b6a;">This website does not support mobile! Please use a desktop.</h3>
-                        </div>
-                    `
-          $("body").append(html)
-        }
-      })
-      function logout_user() {
-        $.ajax({
-          url: "{{url_for('contributor_api.logout')}}",
-          type: 'post',
-          beforeSend: function(){
-            $('.main-container').addClass('blur');
-            $(':button').prop('disabled', true);
-            $("#loader").show();
-          },
-          success: function (result) {
-            window.location.href = "{{url_for('contributor.login')}}";
-          },
-          error: function (result) {
-            alert(result.responseJSON.message);
-          },
-          complete:function(data){
-            $('.main-container').removeClass('blur');
-            $(':button').prop('disabled', false);
-            $("#loader").hide();
-          }
-        });
-      }
-    </script>
+
+    {% include("contributor/main_script.jinja") %}
+    {% include("contributor/main_style.jinja") %}
+
   </head>
   <body>
     <div class="main-container">
-      <div class="wrapper">
-        <!-- Sidebar  -->
-        <nav id="sidebar">
-            <div class="sidebar-header">
-              <img src="/static/images/logo.png" class="img-fluid" />
-              <span class="navbar-heading">PixelEditor</span>
-            </div>
-            <ul class="list-unstyled components">
-                {% for grade_dict in grade_breakdown %}
-                  <li>
-                    <a href="#grade_{{grade_dict.get('grade_number')}}_menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Grade {{grade_dict.get('grade_number')}}</a>
-                    <ul class="collapse list-unstyled sub-menu-1" id="grade_{{grade_dict.get('grade_number')}}_menu">
-                      {% for chapter_dict in grade_dict.get("chapters") %}
-                        <li>
-                          <a href="{{url_for('contributor.levels')}}?grade={{grade_dict.get('grade_number')}}&chapter={{chapter_dict.get('chapter_number')}}">{{chapter_dict.get("chapter_name")}}</a>
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  </li>
-                {% endfor %}
-                <!-- <li>
-                    <a href="#">About</a>
-                </li> -->
-            </ul>
-        </nav>
-        <div id="content">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
-
-                    <button type="button" id="sidebarCollapse" class="btn text-sidebar bg-turbo-yellow navbar-button">
-                        <i class="fas fa-align-left"></i>
-                        <span></span>
-                    </button>
-                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto navbar-button" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <i class="fas fa-align-justify"></i>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="nav navbar-nav ml-auto">
-                            <li class="nav-item active">
-                                <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('contributor.star_questions')}}">
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                </a>
-                            </li>
-                            <li class="nav-item active">
-                                <a class="nav-link" href="{{url_for('contributor.dashboard')}}">Dashboard</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{url_for('contributor.leaderboard')}}">Leaderboard</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" onclick="logout_user()">Logout</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-            <main>
-            {% block main %}{% endblock %}
-            </main>
+      <nav class="navbar fixed-top navbar-expand navbar-light" style="background: white;">
+        <a href="#menu-toggle" id="menu-toggle" class="navbar-brand">
+          <span class="navbar-toggler-icon"></span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarsExample02">
+          <a class="navbar-brand" href="/">
+            <img src="/static/images/logo.png" width="30em" />
+            <span style="font-size: 1em; color: black;"><b>PixelEditor</b></span>
+          </a>
+          <ul class="nav navbar-nav ml-auto">
+              <li class="nav-item" id="star_questions_navigator">
+                  <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('contributor.star_questions')}}">
+                      <i class="fa fa-star" aria-hidden="true"></i>
+                  </a>
+              </li>
+              <li class="nav-item" id="dashboard_navigator">
+                  <a class="nav-link" href="{{url_for('contributor.dashboard')}}">Dashboard</a>
+              </li>
+              <li class="nav-item" id="leaderboard_navigator">
+                  <a class="nav-link" href="{{url_for('contributor.leaderboard')}}">Leaderboard</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="#" onclick="logout_user()">Logout</a>
+              </li>
+          </ul>
+          <form class="form-inline my-2 my-md-0"> </form>
         </div>
-      </div>
-      <div class="row footer-container p-5" id="footer">
-        <div class="col">
-          <nav class="navbar navbar-expand" style="justify-content:center">
-              <ul class="navbar-nav">
-                  <li class="nav-item">
-                      <a class="nav-link" href="#!">
-                          <i class="fab fa-facebook" style="font-size:40px"></i>
-                      </a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="https://twitter.com/PixelMath">
-                          <i class="fab fa-twitter" style="font-size:40px"></i>
-                      </a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="https://www.instagram.com/pixel_math/">
-                          <i class="fab fa-instagram" style="font-size:40px"></i>
-                      </a>
-                  </li>
+      </nav>
+      <div id="wrapper" class="toggled">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+          <ul class="sidebar-nav">
+            {% for grade_dict in grade_breakdown %}
+              <li data-toggle="collapse" data-target="#grade_{{grade_dict.get('grade_number')}}_menu" class="collapsed">
+                <a href="#"><i class="fa fa-book" aria-hidden="true" style="margin-left: -1.5em;padding-right: 1em;"></i> Grade {{grade_dict.get('grade_number')}} <i class="fa fa-caret-down" aria-hidden="true" style="position: absolute; right: 1em; padding-top: 0.75em;"></i></a>
+              </li>
+              <ul class="sub-menu collapse" id="grade_{{grade_dict.get('grade_number')}}_menu" style="margin-left: -2.5em;">
+                {% for chapter_dict in grade_dict.get("chapters") %}
+                  <li style="list-style: none; padding-left: 2em;"><a style="text-indent: initial;" href="{{url_for('contributor.levels')}}?grade={{grade_dict.get('grade_number')}}&chapter={{chapter_dict.get('chapter_number')}}">{{chapter_dict.get("chapter_name")}}</a></li>
+                {% endfor %}
               </ul>
-          </nav>
-          <p id='footer-copyright' class="mt-4">Copyright &copy; 2019 PixelMath | Powered by CreatorsInk</p>
+            {% endfor %}
+          </ul>
+        </div>
+        <div id="page-content-wrapper">
+          <div class="container-fluid">
+            {% block main %}{% endblock %}
+          </div>
+          <div class="container-fluid mt-5 text-center">
+            <div class="row footer-container p-5" id="footer">
+              <div class="col">
+                <nav class="navbar navbar-expand" style="justify-content:center">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fab fa-facebook" style="font-size:40px"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://twitter.com/PixelMath">
+                                <i class="fab fa-twitter" style="font-size:40px"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.instagram.com/pixel_math/">
+                                <i class="fab fa-instagram" style="font-size:40px"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <p id='footer-copyright' class="mt-4">Copyright &copy; 2019 PixelMath | Powered by CreatorsInk</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

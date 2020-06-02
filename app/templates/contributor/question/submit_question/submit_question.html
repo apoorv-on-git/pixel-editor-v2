@@ -3,59 +3,65 @@
 
 {% include("contributor/question/submit_question/submit_question_script.jinja") %}
 {% include("contributor/question/question_style.jinja") %}
-<div>
-  <div class="row mb-5">
-    <div class="col-sm-12 col-md-12 col-lg-12 text-center mt-4">
-      <h4><b>{{level_name}}</b></h4>
+
+<div class="text-center">
+  <div class="row p-2">
+    <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4 text-left">
+      <h3>{{level_name}}</h3>
     </div>
   </div>
-  <div class="row editor-container-main">
-    <div class="col-sm-12 col-md-12 col-lg-6 question-form-container pb-5">
-      <div class="row formula-container pr-3">
-        <div class="col-sm-12 col-md-12 col-lg-12 ml-3" style="flex: wrap;">
+  <div class="row p-2">
+    <div class="col-sm-12 col-md-12 col-lg-5 white-container p-4 text-left" style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;">
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12" style="flex: wrap;">
           {% for name, formula in formula_list.items() %}
             <button class="formula-button-1" data-value="{{formula}}">{{name}}</button>
           {% endfor %}
         </div>
       </div>
-      <div class="row mt-4">
+      <div class="row mt-5">
         <div class="col-sm-12 col-md-12 col-lg-12">
-          <textarea rows="5" class="form-control form-input latex-input" name="question_text" id="question_text" placeholder="Question text">{{preview_question.get("question_text") | safe}}</textarea>
-        </div>
-      </div>
-      <div class="row mt-4">
-        <div class="col-sm-11 col-md-6 col-lg-6 blue-btn btn question-upload">
-          <span>Upload an image for question</span>
-          <input type="file" class="upload-question-image" />
-        </div>
-        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
-          {% if preview_question.get("question_image") != "#" %}
-            <i class="fa fa-trash fa-lg delete-question-image"></i>
-          {% else %}
-            <i class="fa fa-trash fa-lg hidden delete-question-image"></i>
-          {% endif %}
+          <p class="heavy-font">Question Text</p>
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-11 col-md-11 col-lg-11 question-image-name">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <textarea rows="5" class="form-control form-input latex-input" name="question_text" id="question_text">{{preview_question.get("question_text")}}</textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-11 col-md-11 col-lg-11 text-center mt-5">
+          <span class="question-img-upload">Upload an image for question</span>
+          <input type="file" class="upload-question-image" />
+        </div>
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center mt-5">
           {% if preview_question.get("question_image") != "#" %}
-            <p class="guide-text" style="margin-left: 20%;">{{preview_question.get('question_image')}}</p>
+            <i class="fa fa-trash fa-lg delete-question-image" style="position: absolute; left: -1em; bottom: -0.5em;"></i>
+          {% else %}
+            <i class="fa fa-trash fa-lg hidden delete-question-image" style="position: absolute; left: -1em; bottom: -0.5em;"></i>
           {% endif %}
         </div>
       </div>
-      <div class="row mt-4 pr-5">
+      <div class="row mt-3">
+        <div class="col-sm-12 col-md-12 col-lg-12 question-image-name">
+          {% if preview_question.get("question_image") != "#" %}
+            <p class="guide-text" id="question_image_name" style="margin-left: 10%;">{{preview_question.get('question_image')}}</p>
+          {% endif %}
+        </div>
+      </div>
+      <div class="row mt-4">
         <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
           {% if "amazonaws" not in preview_question.get('options').get('option_a') %}
-            <input type="text" class="form-control form-input-option latex-input" name="option_a_text" id="option_a_text" placeholder="Option A" value="{{preview_question.get('options').get('option_a')}}"/>
+            <input type="text" class="form-control form-input-option latex-input" name="option_a_text" id="option_a_text" placeholder="Option A" value="{{preview_question.get('options').get('option_a')}}" />
           {% else %}
             <input type="text" class="form-control form-input-option latex-input" name="option_a_text" id="option_a_text" placeholder="Option A" value="{{preview_question.get('options').get('option_a')}}" readonly/>
           {% endif %}
           <span class="input-group-addon hide">
-            <span>Upload</span>
+            <span class="option-img-upload">Upload</span>
             <input type="file" class="upload-image-a" />
           </span>
         </div>
-        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center">
           {% if "amazonaws" not in preview_question.get('options').get('option_a') %}
             <i class="fa fa-trash fa-lg hidden delete-option-a-image"></i>
           {% else %}
@@ -63,19 +69,19 @@
           {% endif %}
         </div>
       </div>
-      <div class="row mt-4 pr-5">
+      <div class="row mt-4">
         <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
           {% if "amazonaws" not in preview_question.get('options').get('option_b') %}
-            <input type="text" class="form-control form-input-option latex-input" name="option_b_text" id="option_b_text" placeholder="Option B" value="{{preview_question.get('options').get('option_b')}}"/>
+            <input type="text" class="form-control form-input-option latex-input" name="option_b_text" id="option_b_text" placeholder="Option B" value="{{preview_question.get('options').get('option_b')}}" />
           {% else %}
             <input type="text" class="form-control form-input-option latex-input" name="option_b_text" id="option_b_text" placeholder="Option B" value="{{preview_question.get('options').get('option_b')}}" readonly/>
           {% endif %}
           <span class="input-group-addon hide">
-            <span>Upload</span>
+            <span class="option-img-upload">Upload</span>
             <input type="file" class="upload-image-b" />
           </span>
         </div>
-        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center">
           {% if "amazonaws" not in preview_question.get('options').get('option_b') %}
             <i class="fa fa-trash fa-lg hidden delete-option-b-image"></i>
           {% else %}
@@ -83,19 +89,19 @@
           {% endif %}
         </div>
       </div>
-      <div class="row mt-4 pr-5">
+      <div class="row mt-4">
         <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
           {% if "amazonaws" not in preview_question.get('options').get('option_c') %}
-            <input type="text" class="form-control form-input-option latex-input" name="option_c_text" id="option_c_text" placeholder="Option C" value="{{preview_question.get('options').get('option_c')}}"/>
+            <input type="text" class="form-control form-input-option latex-input" name="option_c_text" id="option_c_text" placeholder="Option C" value="{{preview_question.get('options').get('option_c')}}" />
           {% else %}
             <input type="text" class="form-control form-input-option latex-input" name="option_c_text" id="option_c_text" placeholder="Option C" value="{{preview_question.get('options').get('option_c')}}" readonly/>
           {% endif %}
           <span class="input-group-addon hide">
-            <span>Upload</span>
+            <span class="option-img-upload">Upload</span>
             <input type="file" class="upload-image-c" />
           </span>
         </div>
-        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center">
           {% if "amazonaws" not in preview_question.get('options').get('option_c') %}
             <i class="fa fa-trash fa-lg hidden delete-option-c-image"></i>
           {% else %}
@@ -103,19 +109,19 @@
           {% endif %}
         </div>
       </div>
-      <div class="row mt-4 pr-5">
+      <div class="row mt-4">
         <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
           {% if "amazonaws" not in preview_question.get('options').get('option_d') %}
-            <input type="text" class="form-control form-input-option latex-input" name="option_d_text" id="option_d_text" placeholder="Option D" value="{{preview_question.get('options').get('option_d')}}"/>
+            <input type="text" class="form-control form-input-option latex-input" name="option_d_text" id="option_d_text" placeholder="Option D" value="{{preview_question.get('options').get('option_d')}}" />
           {% else %}
             <input type="text" class="form-control form-input-option latex-input" name="option_d_text" id="option_d_text" placeholder="Option D" value="{{preview_question.get('options').get('option_d')}}" readonly/>
           {% endif %}
           <span class="input-group-addon hide">
-            <span>Upload</span>
+            <span class="option-img-upload">Upload</span>
             <input type="file" class="upload-image-d" />
           </span>
         </div>
-        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon">
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center">
           {% if "amazonaws" not in preview_question.get('options').get('option_d') %}
             <i class="fa fa-trash fa-lg hidden delete-option-d-image"></i>
           {% else %}
@@ -129,30 +135,30 @@
         </div>
       </div>
       <div class="row mb-5 mt-4">
-        <div class="col-sm-12 col-md-12 col-lg-12">
+        <div class="col-sm-11 col-md-11 col-lg-11 input-group">
           <select class="form-control form-input" name="correct_option" id="correct_option">
             <option value="">Correct answer</option>
             {% for option in ['a', 'b', 'c', 'd'] %}
-            {% if preview_question.get("correct_option") == "option_{}".format(option) %}
-            <option value="{{option}}" selected>Option {{option | upper}}</option>
+            {% if preview_question.get("correct_option")[-1] == option %}
+              <option value="{{option}}" selected>Option {{option | upper}}</option>
             {% else %}
-            <option value="{{option}}">Option {{option | upper}}</option>
+              <option value="{{option}}">Option {{option | upper}}</option>
             {% endif %}
             {% endfor %}
           </select>
         </div>
       </div>
     </div>
-    <div class="col-sm-12 col-md-12 col-lg-6 pdf-container p-5">
+    <div class="col-sm-12 col-md-12 col-lg-7 white-container p-4 text-left" style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;">
       <embed src="{{pdf_url}}" width="100%" height="100%" />
     </div>
   </div>
-  <div class="row mt-5 pb-5" id="before_preview_container">
-    <div class="col-sm-12 col-md-6 col-lg-6 text-right" style="height: 100;">
-      <button class="fancy-button" id="preview_question">Preview question</button>
+  <div class="row p-2 mt-5">
+    <div class="col-sm-6 col-md-6 col-lg-6 text-right">
+      <button class='action-button-style' id="preview_question">Preview question</button>
     </div>
-    <div class="col-sm-12 col-md-6 col-lg-6 text-left" style="height: 100;">
-      <button class="fancy-button" id="submit_question">Submit question</button>
+    <div class="col-sm-6 col-md-6 col-lg-6 text-left">
+      <button class='action-button-style' id="submit_question">Submit question</button>
     </div>
   </div>
 </div>

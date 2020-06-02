@@ -4,40 +4,45 @@
 {% include("contributor/level/level_script.jinja") %}
 {% include("contributor/level/level_style.jinja") %}
 
-<div class="container mb-5">
-  <div class="row">
-    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-      <h3>Select a level for which you want to submit questions</h3>
+<div class="text-center">
+  <div class="row p-2">
+    <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4 text-left">
+      <h3>{{chapter_name}}</h3>
+      <h4 class="mt-4">Select a level for which you want to submit questions</h4>
     </div>
   </div>
-  <div class="row mt-5">
+  <div class="row p-2">
     {% for level in levels %}
-      {% set percentage = (0 / 50) * 100 %}
-      {% set color = "#7cd049" %}
-      {% if percentage > 100 %}
-        {% set percentage = 100 %}
-        {% set color = "ed3833" %}
-      {% endif %}
-      <!-- Get total questions contributed by community, out of total goal of 50 questions per level -->
-      <!-- A way to check if the user has entered all 5 questions for a particular level or not -->
-      <!-- If entered 5 questions, need to make the color gray and disable button click-->
-      <div class="col-sm-12 col-md-6 col-lg-6 level-card text-center" onclick="create_question({{loop.index}})" style="background-color: {{level.get('level_color')}}">
+      <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4 mt-3" onclick="create_question({{loop.index}})">
         <div class="row">
-          <div class="col-sm-12 col-md-12 col-lg-12">
-            <div class="text-center mb-3"><h3>Level {{level.get("level_number")}}</h3></div>
-            <h5>{{level.get("level_name")}}</h5>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6 col-lg-6">
-        <div class="row mt-5">
-          <div class="progress-bg">
-          	<div class="progress-bar" style="width: {{percentage}}%; background-color: {{color}};">
-            <h3 class="raised">0 Contributed</h3>
+          <div class="col-sm-12 col-md-6 col-lg-6 text-left">
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-12">
+                <h4 class="heavy-font">Level {{level.get("level_number")}}</h4>
+                <hr class="hr-stats" style="border: 3px solid {{level.get('level_color')}};"/>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12 mt-4">
+                <p>{{level.get("level_name")}}</p>
+              </div>
             </div>
           </div>
-          <div class="mt-2">
-            <p class="goal" style="font-size: 1em;"><b>Goal: 50</b></p>
+          <div class="col-sm-12 col-md-6 col-lg-6 text-right">
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-12">
+                <h5 class="heavy-font">Goal</h5>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12">
+                <h3 class="heavy-font" style="color: #5dca88;">50</h3>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12 mt-3">
+                <div class="progress-bg">
+                	<div class="progress-bar" style="width: 75%; background-color: #a39ef5;"></div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12 mt-1">
+                <p class="contribution-text heavy-font">0 Contributed</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

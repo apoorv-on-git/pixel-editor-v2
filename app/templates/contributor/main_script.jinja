@@ -1,0 +1,98 @@
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    messageStyle: 'none',
+    extensions: ['text2jax.js'],
+    jax: ['input/TeX', 'output/HTML-CSS'],
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscape: true,
+      ignoreClass: "note-editable"
+    },
+    TeX: {
+      extensions: ['AMSmath.js', 'AMSsymbols.js', 'noErrors.js', 'noUndefined.js']
+    }
+  });
+  MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+</script>
+<script>
+  $(document).ready(function(){
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+    function detectMob() {
+      const toMatch = [
+        /Android/i,
+        /webOS/i,
+        /iPhone/i,
+        /iPad/i,
+        /iPod/i,
+        /BlackBerry/i,
+        /Windows Phone/i
+      ];
+      return toMatch.some((toMatchItem) => {
+        return navigator.userAgent.match(toMatchItem);
+      });
+    }
+    let is_mobile = detectMob();
+    if (is_mobile) {
+      $('body').empty();
+      let html = `
+                    <style>
+                      body {
+                        background-color: #eaf8fe;
+                      }
+                      * {
+                        font-family: 'Comfortaa', Helvetica, Arial;
+                      }
+                    </style>
+                    <div class="col-sm-12 col-md-12 col-lg-12 mt-5 text-center">
+                      <span style="font-size: 3em; color: #656b6a;">PixelEditor</span>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center mt-5">
+                      <img src="/static/images/not_supported.gif" style="width: 50%; height: auto;">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 mt-5">
+                      <h3 style="color: #656b6a;">This website does not support mobile! Please use a desktop.</h3>
+                    </div>
+                `
+      $("body").append(html)
+    }
+    $(".sidebar-nav li").click(function(){
+      $(".sidebar-nav li").removeClass('active')
+      $(this).addClass("active");
+    })
+    $("#menu-toggle").click(function(){
+      if ($("#wrapper").hasClass("toggled")) {
+        $("#page-content-wrapper").css("width", (window.innerWidth-250).toString()+"px")
+      } else {
+        $("#page-content-wrapper").css("width", (window.innerWidth).toString()+"px")
+      }
+    })
+    $("#menu-toggle").click()
+    $("#menu-toggle").click()
+  })
+  function logout_user() {
+    $.ajax({
+      url: "{{url_for('contributor_api.logout')}}",
+      type: 'post',
+      beforeSend: function(){
+        $('.main-container').addClass('blur');
+        $(':button').prop('disabled', true);
+        $("#loader").show();
+      },
+      success: function (result) {
+        window.location.href = "{{url_for('contributor.login')}}";
+      },
+      error: function (result) {
+        alert(result.responseJSON.message);
+      },
+      complete:function(data){
+        $('.main-container').removeClass('blur');
+        $(':button').prop('disabled', false);
+        $("#loader").hide();
+      }
+    });
+  }
+</script>

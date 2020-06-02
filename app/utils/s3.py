@@ -1,5 +1,6 @@
 import boto3
 import os
+import uuid
 
 def upload_to_s3(file_name, file):
     s3 = boto3.resource('s3')
@@ -8,3 +9,15 @@ def upload_to_s3(file_name, file):
 def delete_from_s3(file_name):
     s3 = boto3.resource('s3')
     s3.Object(os.environ.get('S3_BUCKET_NAME'), file_name).delete()
+
+def rename_image(file_name):
+    s3 = boto3.resource('s3')
+    unique_id = str(uuid.uuid4())
+    new_file_name = f"images/{unique_id}.{file_name.split('.')[-1].split('?')[0]}"
+    copy_source = {
+                        'Bucket': os.environ.get('S3_BUCKET_NAME'),
+                        'Key': f"{file_name.split('amazonaws.com/')[-1].split('?')[0]}"
+                }
+    s3.meta.client.copy(copy_source, os.environ.get('S3_BUCKET_NAME'), new_file_name)
+    s3.Object(os.environ.get('S3_BUCKET_NAME'), f"{file_name.split('amazonaws.com/')[-1].split('?')[0]}").delete()
+    return new_file_name
