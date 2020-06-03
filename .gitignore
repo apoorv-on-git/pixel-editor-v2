@@ -11,3 +11,6 @@ key.py
 __pycache__
 
 *.env
+
+scripts
+scripts/
