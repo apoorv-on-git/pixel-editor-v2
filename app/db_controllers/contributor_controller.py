@@ -62,6 +62,7 @@ def check_preview_question(contributor_id):
 def firebase_save_preview_question(contributor_id):
     try:
         data = json.loads(request.form.get('json'))
+        check_data(data)
         grade, chapter, level = int(data.get("grade")), int(data.get("chapter")), int(data.get("level"))
         question_image, option_a, option_b, option_c, option_d = handle_submitted_images(data, contributor_id)
         preview_question = dict(
@@ -83,9 +84,17 @@ def firebase_save_preview_question(contributor_id):
     except Exception as e:
         raise e
 
+def firebase_delete_preview_question(contributor_id):
+    try:
+        document_ref = firebase_db.collection("users")
+        document_ref.document(contributor_id).update({"preview_question": firestore.DELETE_FIELD})
+    except Exception as e:
+        raise e
+
 def firebase_submit_question(contributor_id):
     try:
         data = json.loads(request.form.get('json'))
+        check_data(data)
         grade, chapter, level = int(data.get("grade")), int(data.get("chapter")), int(data.get("level"))
         question_image, option_a, option_b, option_c, option_d = handle_submitted_images(data, contributor_id)
         question_image, option_a, option_b, option_c, option_d = get_files_renamed(question_image, option_a, option_b, option_c, option_d)

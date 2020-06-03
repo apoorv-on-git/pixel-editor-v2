@@ -16,6 +16,18 @@ def get_grade_breakdown_dict(grade, chapter, level):
         raise ValueError("Invalid Level!")
     return grade_dict, chapter_dict, level_dict
 
+def check_data(data):
+    if data.get("correct_option") == "option_" or not all((data.get("question"), data.get("option_a"), data.get("option_b"))):
+        raise ValueError("At least 2 options, question and the correct answer is mandatory!")
+    option_c = data.get('option_c')
+    if not data.get("option_c"):
+        option_c = "#"
+    option_d = data.get('option_d')
+    if not data.get("option_d"):
+        option_d = "#"
+    if (option_c == "#" and option_d == "#") and (data.get("correct_option") == "option_c" or data.get("correct_option") == "option_d"):
+        raise ValueError("Correct Option cannot be left empty!")
+
 def handle_submitted_images(data, contributor_id):
     if data.get("question_image") != "#" and 'amazonaws' not in data.get("question_image"):
         question_image = handle_image_upload('question_image', contributor_id)
@@ -25,8 +37,8 @@ def handle_submitted_images(data, contributor_id):
         question_image = "#"
     option_a = handle_image_upload('option_a', contributor_id) or data.get('option_a')
     option_b = handle_image_upload('option_b', contributor_id) or data.get('option_b')
-    option_c = handle_image_upload('option_c', contributor_id) or data.get('option_c')
-    option_d = handle_image_upload('option_d', contributor_id) or data.get('option_d')
+    option_c = handle_image_upload('option_c', contributor_id) or data.get('option_c') or "#"
+    option_d = handle_image_upload('option_d', contributor_id) or data.get('option_d') or "#"
     return question_image, option_a, option_b, option_c, option_d
 
 def get_files_renamed(question_image, option_a, option_b, option_c, option_d):

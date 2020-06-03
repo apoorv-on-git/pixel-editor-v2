@@ -1,5 +1,72 @@
 <script>
+  var data;
+  $(document).on("click", ".preview-modal-button", function(){
+    window.location.href = `{{url_for('contributor.create_question')}}?grade=${data.grade}&chapter=${data.chapter}&level=${data.level}`;
+  })
+  $(document).on("click", ".overwrite-modal-button", function(){
+    Swal.close()
+    var level = $(this).attr("data-level")
+    $.ajax({
+      url: "{{url_for('contributor_api.delete_preview_question')}}",
+      type: "delete",
+      beforeSend: function(){
+        $('.main-container').addClass('blur');
+        $(':button').prop('disabled', true);
+        $("#loader").show();
+      },
+      success: function (result) {
+        window.location.href = `{{url_for('contributor.create_question')}}?grade={{grade}}&chapter={{chapter}}&level=${level}`
+      },
+      error: function (result) {
+        $("#loader").hide();
+        Swal.fire(
+         'Uh Oh!',
+         result.responseJSON.message,
+         'error'
+        )
+      },
+      complete:function(data){
+        $('.main-container').removeClass('blur');
+        $(':button').prop('disabled', false);
+        $("#loader").hide();
+      }
+    })
+  })
   function create_question(level) {
-    window.location.href = `{{url_for('contributor.create_question')}}?grade={{grade}}&chapter={{chapter}}&level=${level}`
+    $.ajax({
+      url: "{{url_for('contributor_api.get_preview_question')}}",
+      type: "get",
+      beforeSend: function(){
+        $('.main-container').addClass('blur');
+        $(':button').prop('disabled', true);
+        $("#loader").show();
+      },
+      success: function (result) {
+        data = result.data;
+        if (result.data) {
+          Swal.fire({
+            title: 'You already have a question for preview. What do you want to do?',
+            html: `<button class="action-button-modal preview-modal-button">Preview</button><button class="action-button-modal overwrite-modal-button" data-level="${level}">Overwrite</button>`,
+            type: 'question',
+            showConfirmButton: false
+          })
+        } else {
+          window.location.href = `{{url_for('contributor.create_question')}}?grade={{grade}}&chapter={{chapter}}&level=${level}`
+        }
+      },
+      error: function (result) {
+        $("#loader").hide();
+        Swal.fire(
+         'Uh Oh!',
+         result.responseJSON.message,
+         'error'
+        )
+      },
+      complete:function(data){
+        $('.main-container').removeClass('blur');
+        $(':button').prop('disabled', false);
+        $("#loader").hide();
+      }
+    })
   }
 </script>

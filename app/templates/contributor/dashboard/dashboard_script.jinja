@@ -50,7 +50,11 @@
             ;
           },
           error: function (result) {
-            alert(result.responseJSON.message);
+            Swal.fire(
+             'Houston! We got a problem',
+             result.responseJSON.message,
+             'error'
+            )
           },
           complete:function(data){
             $('.main-container').removeClass('blur');

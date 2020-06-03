@@ -120,3 +120,32 @@ def delete_preview_image():
             "message": str(e),
             "status": "error"
         }), 400
+
+@contributor_api.route("/get-preview-question")
+@required_role_as_contributor()
+def get_preview_question():
+    try:
+        preview_question = check_preview_question(session.get('contributor_id'))
+        return jsonify({
+            "data": preview_question,
+            "status": "success"
+        }), 200
+    except Exception as e:
+        return jsonify({
+            "message": str(e),
+            "status": "error"
+        }), 400
+
+@contributor_api.route("/delete-preview-question", methods=["DELETE"])
+@required_role_as_contributor()
+def delete_preview_question():
+    try:
+        firebase_delete_preview_question(session.get('contributor_id'))
+        return jsonify({
+            "status": "success",
+        }), 204
+    except Exception as e:
+        return jsonify({
+            "message": str(e),
+            "status": "error"
+        }), 400

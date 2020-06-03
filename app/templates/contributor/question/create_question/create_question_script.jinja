@@ -171,6 +171,7 @@
       update_json()
     })
     $("#preview_question").click(function(){
+      update_json();
       json.grade = "{{grade}}";
       json.chapter = "{{chapter}}";
       json.level = "{{level}}";
@@ -196,7 +197,11 @@
           window.location.reload();
         },
         error: function (result) {
-          alert(result.responseJSON.message)
+          Swal.fire(
+           'Houston! We got a problem',
+           result.responseJSON.message,
+           'error'
+          )
         },
         complete:function(data){
           $('.main-container').removeClass('blur');
