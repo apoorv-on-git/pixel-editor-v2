@@ -1,8 +1,9 @@
 import requests
 import json
+import os
 
 def login_firebase_user(email, password):
-    url = "https://us-central1-pixel-editor-test.cloudfunctions.net/login"
+    url = os.environ.get("CONTRIBUTOR_LOGIN_URL")
     post_json = {
                 "email": email,
                 "password": password
