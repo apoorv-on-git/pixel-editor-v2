@@ -4,10 +4,18 @@
 {% include("contributor/question/create_question/create_question_script.jinja") %}
 {% include("contributor/question/question_style.jinja") %}
 
+{% set question_percentage = (total_contributions_by_contributor * 100) / 5.0 %}
+
 <div class="text-center">
   <div class="row p-2">
     <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4 text-left">
       <h3>{{level_name}}</h3>
+      <div class="progress-bg mt-3">
+        <div class="progress-bar" style="width: {{question_percentage}}%; background-color: #a39ef5;"></div>
+      </div>
+      <div>
+        <h5 class="mt-5 heavy-font">{{total_contributions_by_contributor}} out of 5 questions contributed for this level</h5>
+      </div>
     </div>
   </div>
   <div class="row p-2">

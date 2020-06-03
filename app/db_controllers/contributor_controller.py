@@ -8,18 +8,18 @@ from google.cloud.firestore_v1 import Increment
 
 firebase_db = firestore.client()
 
-def get_user_document_data(document_id):
+def get_user_document_data(contributor_id):
     document_ref = firebase_db.collection('users')
-    user_data = document_ref.document(document_id).get()
+    user_data = document_ref.document(contributor_id).get()
     return user_data.to_dict()
 
-def firebase_update_profile_image(document_id, profile_image_url):
+def firebase_update_profile_image(contributor_id, profile_image_url):
     document_ref = firebase_db.collection('users')
-    update_user = document_ref.document(document_id).update({"profile_image": profile_image_url})
+    update_user = document_ref.document(contributor_id).update({"profile_image": profile_image_url})
 
-def get_leaderboard_data(document_id):
+def get_leaderboard_data(contributor_id):
     document_ref = firebase_db.collection('users')
-    user_data = document_ref.document(document_id).get()
+    user_data = document_ref.document(contributor_id).get()
     leaderboard_data_1 = [
                             {
                                 "position": 1,
@@ -43,17 +43,27 @@ def get_star_questions():
     star_questions_data = document_ref.order_by("marked_at", direction=firestore.Query.DESCENDING).limit(10).get()
     return [star_question_data.to_dict() for star_question_data in star_questions_data]
 
-def check_preview_question(document_id):
+def firebase_get_level_count(topic_id):
+    document_ref = firebase_db.collection("total_questions")
+    topic_data = document_ref.document(topic_id).get()
+    return topic_data.to_dict() or {}
+
+def firebase_get_contribution_for_level_by_contributor(contributor_id, level_id):
+    document_ref = firebase_db.collection("users")
+    question_count = document_ref.document(contributor_id).collection("levels").document(level_id).get()
+    return question_count.to_dict() or {}
+
+def check_preview_question(contributor_id):
     document_ref = firebase_db.collection('users')
-    user_data = document_ref.document(document_id).get()
+    user_data = document_ref.document(contributor_id).get()
     user_data = user_data.to_dict()
     return user_data.get("preview_question")
 
-def firebase_save_preview_question(document_id):
+def firebase_save_preview_question(contributor_id):
     try:
         data = json.loads(request.form.get('json'))
         grade, chapter, level = int(data.get("grade")), int(data.get("chapter")), int(data.get("level"))
-        question_image, option_a, option_b, option_c, option_d = handle_submitted_images(data, document_id)
+        question_image, option_a, option_b, option_c, option_d = handle_submitted_images(data, contributor_id)
         preview_question = dict(
                                     grade=grade,
                                     chapter=chapter,
@@ -69,19 +79,19 @@ def firebase_save_preview_question(document_id):
                                     correct_option=data.get("correct_option")
                             )
         document_ref = firebase_db.collection('users')
-        save_preview_question = document_ref.document(document_id).update({"preview_question": preview_question})
+        save_preview_question = document_ref.document(contributor_id).update({"preview_question": preview_question})
     except Exception as e:
         raise e
 
-def firebase_submit_question(document_id):
+def firebase_submit_question(contributor_id):
     try:
         data = json.loads(request.form.get('json'))
         grade, chapter, level = int(data.get("grade")), int(data.get("chapter")), int(data.get("level"))
-        question_image, option_a, option_b, option_c, option_d = handle_submitted_images(data, document_id)
+        question_image, option_a, option_b, option_c, option_d = handle_submitted_images(data, contributor_id)
         question_image, option_a, option_b, option_c, option_d = get_files_renamed(question_image, option_a, option_b, option_c, option_d)
         question = dict(
                             board_type = "NCERT",
-                            contributor_id = document_id,
+                            contributor_id = contributor_id,
                             state = "under_review",
                             date_created = datetime.datetime.utcnow(),
                             date_approved = "",
@@ -101,8 +111,10 @@ def firebase_submit_question(document_id):
                     )
         level_collection_id = f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}"
         document_ref = firebase_db.collection("users")
-        document_ref.document(document_id).update({"preview_question": firestore.DELETE_FIELD})
-        document_ref.document(document_id).collection("levels").document(level_collection_id).collection("question_bank").document().create(question)
-        document_ref.document(document_id).update({"total_questions": Increment(1)})
+        document_ref.document(contributor_id).update({"preview_question": firestore.DELETE_FIELD})
+        document_ref.document(contributor_id).collection("levels").document(level_collection_id).collection("question_bank").document().create(question)
+        document_ref.document(contributor_id).update({"total_questions": Increment(1)})
+        document_ref.document(contributor_id).collection("levels").document(level_collection_id).set({"count": Increment(1)}, merge=True)
+        firebase_db.collection("total_questions").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").set({level_collection_id: Increment(1)}, merge=True)
     except Exception as e:
         raise e

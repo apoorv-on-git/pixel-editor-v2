@@ -9,14 +9,14 @@ contributor = Blueprint('contributor', __name__, url_prefix="/")
 
 @contributor.route('/')
 def login():
-    if session.get("document_id"):
+    if session.get("contributor_id"):
         return redirect(url_for("contributor.dashboard"))
     return render_template("/contributor/login/login.html")
 
 @contributor.route("/dashboard")
 @required_role_as_contributor()
 def dashboard():
-    user_data = get_user_document_data(session.get('document_id'))
+    user_data = get_user_document_data(session.get('contributor_id'))
     return render_template( "/contributor/dashboard/dashboard.html",
                             grade_breakdown=grade_breakdown,
                             user_data=user_data
@@ -25,7 +25,7 @@ def dashboard():
 @contributor.route("/leaderboard")
 @required_role_as_contributor()
 def leaderboard():
-    leaderboard_data_1, leaderboard_data_2 = get_leaderboard_data(session.get('document_id'))
+    leaderboard_data_1, leaderboard_data_2 = get_leaderboard_data(session.get('contributor_id'))
     return render_template( "/contributor/leaderboard/leaderboard.html",
                             leaderboard_data_1=leaderboard_data_1,
                             leaderboard_data_2=leaderboard_data_2,
@@ -59,8 +59,15 @@ def levels():
                 "status": "error",
                 "message": "Invalid Chapter!"
             }), 400
+        levels = chapter_dict.get("levels")
+        level_question_count = firebase_get_level_count(f"NCERT_G{int(grade):02}_TOPIC{int(chapter):02}")
+        for level in levels:
+            level_id = f"NCERT_G{int(grade):02}_TOPIC{int(chapter):02}_LEVEL{int(level.get('level_number')):02}"
+            total_contributions_by_contributor = firebase_get_contribution_for_level_by_contributor(session.get('contributor_id'), level_id)
+            level["total_count"] = level_question_count.get(level_id) or 0
+            level["total_contributions_by_contributor"] = total_contributions_by_contributor.get("count") or 0
         return render_template( "/contributor/level/level.html",
-                                levels=chapter_dict.get("levels"),
+                                levels=levels,
                                 chapter_name=chapter_dict.get("chapter_name"),
                                 grade=grade,
                                 chapter=chapter,
@@ -76,12 +83,16 @@ def levels():
 @required_role_as_contributor()
 def create_question():
     try:
-        preview_question = check_preview_question(session.get('document_id'))
+        preview_question = check_preview_question(session.get('contributor_id'))
         if not preview_question:
             grade = request.args.get("grade")
             chapter = request.args.get("chapter")
             level = request.args.get("level")
             grade_dict, chapter_dict, level_dict = get_grade_breakdown_dict(grade, chapter, level)
+            level_id = f"NCERT_G{int(grade):02}_TOPIC{int(chapter):02}_LEVEL{int(level):02}"
+            total_contributions_by_contributor = firebase_get_contribution_for_level_by_contributor(session.get('contributor_id'), level_id).get("count") or 0
+            if total_contributions_by_contributor >= 5:
+                return redirect(url_for("contributor.levels", grade=grade, chapter=chapter))
             return render_template( "/contributor/question/create_question/create_question.html",
                                     grade=grade,
                                     chapter=chapter,
@@ -91,7 +102,8 @@ def create_question():
                                     pdf_url=chapter_dict.get("chapter_pdf"),
                                     grade_breakdown=grade_breakdown,
                                     preview_question={},
-                                    is_preview=False
+                                    is_preview=False,
+                                    total_contributions_by_contributor=total_contributions_by_contributor
                                 )
         else:
             grade=preview_question.get("grade")

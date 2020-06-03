@@ -19,7 +19,7 @@ def login():
         }), 400
     response = login_firebase_user(email, password)
     if response.get("success") and response.get("type").lower() == "contributor":
-        session["document_id"] = response.get("document_id")
+        session["contributor_id"] = response.get("document_id")
         session["email"] = response.get("email")
         session["user_type"] = response.get("type")
         return jsonify({
@@ -39,7 +39,7 @@ def login():
 @contributor_api.route("/logout", methods=["POST"])
 @required_role_as_contributor()
 def logout():
-    session["document_id"] = None
+    session["contributor_id"] = None
     session["email"] = None
     session["user_type"] = None
     return jsonify(
@@ -54,10 +54,10 @@ def update_profile_image():
     try:
         profile_image = request.files.get('profile_image')
         if profile_image:
-            url_endpoint = f"profile_images/{session.get('document_id')}.{profile_image.filename.split('.')[-1]}"
+            url_endpoint = f"profile_images/{session.get('contributor_id')}.{profile_image.filename.split('.')[-1]}"
             delete_from_s3(url_endpoint)
             upload_to_s3(url_endpoint, profile_image)
-            firebase_update_profile_image(session.get('document_id'), f"{os.environ.get('S3_URL')}{url_endpoint}")
+            firebase_update_profile_image(session.get('contributor_id'), f"{os.environ.get('S3_URL')}{url_endpoint}")
         return jsonify(
             {
                 "status": "success",
@@ -73,7 +73,7 @@ def update_profile_image():
 @required_role_as_contributor()
 def submit_question():
     try:
-        firebase_submit_question(session.get('document_id'))
+        firebase_submit_question(session.get('contributor_id'))
         return jsonify({
             "message": "Saved successfully!",
             "status": "success"
@@ -88,7 +88,7 @@ def submit_question():
 @required_role_as_contributor()
 def save_preview_question():
     try:
-        firebase_save_preview_question(session.get('document_id'))
+        firebase_save_preview_question(session.get('contributor_id'))
         return jsonify({
             "message": "Saved successfully!",
             "status": "success"
@@ -104,7 +104,7 @@ def save_preview_question():
 def delete_preview_image():
     try:
         delete_url = request.json.get("delete_url")
-        if session.get("document_id") not in delete_url:
+        if session.get("contributor_id") not in delete_url:
             return jsonify({
                 "message": "This is not an image",
                 "status": "error"
