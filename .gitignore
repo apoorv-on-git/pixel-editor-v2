@@ -9,3 +9,5 @@ venv/
 key.py
 
 __pycache__
+
+*.env
