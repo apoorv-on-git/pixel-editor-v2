@@ -39,6 +39,11 @@
             <span style="font-size: 1em; color: black;"><b>PixelEditor</b></span>
           </a>
           <ul class="nav navbar-nav ml-auto">
+              <li class="nav-item" id="notification_navigator">
+                  <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('contributor.notifications')}}">
+                      <i class="fa fa-bell" aria-hidden="true"></i>
+                  </a>
+              </li>
               <li class="nav-item" id="star_questions_navigator">
                   <a class="nav-link" style="font-size: 1.5em;" href="{{url_for('contributor.star_questions')}}">
                       <i class="fa fa-star" aria-hidden="true"></i>

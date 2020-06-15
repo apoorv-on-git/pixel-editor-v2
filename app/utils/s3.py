@@ -20,4 +20,4 @@ def rename_image(file_name):
                 }
     s3.meta.client.copy(copy_source, os.environ.get('S3_BUCKET_NAME'), new_file_name)
     s3.Object(os.environ.get('S3_BUCKET_NAME'), f"{file_name.split('amazonaws.com/')[-1].split('?')[0]}").delete()
-    return new_file_name
+    return f"{os.environ.get('S3_URL')}{new_file_name}"

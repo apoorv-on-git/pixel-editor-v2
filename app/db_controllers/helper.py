@@ -3,6 +3,18 @@ from app.utils.s3 import *
 from flask import request
 import os
 from random import randint
+import bs4
+
+def remove_style(html):
+    soup = bs4.BeautifulSoup(html, features="html.parser")
+    for match in soup.findAll('span'):
+        match.unwrap()
+    for tag in soup():
+        for attribute in ["class", "id", "name", "style"]:
+            del tag[attribute]
+    question_text = str(soup)
+    question_text = question_text.replace(u'\xa0', u' ')
+    return question_text
 
 def get_grade_breakdown_dict(grade, chapter, level):
     grade_dict = next((grade_dict for grade_dict in grade_breakdown if grade_dict.get('grade_number') == int(grade)), None)

@@ -25,10 +25,20 @@ def dashboard():
 @contributor.route("/leaderboard")
 @required_role_as_contributor()
 def leaderboard():
-    leaderboard_data_1, leaderboard_data_2 = get_leaderboard_data(session.get('contributor_id'))
+    top_contributors_total_question = get_top_contributors_for_total_question()
+    top_contributors_approval_rate = get_top_contributors_for_approval_rate()
     return render_template( "/contributor/leaderboard/leaderboard.html",
-                            leaderboard_data_1=leaderboard_data_1,
-                            leaderboard_data_2=leaderboard_data_2,
+                            top_contributors_total_question=top_contributors_total_question,
+                            top_contributors_approval_rate=top_contributors_approval_rate,
+                            grade_breakdown=grade_breakdown
+                        )
+
+@contributor.route("/notifications")
+@required_role_as_contributor()
+def notifications():
+    notifications = get_notifications(session.get("contributor_id"))
+    return render_template( "/contributor/notifications/notifications.html",
+                            notifications=notifications,
                             grade_breakdown=grade_breakdown
                         )
 
@@ -45,6 +55,7 @@ def star_questions():
 @required_role_as_contributor()
 def levels():
     try:
+        user_data = get_user_document_data(session.get('contributor_id'))
         grade = request.args.get("grade")
         grade_dict = next((grade_dict for grade_dict in grade_breakdown if grade_dict.get('grade_number') == int(grade)), None)
         if not grade_dict:
@@ -61,11 +72,12 @@ def levels():
             }), 400
         levels = chapter_dict.get("levels")
         level_question_count = firebase_get_level_count(f"NCERT_G{int(grade):02}_TOPIC{int(chapter):02}")
+        individual_log = user_data.get("individual_log")
         for level in levels:
             level_id = f"NCERT_G{int(grade):02}_TOPIC{int(chapter):02}_LEVEL{int(level.get('level_number')):02}"
-            total_contributions_by_contributor = firebase_get_contribution_for_level_by_contributor(session.get('contributor_id'), level_id)
+            total_contributions_by_contributor = individual_log.get(level_id)
             level["total_count"] = level_question_count.get(level_id) or 0
-            level["total_contributions_by_contributor"] = total_contributions_by_contributor.get("count") or 0
+            level["total_contributions_by_contributor"] = total_contributions_by_contributor
         return render_template( "/contributor/level/level.html",
                                 levels=levels,
                                 chapter_name=chapter_dict.get("chapter_name"),
@@ -83,14 +95,16 @@ def levels():
 @required_role_as_contributor()
 def create_question():
     try:
-        preview_question = check_preview_question(session.get('contributor_id'))
+        user_data = get_user_document_data(session.get('contributor_id'))
+        preview_question = user_data.get("preview_question")
         if not preview_question:
             grade = request.args.get("grade")
             chapter = request.args.get("chapter")
             level = request.args.get("level")
             grade_dict, chapter_dict, level_dict = get_grade_breakdown_dict(grade, chapter, level)
             level_id = f"NCERT_G{int(grade):02}_TOPIC{int(chapter):02}_LEVEL{int(level):02}"
-            total_contributions_by_contributor = firebase_get_contribution_for_level_by_contributor(session.get('contributor_id'), level_id).get("count") or 0
+            individual_log = user_data.get("individual_log")
+            total_contributions_by_contributor = individual_log.get(level_id)
             if total_contributions_by_contributor >= 5:
                 return redirect(url_for("contributor.levels", grade=grade, chapter=chapter))
             return render_template( "/contributor/question/create_question/create_question.html",

@@ -4,140 +4,190 @@
 {% include("contributor/leaderboard/leaderboard_script.jinja") %}
 {% include("contributor/leaderboard/leaderboard_style.jinja") %}
 
-<div class="container mb-5">
-  <div class="row">
-    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+<div class="text-center" id="leaderboard">
+  <div class="row p-2">
+    <div class="col-sm-12 col-md-12 col-lg-12 text-center white-container-special">
       <h1 class="ribbon"><strong class="ribbon-content">PixelBoard</strong></h1>
     </div>
   </div>
-  <div class="row mb-5">
-    <div class="col-sm-12 col-md-12 col-lg-12">
-      <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#questions">Questions</a></li>
-        <li><a data-toggle="tab" href="#approval_rate">Approval Rate</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="tab-content">
-    <div id="questions" class="tab-pane fade in active">
-      {% if leaderboard_data_1 | length != 0 %}
-        {% for contributor in leaderboard_data_1 %}
-          <div class="row mt-5 mb-5 {{contributor['class_name']}}">
-            {% if contributor["position"] == 1 %}
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <div class="first_position_icon"><h1><i class="fas fa-crown"></i></h1></div>
-            </div>
-            <div class="col-sm-12 col-md-8 col-lg-8 text-center">
-              <h1>{{contributor["name"]}}</h1>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <h1>{{contributor["questions"]}}</h1>
-            </div>
-            {% elif contributor["position"] == 2 %}
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <div class="second_position_icon"><h2><i class="fas fa-crown"></i></h2></div>
-            </div>
-            <div class="col-sm-12 col-md-8 col-lg-8 text-center">
-              <h2>{{contributor["name"]}}</h2>
-              <p>{{contributor["contributor_type"]}}</p>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <h2>{{contributor["questions"]}}</h2>
-            </div>
-            {% elif contributor["position"] == 3 %}
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <div class="third_position_icon"><h3><i class="fas fa-crown"></i></h3></div>
-            </div>
-            <div class="col-sm-12 col-md-8 col-lg-8 text-center">
-              <h3>{{contributor["name"]}}</h3>
-              <p>{{contributor["contributor_type"]}}</p>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <h3>{{contributor["questions"]}}</h3>
-            </div>
-            {% else %}
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <div class="position_icon"><h4>{{contributor["position"]}}</h4></div>
-            </div>
-            <div class="col-sm-12 col-md-8 col-lg-8 text-center">
-              <h4>{{contributor["name"]}}</h4>
-              <p>{{contributor["contributor_type"]}}</p>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <h4>{{contributor["questions"]}}</h4>
-            </div>
-            {% endif %}
-          </div>
-        {% endfor %}
-      {% else %}
-        <div class="row">
-          <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-            <h3>No data to display!</h3>
-          </div>
+  <div class="row mt-5 p-2">
+    <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4">
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#questions">Questions</a></li>
+            <li><a data-toggle="tab" href="#approval_rate">Approval Rate</a></li>
+          </ul>
         </div>
-      {% endif %}
-    </div>
-    <div id="approval_rate" class="tab-pane fade">
-      {% if leaderboard_data_2 | length != 0 %}
-        {% for contributor in leaderboard_data_2 %}
-          <div class="row mt-5 mb-5 {{contributor['class_name']}}">
-            {% if contributor["position"] == 1 %}
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <div class="first_position_icon"><h1><i class="fas fa-crown"></i></h1></div>
+      </div>
+      <div class="tab-content">
+        <div id="questions" class="tab-pane fade in active">
+          {% if top_contributors_total_question | length != 0 %}
+            {% for contributor in top_contributors_total_question %}
+              <div class="row mt-5 mb-5 {{contributor['class_name']}}">
+                {% if loop.index == 1 %}
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <div class="first_position_icon"><h1><i class="fas fa-crown"></i></h1></div>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <h1>{{contributor.get("name")}}</h1>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <h1>{{contributor.get("total_questions")}}</h1>
+                </div>
+                {% elif loop.index == 2 %}
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <div class="second_position_icon"><h2><i class="fas fa-crown"></i></h2></div>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <h2>{{contributor.get("name")}}</h2>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <h2>{{contributor.get("total_questions")}}</h2>
+                </div>
+                {% elif loop.index == 3 %}
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <div class="third_position_icon"><h3><i class="fas fa-crown"></i></h3></div>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <h3>{{contributor.get("name")}}</h3>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <h3>{{contributor.get("total_questions")}}</h3>
+                </div>
+                {% else %}
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <div class="position_icon"><h4>{{loop.index}}</h4></div>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <h4>{{contributor.get("name")}}</h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <h4>{{contributor.get("total_questions")}}</h4>
+                </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                <h3>No data to display!</h3>
+              </div>
             </div>
-            <div class="col-sm-12 col-md-8 col-lg-8 text-center">
-              <h1>{{contributor["name"]}}</h1>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <h1>{{contributor["approval_rate"]}}%</h1>
-              <p>{{contributor["questions_reviewed"]}} / {{contributor["total_questions"]}}</p>
-            </div>
-            {% elif contributor["position"] == 2 %}
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <div class="second_position_icon"><h2><i class="fas fa-crown"></i></h2></div>
-            </div>
-            <div class="col-sm-12 col-md-8 col-lg-8 text-center">
-              <h2>{{contributor["name"]}}</h2>
-              <p>{{contributor["contributor_type"]}}</p>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <h2>{{contributor["approval_rate"]}}%</h2>
-              <p>{{contributor["questions_reviewed"]}} / {{contributor["total_questions"]}}</p>
-            </div>
-            {% elif contributor["position"] == 3 %}
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <div class="third_position_icon"><h3><i class="fas fa-crown"></i></h3></div>
-            </div>
-            <div class="col-sm-12 col-md-8 col-lg-8 text-center">
-              <h3>{{contributor["name"]}}</h3>
-              <p>{{contributor["contributor_type"]}}</p>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <h3>{{contributor["approval_rate"]}}%</h3>
-              <p>{{contributor["questions_reviewed"]}} / {{contributor["total_questions"]}}</p>
-            </div>
-            {% else %}
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <div class="position_icon"><h4>{{contributor["position"]}}</h4></div>
-            </div>
-            <div class="col-sm-12 col-md-8 col-lg-8 text-center">
-              <h4>{{contributor["name"]}}</h4>
-              <p>{{contributor["contributor_type"]}}</p>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
-              <h4>{{contributor["approval_rate"]}}%</h4>
-              <p>{{contributor["questions_reviewed"]}} / {{contributor["total_questions"]}}</p>
-            </div>
-            {% endif %}
-          </div>
-        {% endfor %}
-      {% else %}
-        <div class="row">
-          <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-            <h3>No data to display!</h3>
-          </div>
+          {% endif %}
         </div>
-      {% endif %}
+        <div id="approval_rate" class="tab-pane fade">
+          {% if top_contributors_approval_rate | length != 0 %}
+            {% for contributor in top_contributors_approval_rate %}
+              <div class="row mt-5 mb-5 {{contributor['class_name']}}">
+                {% if loop.index == 1 %}
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <div class="first_position_icon"><h1><i class="fas fa-crown"></i></h1></div>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <h1>{{contributor.get("name")}}</h1>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <h1>{{contributor.get("approval_rate")}}%</h1>
+                </div>
+                {% elif loop.index == 2 %}
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <div class="second_position_icon"><h2><i class="fas fa-crown"></i></h2></div>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <h2>{{contributor.get("name")}}</h2>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <h2>{{contributor.get("approval_rate")}}%</h2>
+                </div>
+                {% elif loop.index == 3 %}
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <div class="third_position_icon"><h3><i class="fas fa-crown"></i></h3></div>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <h3>{{contributor.get("name")}}</h3>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <h3>{{contributor.get("approval_rate")}}%</h3>
+                </div>
+                {% else %}
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <div class="position_icon"><h4>{{loop.index}}</h4></div>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                      <h4>{{contributor.get("name")}}</h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                  <h4>{{contributor.get("approval_rate")}}%</h4>
+                </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                <h3>No data to display!</h3>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </div>
 </div>

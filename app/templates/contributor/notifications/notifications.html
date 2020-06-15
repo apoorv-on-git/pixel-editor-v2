@@ -1,43 +1,40 @@
 {% extends "contributor/main.jinja" %}
 {% block main %}
 
-{% include("contributor/star_questions/star_questions_script.jinja") %}
-{% include("contributor/star_questions/star_questions_style.jinja") %}
+{% include("contributor/notifications/notifications_script.jinja") %}
+{% include("contributor/notifications/notifications_style.jinja") %}
 
 <div class="text-center">
   <div class="row p-2">
     <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4">
-      <h4 style="font-weight: 500">Star Questions</h4>
+      <h4 style="font-weight: 500">Notifications</h4>
     </div>
   </div>
   <div class="row p-2">
     <div class="card-columns">
-      {% for star_question in star_questions %}
+      {% for notification in notifications %}
         <div class="card">
           <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4">
             <div class="row">
               <div class="col-sm-12 col-md-12 col-lg-12">
-                <h5 class="heavy-font">{{star_question.get('contributor_name')}}</h5>
+                <h5 class="heavy-font">{{notification.get('contributor_name')}}</h5>
                 <hr class="hr-stats"/>
               </div>
-              <div class="col-sm-12 col-md-12 col-lg-12 star-icon">
-                <i class="fa fa-star" aria-hidden="true"></i>
-              </div>
               <div class="col-sm-12 col-md-12 col-lg-12 mt-3">
-                <p class="heavy-font">{{star_question.get('question_text') | safe}}</p>
-                {% if star_question.get('question_image') == "#" %}
+                <p class="heavy-font">{{notification.get('question_text') | safe}}</p>
+                {% if notification.get('question_image') == "#" %}
                 <hr/>
                 {% endif %}
               </div>
-              {% if star_question.get('question_image') != "#" %}
+              {% if notification.get('question_image') != "#" %}
               <div class="col-sm-12 col-md-12 col-lg-12 mt-2">
-                <img src="{{star_question.get('question_image')}}" width="30%" />
+                <img src="{{notification.get('question_image')}}" width="30%" />
                 <hr/>
               </div>
               {% endif %}
               <div class="col-sm-12 col-md-8 col-lg-8 offset-md-2 offset-lg-2 mt-2">
                 <div class="row">
-                  {% set sorted_options = star_question.get('options').items()|sort(attribute='0') %}
+                  {% set sorted_options = notification.get('options').items()|sort(attribute='0') %}
                   {% for option_key, option_value in sorted_options %}
                   <div class="col-sm-12 col-md-6 col-lg-6">
                     <div class="row mt-4">
@@ -45,7 +42,7 @@
                       <div class="col-sm-3 col-md-3 col-lg-3 align-self-center no-col-padding">
                         <p class="heavy-font">{{option_key.split("option_")[-1]|upper}}.</p>
                       </div>
-                      {% if star_question.get('correct_option') == option_key %}
+                      {% if notification.get('correct_option') == option_key %}
                       <div class="col-sm-9 col-md-9 col-lg-9 no-col-padding" style="background: #827af3;">
                         <img src="{{option_value}}" width="100%" />
                       </div>
@@ -59,7 +56,7 @@
                         <p class="heavy-font">{{option_key.split("option_")[-1]|upper}}.</p>
                       </div>
                       <div class="col-sm-9 col-md-9 col-lg-9 no-col-padding">
-                        {% if star_question.get('correct_option') == option_key %}
+                        {% if notification.get('correct_option') == option_key %}
                           <p class="option-container" style="background: #827af3;">{{option_value}}</p>
                         {% else %}
                           <p class="option-container">{{option_value}}</p>
@@ -75,7 +72,16 @@
                 <hr/>
               </div>
               <div class="col-sm-12 col-md-12 col-lg-12">
-                {% for tag in star_question.get('tags') %}
+                <h5 class=heavy-font>Feedback</h5>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12 mt-2">
+                <p>{{notification.get('feedback')}}</p>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12">
+                <hr/>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12">
+                {% for tag in notification.get('tags') %}
                 <span class="question-tag">{{tag}}</span>
                 {% endfor %}
               </div>
