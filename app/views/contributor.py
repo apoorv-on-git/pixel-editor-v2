@@ -17,9 +17,11 @@ def login():
 @required_role_as_contributor()
 def dashboard():
     user_data = get_user_document_data(session.get('contributor_id'))
+    chart_data = get_chart_data(session.get('contributor_id'))
     return render_template( "/contributor/dashboard/dashboard.html",
                             grade_breakdown=grade_breakdown,
-                            user_data=user_data
+                            user_data=user_data,
+                            chart_data=chart_data
                         )
 
 @contributor.route("/leaderboard")

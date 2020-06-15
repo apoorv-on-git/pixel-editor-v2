@@ -1,30 +1,23 @@
 <script>
   google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(drawChart);
 
-  function drawChart() {
-   var data = google.visualization.arrayToDataTable([
-        ["date", "Total", "Individual"],
-        ["21/05/2020", 200, 20],
-        ["22/05/2020", 190, 3],
-        ["23/05/2020", 150, 32],
-        ["24/05/2020", 248, 12],
-        ["25/05/2020", 89, 1],
-        ["26/05/2020", 67, 11],
-        ["27/05/2020", 198, 0],
-   ]);
+  {% if chart_data|length > 1 %}
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+     var data = google.visualization.arrayToDataTable({{chart_data}});
 
-   var options = {
-     curveType: 'function',
-     legend: { position: 'top', alignment: 'center', textStyle: {fontSize: 20} },
-     colors: ["#a39ef5", "#5dca88"],
-     lineWidth: 5
-   };
+     var options = {
+       curveType: 'function',
+       legend: { position: 'top', alignment: 'center', textStyle: {fontSize: 20} },
+       colors: ["#a39ef5", "#5dca88"],
+       lineWidth: 5
+     };
 
-   var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+     var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
 
-   chart.draw(data, options);
-  }
+     chart.draw(data, options);
+    }
+  {% endif %}
   $(function(){
     $('.upload-profile-image').change(function(){
       if (this.files && this.files[0]) {

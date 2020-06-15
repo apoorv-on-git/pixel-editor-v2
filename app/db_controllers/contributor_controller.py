@@ -5,6 +5,7 @@ from app.db_controllers.helper import *
 from flask import request
 import datetime
 from google.cloud.firestore_v1 import Increment
+import time
 
 firebase_db = firestore.client()
 
@@ -12,6 +13,24 @@ def get_user_document_data(contributor_id):
     document_ref = firebase_db.collection('users')
     user_data = document_ref.document(contributor_id).get()
     return user_data.to_dict()
+
+def get_chart_data(contributor_id):
+    document_ref = firebase_db.collection("users")
+    last_7_days = []
+    for days in range(1, 8):
+        last_7_days.append(datetime.datetime.strftime(datetime.datetime.fromtimestamp(time.mktime(time.localtime())) - datetime.timedelta(days=days), "%d_%m_%Y"))
+    return_list = [["date", "Total", "Individual"]]
+    for day in last_7_days[::-1]:
+        temp_list = [day.replace("_", "/")]
+        individual_contribution_on_day = document_ref.document(contributor_id).collection("daily_log").document(day).get().to_dict()
+        if individual_contribution_on_day:
+            temp_list.append(individual_contribution_on_day.get("count"))
+        total_contributions_on_day = firebase_db.collection("daily_question_log").document(day).get().to_dict()
+        if total_contributions_on_day:
+            temp_list.append(total_contributions_on_day.get("count"))
+        if len(temp_list) == 3:
+            return_list.append(temp_list)
+    return return_list
 
 def firebase_update_profile_image(contributor_id, profile_image_url):
     document_ref = firebase_db.collection('users')
@@ -136,6 +155,8 @@ def firebase_submit_question(contributor_id):
                             approved_by = None,
                             deployed_by = None
                     )
+        local_date = time.localtime()
+        local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
         level_collection_id = f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}"
         document_ref = firebase_db.collection("users")
         question_document_ref = firebase_db.collection("questions")
@@ -145,6 +166,8 @@ def firebase_submit_question(contributor_id):
         updated_individual_log = user_data.get("individual_log")
         updated_individual_log[level_collection_id] += 1
         document_ref.document(contributor_id).update({"individual_log": updated_individual_log})
+        document_ref.document(contributor_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
+        firebase_db.collection("daily_question_log").document(local_date).set({"count": Increment(1)}, merge=True)
         firebase_db.collection("total_questions").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").set({level_collection_id: Increment(1)}, merge=True)
     except Exception as e:
         raise e

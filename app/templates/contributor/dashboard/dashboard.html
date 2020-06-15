@@ -69,8 +69,12 @@
         <div class="col-sm-12 col-md-12 col-lg-12">
           <h5 class="heavy-font">Analytics</h5>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-          <div id="curve_chart" style="height: 50vh;"></div>
+        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="chart_container">
+          {% if chart_data | length > 1 %}
+            <div id="curve_chart" style="height: 50vh;"></div>
+          {% else %}
+            <h5 class="heavy-font mt-5">No data to display!</h5>
+          {% endif %}
         </div>
       </div>
     </div>
