@@ -41,17 +41,20 @@ def check_data(data):
         raise ValueError("Correct Option cannot be left empty!")
 
 def handle_submitted_images(data, contributor_id):
-    if data.get("question_image") != "#" and 'amazonaws' not in data.get("question_image"):
-        question_image = handle_image_upload('question_image', contributor_id)
-    elif 'amazonaws' in data.get("question_image"):
-        question_image = data.get("question_image")
-    else:
-        question_image = "#"
-    option_a = handle_image_upload('option_a', contributor_id) or data.get('option_a')
-    option_b = handle_image_upload('option_b', contributor_id) or data.get('option_b')
-    option_c = handle_image_upload('option_c', contributor_id) or data.get('option_c') or "#"
-    option_d = handle_image_upload('option_d', contributor_id) or data.get('option_d') or "#"
-    return question_image, option_a, option_b, option_c, option_d
+    try:
+        if data.get("question_image") != "#" and 'amazonaws' not in data.get("question_image"):
+            question_image = handle_image_upload('question_image', contributor_id)
+        elif 'amazonaws' in data.get("question_image"):
+            question_image = data.get("question_image")
+        else:
+            question_image = "#"
+        option_a = handle_image_upload('option_a', contributor_id) or data.get('option_a')
+        option_b = handle_image_upload('option_b', contributor_id) or data.get('option_b')
+        option_c = handle_image_upload('option_c', contributor_id) or data.get('option_c') or "#"
+        option_d = handle_image_upload('option_d', contributor_id) or data.get('option_d') or "#"
+        return question_image, option_a, option_b, option_c, option_d
+    except Exception as e:
+        raise e
 
 def get_files_renamed(question_image, option_a, option_b, option_c, option_d):
     if "amazonaws" in question_image:
@@ -72,26 +75,29 @@ def file_allowed(extension):
     return True
 
 def handle_image_upload(key, contributor_id):
-    image = request.files.get(key)
-    random_param = randint(100, 999)
-    if image and file_allowed(image.filename.split('.')[-1]):
-        if key == 'question_image':
-            url_endpoint = f"preview_images/{contributor_id}_preview.{image.filename.split('.')[-1]}"
-            upload_to_s3(url_endpoint, image)
-            return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
-        elif key == 'option_a':
-            url_endpoint = f"preview_images/{contributor_id}_preview_OPTION_A.{image.filename.split('.')[-1]}"
-            upload_to_s3(url_endpoint, image)
-            return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
-        elif key == 'option_b':
-            url_endpoint = f"preview_images/{contributor_id}_preview_OPTION_B.{image.filename.split('.')[-1]}"
-            upload_to_s3(url_endpoint, image)
-            return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
-        elif key == 'option_c':
-            url_endpoint = f"preview_images/{contributor_id}_preview_OPTION_C.{image.filename.split('.')[-1]}"
-            upload_to_s3(url_endpoint, image)
-            return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
-        elif key == 'option_d':
-            url_endpoint = f"preview_images/{contributor_id}_preview_OPTION_D.{image.filename.split('.')[-1]}"
-            upload_to_s3(url_endpoint, image)
-            return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
+    try:
+        image = request.files.get(key)
+        random_param = randint(100, 999)
+        if image and file_allowed(image.filename.split('.')[-1].lower()):
+            if key == 'question_image':
+                url_endpoint = f"preview_images/{contributor_id}_preview.{image.filename.split('.')[-1].lower()}"
+                upload_to_s3(url_endpoint, image)
+                return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
+            elif key == 'option_a':
+                url_endpoint = f"preview_images/{contributor_id}_preview_OPTION_A.{image.filename.split('.')[-1].lower()}"
+                upload_to_s3(url_endpoint, image)
+                return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
+            elif key == 'option_b':
+                url_endpoint = f"preview_images/{contributor_id}_preview_OPTION_B.{image.filename.split('.')[-1].lower()}"
+                upload_to_s3(url_endpoint, image)
+                return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
+            elif key == 'option_c':
+                url_endpoint = f"preview_images/{contributor_id}_preview_OPTION_C.{image.filename.split('.')[-1].lower()}"
+                upload_to_s3(url_endpoint, image)
+                return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
+            elif key == 'option_d':
+                url_endpoint = f"preview_images/{contributor_id}_preview_OPTION_D.{image.filename.split('.')[-1].lower()}"
+                upload_to_s3(url_endpoint, image)
+                return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
+    except Exception as e:
+        raise e

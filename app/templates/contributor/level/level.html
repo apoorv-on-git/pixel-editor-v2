@@ -25,45 +25,51 @@
   <div class="row p-2">
     {% if levels | length > 0 %}
       {% for level in levels %}
-        {% if level.get("total_contributions_by_contributor") < 5 %}
-          {% set level_percentage = (level.get("total_count") * 100) / 50.0 %}
-          <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4 mt-3">
-            <div class="row">
-              <div class="col-sm-12 col-md-6 col-lg-6 text-left">
-                <div class="row">
-                  <div class="col-sm-12 col-md-12 col-lg-12">
-                    <h4 class="heavy-font">Level {{level.get("level_number")}}</h4>
-                    <hr class="hr-stats" style="border: 3px solid {{level.get('level_color')}};"/>
-                  </div>
-                  <div class="col-sm-12 col-md-12 col-lg-12 mt-4">
-                    <p>{{level.get("level_name")}}</p>
-                  </div>
+        {% set level_percentage = (level.get("total_count") * 100) / 50.0 %}
+        <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4 mt-3">
+          <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-6 text-left">
+              <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  <h4 class="heavy-font">Level {{level.get("level_number")}}</h4>
+                  <hr class="hr-stats" style="border: 3px solid {{level.get('level_color')}};"/>
                 </div>
-              </div>
-              <div class="col-sm-12 col-md-6 col-lg-6 text-right">
-                <div class="row">
-                  <div class="col-sm-12 col-md-12 col-lg-12">
-                    <h5 class="heavy-font">Goal</h5>
-                  </div>
-                  <div class="col-sm-12 col-md-12 col-lg-12">
-                    <h3 class="heavy-font" style="color: #5dca88;">50</h3>
-                  </div>
-                  <div class="col-sm-12 col-md-12 col-lg-12 mt-3">
-                    <div class="progress-bg">
-                    	<div class="progress-bar" style="width: {{level_percentage}}%; background-color: #a39ef5;"></div>
-                    </div>
-                  </div>
-                  <div class="col-sm-12 col-md-12 col-lg-12 mt-1">
-                    <p class="contribution-text heavy-font">{{level.get("total_count")}} Contributed</p>
-                  </div>
-                  <div class="col-sm-12 col-md-12 col-lg-12">
-                    <button class='action-button-style heavy-font' id="contribute" onclick="create_question({{loop.index}})">Contribute</button>
-                  </div>
+                <div class="col-sm-12 col-md-12 col-lg-12 mt-4">
+                  <p>{{level.get("level_name")}}</p>
                 </div>
               </div>
             </div>
+            <div class="col-sm-12 col-md-6 col-lg-6 text-right">
+              <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  <h5 class="heavy-font">Goal</h5>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  <h3 class="heavy-font" style="color: #5dca88;">50</h3>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-12 mt-3">
+                  <div class="progress-bg">
+                  	<div class="progress-bar" style="width: {{level_percentage}}%; background-color: #a39ef5;"></div>
+                  </div>
+                </div>
+                {% if level.get("total_contributions_by_contributor") < 5 %}
+                <div class="col-sm-12 col-md-12 col-lg-12 mt-1">
+                  <p class="contribution-text heavy-font">{{level.get("total_count")}} Contributed</p>
+                </div>
+                {% else %}
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  <p class="contribution-text heavy-font">All questions contributed for this level</p>
+                </div>
+                {% endif %}
+                {% if level.get("total_contributions_by_contributor") < 5 %}
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  <button class='action-button-style heavy-font' id="contribute" onclick="create_question({{loop.index}})">Contribute</button>
+                </div>
+                {% endif %}
+              </div>
+            </div>
           </div>
-        {% endif %}
+        </div>
       {% endfor %}
     {% else %}
       <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4 mt-3 text-left">

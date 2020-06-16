@@ -26,72 +26,104 @@
             {% for contributor in top_contributors_total_question %}
               <div class="row mt-5 mb-5 {{contributor['class_name']}}">
                 {% if loop.index == 1 %}
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <div class="first_position_icon"><h1><i class="fas fa-crown"></i></h1></div>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  {% if loop.index % 2 == 0 %}
+                  <div class="row" style="background: #eee;">
+                  {% else %}
                   <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                  {% endif %}
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <div class="first_position_icon"><h1><i class="fas fa-crown"></i></h1></div>
                     </div>
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <h1>{{contributor.get("name")}}</h1>
+                    <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                      <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <h1>{{contributor.get("name")}}</h1>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <h1>{{contributor.get("total_questions")}}</h1>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <h1>{{contributor.get("total_questions")}}</h1>
                 </div>
                 {% elif loop.index == 2 %}
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <div class="second_position_icon"><h2><i class="fas fa-crown"></i></h2></div>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  {% if loop.index % 2 == 0 %}
+                  <div class="row" style="background: #eee;">
+                  {% else %}
                   <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                  {% endif %}
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <div class="second_position_icon"><h2><i class="fas fa-crown"></i></h2></div>
                     </div>
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <h2>{{contributor.get("name")}}</h2>
+                    <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                      <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <h2>{{contributor.get("name")}}</h2>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <h2>{{contributor.get("total_questions")}}</h2>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <h2>{{contributor.get("total_questions")}}</h2>
                 </div>
                 {% elif loop.index == 3 %}
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <div class="third_position_icon"><h3><i class="fas fa-crown"></i></h3></div>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  {% if loop.index % 2 == 0 %}
+                  <div class="row" style="background: #eee;">
+                  {% else %}
                   <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                  {% endif %}
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <div class="third_position_icon"><h3><i class="fas fa-crown"></i></h3></div>
                     </div>
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <h3>{{contributor.get("name")}}</h3>
+                    <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                      <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <h3>{{contributor.get("name")}}</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <h3>{{contributor.get("total_questions")}}</h3>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <h3>{{contributor.get("total_questions")}}</h3>
                 </div>
                 {% else %}
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <div class="position_icon"><h4>{{loop.index}}</h4></div>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  {% if loop.index % 2 == 0 %}
+                  <div class="row" style="background: #eee;">
+                  {% else %}
                   <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                  {% endif %}
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <div class="position_icon"><h4>{{loop.index}}</h4></div>
                     </div>
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <h4>{{contributor.get("name")}}</h4>
+                    <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                      <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <h4>{{contributor.get("name")}}</h4>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <h4>{{contributor.get("total_questions")}}</h4>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <h4>{{contributor.get("total_questions")}}</h4>
                 </div>
                 {% endif %}
               </div>
@@ -109,72 +141,104 @@
             {% for contributor in top_contributors_approval_rate %}
               <div class="row mt-5 mb-5 {{contributor['class_name']}}">
                 {% if loop.index == 1 %}
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <div class="first_position_icon"><h1><i class="fas fa-crown"></i></h1></div>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  {% if loop.index % 2 == 0 %}
+                  <div class="row" style="background: #eee;">
+                  {% else %}
                   <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                  {% endif %}
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <div class="first_position_icon"><h1><i class="fas fa-crown"></i></h1></div>
                     </div>
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <h1>{{contributor.get("name")}}</h1>
+                    <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                      <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <h1>{{contributor.get("name")}}</h1>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <h1>{{'%0.2f'| format(contributor.get("approval_rate")|float)}}%</h1>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <h1>{{contributor.get("approval_rate")}}%</h1>
                 </div>
                 {% elif loop.index == 2 %}
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <div class="second_position_icon"><h2><i class="fas fa-crown"></i></h2></div>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  {% if loop.index % 2 == 0 %}
+                  <div class="row" style="background: #eee;">
+                  {% else %}
                   <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                  {% endif %}
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <div class="second_position_icon"><h2><i class="fas fa-crown"></i></h2></div>
                     </div>
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <h2>{{contributor.get("name")}}</h2>
+                    <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                      <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <h2>{{contributor.get("name")}}</h2>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <h2>{{'%0.2f'| format(contributor.get("approval_rate")|float)}}%</h2>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <h2>{{contributor.get("approval_rate")}}%</h2>
                 </div>
                 {% elif loop.index == 3 %}
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <div class="third_position_icon"><h3><i class="fas fa-crown"></i></h3></div>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  {% if loop.index % 2 == 0 %}
+                  <div class="row" style="background: #eee;">
+                  {% else %}
                   <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                  {% endif %}
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <div class="third_position_icon"><h3><i class="fas fa-crown"></i></h3></div>
                     </div>
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <h3>{{contributor.get("name")}}</h3>
+                    <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                      <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <h3>{{contributor.get("name")}}</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <h3>{{'%0.2f'| format(contributor.get("approval_rate")|float)}}%</h3>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <h3>{{contributor.get("approval_rate")}}%</h3>
                 </div>
                 {% else %}
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <div class="position_icon"><h4>{{loop.index}}</h4></div>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  {% if loop.index % 2 == 0 %}
+                  <div class="row" style="background: #eee;">
+                  {% else %}
                   <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                  {% endif %}
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <div class="position_icon"><h4>{{loop.index}}</h4></div>
                     </div>
-                    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                      <h4>{{contributor.get("name")}}</h4>
+                    <div class="col-sm-12 col-md-8 col-lg-8 text-center">
+                      <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <div class="profile_image"><img src="{{contributor.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                          <h4>{{contributor.get("name")}}</h4>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
+                      <h4>{{'%0.2f'| format(contributor.get("approval_rate")|float)}}%</h4>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
-                  <h4>{{contributor.get("approval_rate")}}%</h4>
                 </div>
                 {% endif %}
               </div>
