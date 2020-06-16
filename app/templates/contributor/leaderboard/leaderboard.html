@@ -24,14 +24,14 @@
         <div id="questions" class="tab-pane fade in active">
           {% if top_contributors_total_question | length != 0 %}
             {% for contributor in top_contributors_total_question %}
-              <div class="row mt-5 mb-5 {{contributor['class_name']}}">
+              {% if loop.index % 2 == 0 %}
+              <div class="row p-5" style="background: #eee;">
+              {% else %}
+              <div class="row p-5">
+              {% endif %}
                 {% if loop.index == 1 %}
                 <div class="col-sm-12 col-md-12 col-lg-12">
-                  {% if loop.index % 2 == 0 %}
-                  <div class="row" style="background: #eee;">
-                  {% else %}
                   <div class="row">
-                  {% endif %}
                     <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
                       <div class="first_position_icon"><h1><i class="fas fa-crown"></i></h1></div>
                     </div>
@@ -52,11 +52,7 @@
                 </div>
                 {% elif loop.index == 2 %}
                 <div class="col-sm-12 col-md-12 col-lg-12">
-                  {% if loop.index % 2 == 0 %}
-                  <div class="row" style="background: #eee;">
-                  {% else %}
                   <div class="row">
-                  {% endif %}
                     <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
                       <div class="second_position_icon"><h2><i class="fas fa-crown"></i></h2></div>
                     </div>
@@ -77,11 +73,7 @@
                 </div>
                 {% elif loop.index == 3 %}
                 <div class="col-sm-12 col-md-12 col-lg-12">
-                  {% if loop.index % 2 == 0 %}
-                  <div class="row" style="background: #eee;">
-                  {% else %}
                   <div class="row">
-                  {% endif %}
                     <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
                       <div class="third_position_icon"><h3><i class="fas fa-crown"></i></h3></div>
                     </div>
@@ -102,11 +94,7 @@
                 </div>
                 {% else %}
                 <div class="col-sm-12 col-md-12 col-lg-12">
-                  {% if loop.index % 2 == 0 %}
-                  <div class="row" style="background: #eee;">
-                  {% else %}
                   <div class="row">
-                  {% endif %}
                     <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
                       <div class="position_icon"><h4>{{loop.index}}</h4></div>
                     </div>
@@ -139,14 +127,14 @@
         <div id="approval_rate" class="tab-pane fade">
           {% if top_contributors_approval_rate | length != 0 %}
             {% for contributor in top_contributors_approval_rate %}
-              <div class="row mt-5 mb-5 {{contributor['class_name']}}">
+              {% if loop.index % 2 == 0 %}
+              <div class="row p-5" style="background: #eee;">
+              {% else %}
+              <div class="row p-5">
+              {% endif %}
                 {% if loop.index == 1 %}
                 <div class="col-sm-12 col-md-12 col-lg-12">
-                  {% if loop.index % 2 == 0 %}
-                  <div class="row" style="background: #eee;">
-                  {% else %}
                   <div class="row">
-                  {% endif %}
                     <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
                       <div class="first_position_icon"><h1><i class="fas fa-crown"></i></h1></div>
                     </div>
@@ -167,11 +155,7 @@
                 </div>
                 {% elif loop.index == 2 %}
                 <div class="col-sm-12 col-md-12 col-lg-12">
-                  {% if loop.index % 2 == 0 %}
-                  <div class="row" style="background: #eee;">
-                  {% else %}
                   <div class="row">
-                  {% endif %}
                     <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
                       <div class="second_position_icon"><h2><i class="fas fa-crown"></i></h2></div>
                     </div>
@@ -192,11 +176,7 @@
                 </div>
                 {% elif loop.index == 3 %}
                 <div class="col-sm-12 col-md-12 col-lg-12">
-                  {% if loop.index % 2 == 0 %}
-                  <div class="row" style="background: #eee;">
-                  {% else %}
                   <div class="row">
-                  {% endif %}
                     <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
                       <div class="third_position_icon"><h3><i class="fas fa-crown"></i></h3></div>
                     </div>
@@ -217,11 +197,7 @@
                 </div>
                 {% else %}
                 <div class="col-sm-12 col-md-12 col-lg-12">
-                  {% if loop.index % 2 == 0 %}
-                  <div class="row" style="background: #eee;">
-                  {% else %}
                   <div class="row">
-                  {% endif %}
                     <div class="col-sm-12 col-md-2 col-lg-2 text-center align-self-center">
                       <div class="position_icon"><h4>{{loop.index}}</h4></div>
                     </div>
