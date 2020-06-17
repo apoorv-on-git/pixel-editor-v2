@@ -14,10 +14,17 @@ def create_app(script_info=None):
         default_app = initialize_app(cred)
 
     #registering blueprints
+    #View
     from app.views.contributor import contributor
     app.register_blueprint(contributor)
+    from app.views.admin import admin
+    app.register_blueprint(admin)
+
+    #API
     from app.api.contributor import contributor_api
     app.register_blueprint(contributor_api)
+    from app.api.admin import admin_api
+    app.register_blueprint(admin_api)
 
     @app.shell_context_processor
     def ctx():

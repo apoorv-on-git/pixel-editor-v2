@@ -16,7 +16,6 @@ def rename_image(file_name):
     new_file_name = f"images/{unique_id}.{file_name.split('.')[-1].split('?')[0].lower()}"
     copy_source = {
                         'Bucket': os.environ.get('S3_BUCKET_NAME'),
-                        # 'Key': f"{file_name.split('amazonaws.com/')[-1].split('?')[0]}"
                         'Key': f"{file_name.split('amazonaws.com/')[-1].split('.')[0]}.{file_name.split('amazonaws.com/')[-1].split('.')[-1].split('?')[0].lower()}"
                 }
     s3.meta.client.copy(copy_source, os.environ.get('S3_BUCKET_NAME'), new_file_name)
