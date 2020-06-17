@@ -17,11 +17,13 @@ def login():
 @required_role_as_contributor()
 def dashboard():
     user_data = get_user_document_data(session.get('contributor_id'))
+    active_grade = user_data.get("active_grade")
     chart_data = get_chart_data(session.get('contributor_id'))
     return render_template( "/contributor/dashboard/dashboard.html",
                             grade_breakdown=grade_breakdown,
                             user_data=user_data,
-                            chart_data=chart_data
+                            chart_data=chart_data,
+                            active_grade=active_grade
                         )
 
 @contributor.route("/leaderboard")
@@ -29,28 +31,37 @@ def dashboard():
 def leaderboard():
     top_contributors_total_question = get_top_contributors_for_total_question()
     top_contributors_approval_rate = get_top_contributors_for_approval_rate()
+    user_data = get_user_document_data(session.get('contributor_id'))
+    active_grade = user_data.get("active_grade")
     return render_template( "/contributor/leaderboard/leaderboard.html",
                             top_contributors_total_question=top_contributors_total_question,
                             top_contributors_approval_rate=top_contributors_approval_rate,
-                            grade_breakdown=grade_breakdown
+                            grade_breakdown=grade_breakdown,
+                            active_grade=active_grade
                         )
 
 @contributor.route("/notifications")
 @required_role_as_contributor()
 def notifications():
     notifications = get_notifications(session.get("contributor_id"))
+    user_data = get_user_document_data(session.get('contributor_id'))
+    active_grade = user_data.get("active_grade")
     return render_template( "/contributor/notifications/notifications.html",
                             notifications=notifications,
-                            grade_breakdown=grade_breakdown
+                            grade_breakdown=grade_breakdown,
+                            active_grade=active_grade
                         )
 
 @contributor.route("/star-questions")
 @required_role_as_contributor()
 def star_questions():
     star_questions = get_star_questions()
+    user_data = get_user_document_data(session.get('contributor_id'))
+    active_grade = user_data.get("active_grade")
     return render_template( "/contributor/star_questions/star_questions.html",
                             star_questions=star_questions,
-                            grade_breakdown=grade_breakdown
+                            grade_breakdown=grade_breakdown,
+                            active_grade=active_grade
                         )
 
 @contributor.route("/levels")
@@ -58,6 +69,7 @@ def star_questions():
 def levels():
     try:
         user_data = get_user_document_data(session.get('contributor_id'))
+        active_grade = user_data.get("active_grade")
         grade = request.args.get("grade")
         grade_dict = next((grade_dict for grade_dict in grade_breakdown if grade_dict.get('grade_number') == int(grade)), None)
         if not grade_dict:
@@ -85,7 +97,8 @@ def levels():
                                 chapter_name=chapter_dict.get("chapter_name"),
                                 grade=grade,
                                 chapter=chapter,
-                                grade_breakdown=grade_breakdown
+                                grade_breakdown=grade_breakdown,
+                                active_grade=active_grade
                             )
     except ValueError:
         return jsonify({
@@ -98,6 +111,7 @@ def levels():
 def create_question():
     try:
         user_data = get_user_document_data(session.get('contributor_id'))
+        active_grade = user_data.get("active_grade")
         preview_question = user_data.get("preview_question")
         if not preview_question:
             grade = request.args.get("grade")
@@ -119,7 +133,8 @@ def create_question():
                                     grade_breakdown=grade_breakdown,
                                     preview_question={},
                                     is_preview=False,
-                                    total_contributions_by_contributor=total_contributions_by_contributor
+                                    total_contributions_by_contributor=total_contributions_by_contributor,
+                                    active_grade=active_grade
                                 )
         else:
             grade=preview_question.get("grade")
@@ -136,7 +151,8 @@ def create_question():
                                     pdf_url=chapter_dict.get("chapter_pdf"),
                                     grade_breakdown=grade_breakdown,
                                     preview_question=preview_question,
-                                    is_preview=True
+                                    is_preview=True,
+                                    active_grade=active_grade
                                 )
     except ValueError:
         return jsonify({

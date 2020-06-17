@@ -67,14 +67,16 @@
         <div id="sidebar-wrapper">
           <ul class="sidebar-nav">
             {% for grade_dict in grade_breakdown %}
-              <li data-toggle="collapse" data-target="#grade_{{grade_dict.get('grade_number')}}_menu" class="collapsed">
-                <a href="#"><i class="fa fa-book" aria-hidden="true" style="margin-left: -1.5em;padding-right: 1em;"></i> Grade {{grade_dict.get('grade_number')}} <i class="fa fa-caret-down" aria-hidden="true" style="position: absolute; right: 1em; padding-top: 0.75em;"></i></a>
-              </li>
-              <ul class="sub-menu collapse" id="grade_{{grade_dict.get('grade_number')}}_menu" style="margin-left: -2.5em;">
-                {% for chapter_dict in grade_dict.get("chapters") %}
-                  <li style="list-style: none; padding-left: 2em;"><a style="text-indent: initial;" href="{{url_for('contributor.levels')}}?grade={{grade_dict.get('grade_number')}}&chapter={{chapter_dict.get('chapter_number')}}">{{chapter_dict.get("chapter_name")}}</a></li>
-                {% endfor %}
-              </ul>
+              {% if not active_grade or grade_dict.get('grade_number') in active_grade %}
+                <li data-toggle="collapse" data-target="#grade_{{grade_dict.get('grade_number')}}_menu" class="collapsed">
+                  <a href="#"><i class="fa fa-book" aria-hidden="true" style="margin-left: -1.5em;padding-right: 1em;"></i> Grade {{grade_dict.get('grade_number')}} <i class="fa fa-caret-down" aria-hidden="true" style="position: absolute; right: 1em; padding-top: 0.75em;"></i></a>
+                </li>
+                <ul class="sub-menu collapse" id="grade_{{grade_dict.get('grade_number')}}_menu" style="margin-left: -2.5em;">
+                  {% for chapter_dict in grade_dict.get("chapters") %}
+                    <li style="list-style: none; padding-left: 2em;"><a style="text-indent: initial;" href="{{url_for('contributor.levels')}}?grade={{grade_dict.get('grade_number')}}&chapter={{chapter_dict.get('chapter_number')}}">{{chapter_dict.get("chapter_name")}}</a></li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
             {% endfor %}
           </ul>
         </div>
