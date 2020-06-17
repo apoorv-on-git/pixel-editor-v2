@@ -1,0 +1,181 @@
+{% extends "admin/main.jinja" %}
+{% block main %}
+
+{% include("admin/question/editor/editor_script.jinja") %}
+{% include("admin/question/question_style.jinja") %}
+
+<div class="text-center">
+  <div class="row p-2">
+    <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4 text-left">
+      <div class="row">
+        <div class="col-sm-12 col-md-4 col-lg-4 p-5">
+          <select class="form-control form-input" name="grade" id="grade">
+            <option value="">Select Grade</option>
+            {% for grade in [3, 4, 5, 6, 7, 8, 9, 10] %}
+              <option value="{{grade}}">Grade {{grade}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4 p-5">
+          <select class="form-control form-input" name="chapter" id="chapter">
+            <option value="">Select Chapter</option>
+          </select>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4 p-5">
+          <select class="form-control form-input" name="level" id="level">
+            <option value="">Select Level</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row p-2">
+    <div class="col-sm-12 col-md-12 col-lg-5 white-container p-4 text-left" style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;">
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12" style="flex: wrap;">
+          {% for name, formula in formula_list.items() %}
+            <button class="formula-button-1" data-value="{{formula}}">{{name}}</button>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <p class="heavy-font">Question Text</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <textarea rows="5" class="form-control form-input latex-input" name="question_text" id="question_text"></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-11 col-md-11 col-lg-11 text-center mt-5">
+          <span class="question-img-upload">Upload an image for question</span>
+          <input type="file" class="upload-question-image" />
+        </div>
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center mt-5">
+          <i class="fa fa-trash fa-lg hidden delete-question-image" style="position: absolute; left: -20%; bottom: -0.5em;"></i>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-sm-12 col-md-12 col-lg-12 question-image-name">
+
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
+          <input type="text" class="form-control form-input-option latex-input" name="option_a_text" id="option_a_text" placeholder="Option A" />
+          <span class="input-group-addon hide">
+            <span class="option-img-upload">Upload</span>
+            <input type="file" class="upload-image-a" />
+          </span>
+        </div>
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center">
+          <i class="fa fa-trash fa-lg hidden delete-option-a-image"></i>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
+          <input type="text" class="form-control form-input-option latex-input" name="option_b_text" id="option_b_text" placeholder="Option B" />
+          <span class="input-group-addon hide">
+            <span class="option-img-upload">Upload</span>
+            <input type="file" class="upload-image-b" />
+          </span>
+        </div>
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center">
+          <i class="fa fa-trash fa-lg hidden delete-option-b-image"></i>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
+          <input type="text" class="form-control form-input-option latex-input" name="option_c_text" id="option_c_text" placeholder="Option C" />
+          <span class="input-group-addon hide">
+            <span class="option-img-upload">Upload</span>
+            <input type="file" class="upload-image-c" />
+          </span>
+        </div>
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center">
+          <i class="fa fa-trash fa-lg hidden delete-option-c-image"></i>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
+          <input type="text" class="form-control form-input-option latex-input" name="option_d_text" id="option_d_text" placeholder="Option D" />
+          <span class="input-group-addon hide">
+            <span class="option-img-upload">Upload</span>
+            <input type="file" class="upload-image-d" />
+          </span>
+        </div>
+        <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center">
+          <i class="fa fa-trash fa-lg hidden delete-option-d-image"></i>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <p class="guide-text">You can upload an image as an option too.</p>
+        </div>
+      </div>
+      <div class="row mb-5 mt-4">
+        <div class="col-sm-11 col-md-11 col-lg-11 input-group">
+          <select class="form-control form-input" name="correct_option" id="correct_option">
+            <option value="">Correct answer</option>
+            {% for option in ['a', 'b', 'c', 'd'] %}
+            <option value="{{option}}">Option {{option | upper}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-7 white-container p-4 text-left" style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;">
+      <div class="row mt-3 pl-2 pr-5">
+        <div class="col-sm-12 col-md-12 col-lg-12" id="question_preview_container">
+          <p id="question_preview"></p>
+        </div>
+      </div>
+      <div class="row mt-3 pl-2 pr-5">
+        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="question_image_preview_container">
+
+        </div>
+      </div>
+      <div class="row mt-3 pl-2 pr-5">
+        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_a_preview_container">
+          <p id="option_a_preview">Option A</p>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12 hidden text-center" id="option_a_image_preview_container">
+
+        </div>
+      </div>
+      <div class="row mt-3 pl-2 pr-5">
+        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_b_preview_container">
+          <p id="option_b_preview">Option B</p>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12 hidden text-center" id="option_b_image_preview_container">
+
+        </div>
+      </div>
+      <div class="row mt-3 pl-2 pr-5">
+        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_c_preview_container">
+          <p id="option_c_preview">Option C</p>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12 hidden text-center" id="option_c_image_preview_container">
+
+        </div>
+      </div>
+      <div class="row mt-3 pl-2 pr-5">
+        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_d_preview_container">
+          <p id="option_d_preview">Option D</p>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12 hidden text-center" id="option_d_image_preview_container">
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row p-2 mt-5">
+    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+      <button class='action-button-style' id="submit_question">Submit question</button>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

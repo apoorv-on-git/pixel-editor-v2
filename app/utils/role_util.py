@@ -10,3 +10,13 @@ def required_role_as_contributor():
             return func(*args, **kwargs)
         return wrapper
     return decorator
+
+def required_role_as_admin():
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if not session.get("user_type") or session.get("user_type").lower() != "admin":
+              abort(401)
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator

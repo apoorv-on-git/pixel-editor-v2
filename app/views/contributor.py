@@ -11,6 +11,8 @@ contributor = Blueprint('contributor', __name__, url_prefix="/")
 def login():
     if session.get("contributor_id"):
         return redirect(url_for("contributor.dashboard"))
+    elif session.get("admin_id"):
+        return redirect(url_for("admin.dashboard"))
     return render_template("/contributor/login/login.html")
 
 @contributor.route("/dashboard")
