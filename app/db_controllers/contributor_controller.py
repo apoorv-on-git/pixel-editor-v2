@@ -22,12 +22,16 @@ def get_chart_data(contributor_id):
     return_list = [["date", "Total", "Individual"]]
     for day in last_7_days[::-1]:
         temp_list = [day.replace("_", "/")]
-        individual_contribution_on_day = document_ref.document(contributor_id).collection("daily_log").document(day).get().to_dict()
-        if individual_contribution_on_day:
-            temp_list.append(individual_contribution_on_day.get("count"))
         total_contributions_on_day = firebase_db.collection("daily_question_log").document(day).get().to_dict()
         if total_contributions_on_day:
             temp_list.append(total_contributions_on_day.get("count"))
+        else:
+            temp_list.append(0)
+        individual_contribution_on_day = document_ref.document(contributor_id).collection("daily_log").document(day).get().to_dict()
+        if individual_contribution_on_day:
+            temp_list.append(individual_contribution_on_day.get("count"))
+        else:
+            temp_list.append(0)
         if len(temp_list) == 3:
             return_list.append(temp_list)
     return return_list
