@@ -108,3 +108,33 @@ def submit_question():
             "message": str(e),
             "status": "error"
         }), 400
+
+@admin_api.route("/disapprove-question", methods=["POST"])
+@required_role_as_admin()
+def disapprove_question():
+    try:
+        firebase_disapprove_question(session.get('admin_id'))
+        return jsonify({
+            "message": "Question disapproved successfully!",
+            "status": "success"
+        }), 204
+    except Exception as e:
+        return jsonify({
+            "message": str(e),
+            "status": "error"
+        }), 400
+
+@admin_api.route("/approve-question", methods=["POST"])
+@required_role_as_admin()
+def approve_question():
+    try:
+        firebase_approve_question(session.get('admin_id'))
+        return jsonify({
+            "message": "Question approved successfully!",
+            "status": "success"
+        }), 204
+    except Exception as e:
+        return jsonify({
+            "message": str(e),
+            "status": "error"
+        }), 400

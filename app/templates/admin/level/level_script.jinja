@@ -1,0 +1,5 @@
+<script>
+  function review_question(level) {
+    window.location.href = `{{url_for('admin.review_question')}}?grade={{grade}}&chapter={{chapter}}&level=${level}`
+  }
+</script>

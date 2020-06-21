@@ -1,0 +1,61 @@
+{% extends "admin/main.jinja" %}
+{% block main %}
+
+{% include("admin/level/level_script.jinja") %}
+{% include("admin/level/level_style.jinja") %}
+
+<div class="text-center">
+  <div class="row p-2">
+    <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4 text-left">
+      <div class="row">
+        <div class="col-sm-9 col-md-9 col-lg-9">
+          <h3>{{chapter_name}}</h3>
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 text-right">
+          <span class="grade-tag">Grade {{grade}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <h4 class="mt-4">Select a level for which you want to review questions</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row p-2">
+    {% for level in levels %}
+      <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4 mt-3">
+        <div class="row">
+          <div class="col-sm-12 col-md-6 col-lg-6 text-left">
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-12">
+                <h4 class="heavy-font">Level {{level.get("level_number")}}</h4>
+                <hr class="hr-stats" style="border: 3px solid {{level.get('level_color')}};"/>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12 mt-4">
+                <p>{{level.get("level_name")}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-6 text-right">
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-12">
+                <h5 class="heavy-font">Questions pending for review</h5>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12">
+                <h3 class="heavy-font" style="color: #5dca88;">{{level.get("questions_for_review")}}</h3>
+              </div>
+              {% if level.get("questions_for_review") > 0 %}
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  <button class='action-button-style heavy-font' id="contribute" onclick="review_question({{loop.index}})">Review</button>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
