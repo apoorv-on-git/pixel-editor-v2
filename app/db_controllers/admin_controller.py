@@ -14,6 +14,39 @@ def get_user_document_data(admin_id):
     user_data = document_ref.document(admin_id).get()
     return user_data.to_dict()
 
+def firebase_get_questions_for_review(topic_id):
+    document_ref = firebase_db.collection("admin_questions_for_review")
+    topic_data = document_ref.document(topic_id).get()
+    return topic_data.to_dict() or {}
+
+def firebase_get_questions_for_review_list(grade, chapter, level):
+    document_ref = firebase_db.collection("questions")
+    questions_for_review = document_ref\
+                            .document(f"G{grade:02}")\
+                            .collection("levels")\
+                            .document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")\
+                            .collection("question_bank")\
+                            .where("state", "==", "under_review")\
+                            .stream()
+    document_id_list = []
+    for question in questions_for_review:
+        document_id_list.append(question.id)
+    return document_id_list
+
+def firebase_get_question(question_id, grade, chapter, level):
+    document_ref = firebase_db.collection("questions")
+    question_data = document_ref\
+                    .document(f"G{grade:02}")\
+                    .collection("levels")\
+                    .document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")\
+                    .collection("question_bank")\
+                    .document(question_id)\
+                    .get()\
+                    .to_dict() or {}
+    if not question_data:
+        raise ValueError("No such question")
+    return question_data
+
 def firebase_submit_question(admin_id):
     try:
         data = json.loads(request.form.get('json'))
@@ -30,8 +63,8 @@ def firebase_submit_question(admin_id):
                             grade = grade,
                             chapter = chapter,
                             level = level,
-                            admin_id = admin_id,
-                            admin_name = user_data.get("name"),
+                            contributor_id = admin_id,
+                            contributor_name = user_data.get("name"),
                             is_star_question = False,
                             state = "under_review",
                             date_created = datetime.datetime.utcnow(),
@@ -59,5 +92,107 @@ def firebase_submit_question(admin_id):
         document_ref.document(admin_id).set({"total_questions": Increment(1)}, merge=True)
         firebase_db.collection("daily_question_log").document(local_date).set({"count": Increment(1)}, merge=True)
         firebase_db.collection("total_questions").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").set({level_collection_id: Increment(1)}, merge=True)
+        firebase_db.collection("admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").set({level_collection_id: Increment(1)}, merge=True)
+    except Exception as e:
+        raise e
+
+def firebase_disapprove_question(admin_id):
+    try:
+        feedback = request.json.get("feedback")
+        question_id = request.json.get("document_id")
+        grade = int(request.json.get("grade"))
+        chapter = int(request.json.get("chapter"))
+        level = int(request.json.get("level"))
+        if not feedback:
+            raise ValueError("Feedback is important!")
+        if not question_id:
+            raise ValueError("Invalid Question")
+        if not all((grade, chapter, level)):
+            raise ValueError("Grade, chapter or level unidentified!")
+        question_data = firebase_get_question(question_id, grade, chapter, level)
+        contributor_id = question_data.get("contributor_id")
+        if not contributor_id:
+            raise ValueError("Contributor not identified!")
+        user_data = get_user_document_data(admin_id)
+        contributor_data = get_user_document_data(contributor_id)
+        question_updates = dict(
+                                    state = "disapproved",
+                                    reviewed_by = user_data.get("email"),
+                                    feedback = feedback,
+                                    date_reviewed = datetime.datetime.utcnow()
+                            )
+        firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).update(question_updates)
+        firebase_db.collection("users").document(admin_id).set({"total_questions_reviewed": Increment(1)}, merge=True)
+        firebase_db.collection("users").document(contributor_id).set({"total_reviewed": Increment(1)}, merge=True)
+        notification_dict = dict(
+                                    contributed_by = contributor_id,
+                                    contributor_name = contributor_data.get("name"),
+                                    correct_answer = question_data.get("correct_option"),
+                                    created_at = datetime.datetime.utcnow(),
+                                    options = question_data.get("options"),
+                                    question_image = question_data.get("question_image"),
+                                    question_text = question_data.get("question_text"),
+                                    feedback = feedback,
+                                    is_read = False,
+                                    tags = [f"Grade {grade}", f"Chapter {chapter}", f"Level {level}"]
+                                )
+        firebase_db.collection("users").document(contributor_id).collection("notifications").document().create(notification_dict)
+        questions_for_review = firebase_get_questions_for_review(f"NCERT_G{grade:02}_TOPIC{chapter:02}")
+        current_questions_for_review = questions_for_review.get(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")
+        firebase_db.collection("admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": (current_questions_for_review - 1)})
+    except Exception as e:
+        raise e
+
+def firebase_approve_question(admin_id):
+    try:
+        graphics_required = request.json.get("graphics_required")
+        question_id = request.json.get("document_id")
+        grade = int(request.json.get("grade"))
+        chapter = int(request.json.get("chapter"))
+        level = int(request.json.get("level"))
+        if graphics_required == "":
+            raise ValueError("Please tell us if this question requires graphic work or not!")
+        if not question_id:
+            raise ValueError("Invalid Question")
+        if not all((grade, chapter, level)):
+            raise ValueError("Grade, chapter or level unidentified!")
+        if graphics_required.lower() == "yes":
+            graphics_required = True
+        else:
+            graphics_required = False
+        question_data = firebase_get_question(question_id, grade, chapter, level)
+        contributor_id = question_data.get("contributor_id")
+        if not contributor_id:
+            raise ValueError("Contributor not identified!")
+        user_data = get_user_document_data(admin_id)
+        new_question_data = request.json.get("question_json")
+        check_data(new_question_data)
+        question_text = remove_style(new_question_data.get("question"))
+        question_updates = dict(
+                                    approved_by = user_data.get("email"),
+                                    correct_option = new_question_data.get("correct_option"),
+                                    date_approved = datetime.datetime.utcnow(),
+                                    options = dict(
+                                                    option_a = new_question_data.get("option_a"),
+                                                    option_b = new_question_data.get("option_b"),
+                                                    option_c = new_question_data.get("option_c"),
+                                                    option_d = new_question_data.get("option_d")
+                                                ),
+                                    question_text = question_text,
+                                    reviewed_by = user_data.get("email"),
+                                    feedback = request.json.get("feedback"),
+                                    date_reviewed = datetime.datetime.utcnow()
+                            )
+        if graphics_required:
+            question_updates["state"] = "graphics_required"
+        else:
+            question_updates["state"] = "approved"
+        firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).update(question_updates)
+        firebase_db.collection("users").document(admin_id).set({"total_questions_reviewed": Increment(1)}, merge=True)
+        firebase_db.collection("users").document(contributor_id).set({"total_reviewed": Increment(1)}, merge=True)
+        firebase_db.collection("users").document(contributor_id).set({"total_approved": Increment(1)}, merge=True)
+        questions_for_review = firebase_get_questions_for_review(f"NCERT_G{grade:02}_TOPIC{chapter:02}")
+        current_questions_for_review = questions_for_review.get(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")
+        firebase_db.collection("admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": (current_questions_for_review - 1)})
     except Exception as e:
         raise e

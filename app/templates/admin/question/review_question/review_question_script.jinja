@@ -1,0 +1,236 @@
+{% set question_image = question_data.get("question_image") %}
+{% set question_text = question_data.get("question_text") %}
+{% set correct_option = question_data.get("correct_option") %}
+{% set option_a = question_data.get("options").get("option_a") %}
+{% set option_b = question_data.get("options").get("option_b") %}
+{% set option_c = question_data.get("options").get("option_c") %}
+{% set option_d = question_data.get("options").get("option_d") %}
+<script>
+  var input_focus = ""
+  var json = {
+                "question": "{{question_text}}",
+                "question_image": "{{question_image}}",
+                "option_a": "{{option_a}}",
+                "option_b": "{{option_b}}",
+                "option_c": "{{option_c}}",
+                "option_d": "{{option_d}}",
+                "correct_option": "{{correct_option}}"
+              }
+  $(function(){
+    $("#question_text").summernote();
+    $(".note-editable").addClass("latex-input")
+    $('.latex-input').focus(function(){
+      if (!$(this).hasClass("note-editable")) {
+        input_focus = $(this).attr("id")
+      }
+    })
+    $(".note-editable").focus(function(){
+      input_focus = "note-editable";
+    })
+    $('.formula-button-1').click(function(){
+      if (input_focus) {
+        if (input_focus !== 'note-editable') {
+          let input_value = $(`#${input_focus}`).val();
+          let formula = $(this).data('value')
+          $(`#${input_focus}`).val(input_value + formula)
+          $(`#${input_focus}`).keyup()
+        } else {
+          let formula = $(this).data('value')
+          $("#question_text").summernote('editor.saveRange');
+          $("#question_text").summernote('editor.restoreRange');
+          $("#question_text").summernote('editor.focus');
+          $("#question_text").summernote('editor.insertText', formula);
+          $(".note-editable").keyup()
+        }
+      }
+    })
+    $('.note-editable').keyup(function(){
+      $('#question_preview').empty()
+      $('#question_preview').html($("#question_text").val())
+      update_json()
+      MathJax.Hub.Typeset()
+    })
+    $('#option_a_text').keyup(function(){
+      let current_value = $(this).val()
+      if (!current_value) {
+        current_value = "Option A"
+      }
+      $('#option_a_preview').empty()
+      $('#option_a_preview').html(current_value)
+      update_json()
+      MathJax.Hub.Typeset()
+    })
+    $('#option_b_text').keyup(function(){
+      let current_value = $(this).val()
+      if (!current_value) {
+        current_value = "Option B"
+      }
+      $('#option_b_preview').empty()
+      $('#option_b_preview').html(current_value)
+      update_json()
+      MathJax.Hub.Typeset()
+    })
+    $('#option_c_text').keyup(function(){
+      let current_value = $(this).val()
+      if (!current_value) {
+        current_value = "Option C"
+      }
+      $('#option_c_preview').empty()
+      $('#option_c_preview').html(current_value)
+      update_json()
+      MathJax.Hub.Typeset()
+    })
+    $('#option_d_text').keyup(function(){
+      let current_value = $(this).val()
+      if (!current_value) {
+        current_value = "Option D"
+      }
+      $('#option_d_preview').empty()
+      $('#option_d_preview').html(current_value)
+      update_json()
+      MathJax.Hub.Typeset()
+    })
+    $('#correct_option').change(function(){
+      let option_selected = $(this).val();
+      let option_list = ['option_a', 'option_b', 'option_c', 'option_d']
+      option_list.map(function(option){
+        $(`#${option}_preview_container`).css('background-color', '#eee');
+        $(`#${option}_image_preview_container`).css('background-color', '#eee');
+      })
+      $(`#option_${option_selected}_preview_container`).css('background-color', 'green');
+      $(`#option_${option_selected}_image_preview_container`).css('background-color', 'green');
+      update_json()
+    })
+    $('#correct_option').change()
+    $("#skip_question").click(function(){
+      if ("{{next_document_id}}") {
+        window.location.href = `{{url_for('admin.review_question')}}?grade={{grade}}&chapter={{chapter}}&level={{level}}&document_id={{next_document_id}}`
+      } else {
+        window.location.href = `{{url_for('admin.levels')}}?grade={{grade}}&chapter={{chapter}}`
+      }
+    })
+    $("#approve_question").click(function(){
+      var graphics_required = $("#graphics_required").val();
+      if (!graphics_required) {
+        Swal.fire(
+         'Hey!',
+         "Please tell us if this question requires graphic work or not!",
+         'error'
+        )
+      }
+      update_json()
+      let data = {
+        "graphics_required": graphics_required,
+        "feedback": $("#feedback").val(),
+        "document_id": "{{document_id}}",
+        "grade": "{{grade}}",
+        "chapter": "{{chapter}}",
+        "level": "{{level}}",
+        "question_json": json
+      }
+      $.ajax({
+        url: "{{url_for('admin_api.approve_question')}}",
+        type: "post",
+        data: JSON.stringify(data),
+        dataType: 'json',
+        contentType: 'application/json',
+        beforeSend: function(){
+          $('.main-container').addClass('blur');
+          $(':button').prop('disabled', true);
+          $("#loader").show();
+        },
+        success: function (result) {
+          if ("{{next_document_id}}") {
+            window.location.href = `{{url_for('admin.review_question')}}?grade={{grade}}&chapter={{chapter}}&level={{level}}&document_id={{next_document_id}}`
+          } else {
+            window.location.href = `{{url_for('admin.levels')}}?grade={{grade}}&chapter={{chapter}}`
+          }
+        },
+        error: function (result) {
+          $("#loader").hide();
+          Swal.fire(
+           'Hey!',
+           result.responseJSON.message,
+           'error'
+          )
+        },
+        complete:function(data){
+          $('.main-container').removeClass('blur');
+          $(':button').prop('disabled', false);
+          $("#loader").hide();
+        }
+      })
+    })
+    $("#disapprove_question").click(function(){
+      var feedback = $("#feedback").val();
+      if (!feedback) {
+        Swal.fire(
+         'Hey!',
+         "Feedback is important!",
+         'error'
+        )
+      }
+      update_json();
+      let data = {
+        "feedback": feedback,
+        "document_id": "{{document_id}}",
+        "grade": "{{grade}}",
+        "chapter": "{{chapter}}",
+        "level": "{{level}}",
+      }
+      $.ajax({
+        url: "{{url_for('admin_api.disapprove_question')}}",
+        type: "post",
+        data: JSON.stringify(data),
+        dataType: 'json',
+        contentType: 'application/json',
+        beforeSend: function(){
+          $('.main-container').addClass('blur');
+          $(':button').prop('disabled', true);
+          $("#loader").show();
+        },
+        success: function (result) {
+          if ("{{next_document_id}}") {
+            window.location.href = `{{url_for('admin.review_question')}}?grade={{grade}}&chapter={{chapter}}&level={{level}}&document_id={{next_document_id}}`
+          } else {
+            window.location.href = `{{url_for('admin.levels')}}?grade={{grade}}&chapter={{chapter}}`
+          }
+        },
+        error: function (result) {
+          $("#loader").hide();
+          Swal.fire(
+           'Hey!',
+           result.responseJSON.message,
+           'error'
+          )
+        },
+        complete:function(data){
+          $('.main-container').removeClass('blur');
+          $(':button').prop('disabled', false);
+          $("#loader").hide();
+        }
+      })
+    })
+  })
+  $(document).ready(function(){
+    setTimeout(function(){
+      $(".note-editable").keyup()
+    }, 1000)
+  })
+  function update_json() {
+    json.question = $('#question_text').val();
+    if (!"{{option_a}}".includes("amazonaws")) {
+      json.option_a = $('#option_a_text').val()
+    }
+    if (!"{{option_b}}".includes("amazonaws")) {
+      json.option_b = $('#option_b_text').val()
+    }
+    if (!"{{option_c}}".includes("amazonaws")) {
+      json.option_c = $('#option_c_text').val()
+    }
+    if (!"{{option_d}}".includes("amazonaws")) {
+      json.option_d = $('#option_d_text').val()
+    }
+    json.correct_option = `option_${$('#correct_option').val()}`
+  }
+</script>
