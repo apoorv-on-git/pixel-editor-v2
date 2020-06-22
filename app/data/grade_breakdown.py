@@ -2677,6 +2677,327 @@ data = [
                                                     "level_color": "#a2d4ff"
                                                 }
                                             ]
+                                },
+                                {
+                                    "chapter_number": 8,
+                                    "chapter_name": "Comparing Quantities",
+                                    "chapter_pdf": "https://pixel-editor-db.s3.ap-south-1.amazonaws.com/pdf/G7_C8.pdf",
+                                    "levels": [
+                                                {
+                                                    "level_number": 1,
+                                                    "level_name": "Simple Ratios",
+                                                    "level_color": "#ffa0ad"
+                                                },
+                                                {
+                                                    "level_number": 2,
+                                                    "level_name": "Equivalent Ratios",
+                                                    "level_color": "#d1ffaa"
+                                                },
+                                                {
+                                                    "level_number": 3,
+                                                    "level_name": "Calculating Percentage",
+                                                    "level_color": "#a2d4ff"
+                                                },
+                                                {
+                                                    "level_number": 4,
+                                                    "level_name": "Converting fractional numbers to the percentage",
+                                                    "level_color": "#fff583"
+                                                },
+                                                {
+                                                    "level_number": 5,
+                                                    "level_name": "Converting Decimals to the percentage",
+                                                    "level_color": "#ffa0ad"
+                                                },
+                                                {
+                                                    "level_number": 6,
+                                                    "level_name": "Converting percentages to fractions or decimals",
+                                                    "level_color": "#d1ffaa"
+                                                },
+                                                {
+                                                    "level_number": 7,
+                                                    "level_name": "Estimating percentage",
+                                                    "level_color": "#a2d4ff"
+                                                },
+                                                {
+                                                    "level_number": 8,
+                                                    "level_name": "Convert percentages to “how many”",
+                                                    "level_color": "#fff583"
+                                                },
+                                                {
+                                                    "level_number": 9,
+                                                    "level_name": "Conversion between ratio to percent",
+                                                    "level_color": "#ffa0ad"
+                                                },
+                                                {
+                                                    "level_number": 10,
+                                                    "level_name": "Express increase or decrease in percentage",
+                                                    "level_color": "#d1ffaa"
+                                                },
+                                                {
+                                                    "level_number": 11,
+                                                    "level_name": "Express profit or loss as percentage",
+                                                    "level_color": "#a2d4ff"
+                                                },
+                                                {
+                                                    "level_number": 12,
+                                                    "level_name": "Calculating simple interest",
+                                                    "level_color": "#fff583"
+                                                },
+                                                {
+                                                    "level_number": 13,
+                                                    "level_name": "Challenging Questions integrating the above concepts",
+                                                    "level_color": "#ffa0ad"
+                                                }
+                                            ]
+                                },
+                                {
+                                    "chapter_number": 9,
+                                    "chapter_name": "Rational Numbers",
+                                    "chapter_pdf": "https://pixel-editor-db.s3.ap-south-1.amazonaws.com/pdf/G7_C9.pdf",
+                                    "levels": [
+                                                {
+                                                    "level_number": 1,
+                                                    "level_name": "Rational number representation",
+                                                    "level_color": "#ffa0ad"
+                                                },
+                                                {
+                                                    "level_number": 2,
+                                                    "level_name": "Equivalent rational numbers",
+                                                    "level_color": "#d1ffaa"
+                                                },
+                                                {
+                                                    "level_number": 3,
+                                                    "level_name": "Positive and negative rational numbers",
+                                                    "level_color": "#a2d4ff"
+                                                },
+                                                {
+                                                    "level_number": 4,
+                                                    "level_name": "Rational numbers on the number line",
+                                                    "level_color": "#fff583"
+                                                },
+                                                {
+                                                    "level_number": 5,
+                                                    "level_name": "Reducing rational numbers to standard form",
+                                                    "level_color": "#ffa0ad"
+                                                },
+                                                {
+                                                    "level_number": 6,
+                                                    "level_name": "Comparison of rational numbers",
+                                                    "level_color": "#d1ffaa"
+                                                },
+                                                {
+                                                    "level_number": 7,
+                                                    "level_name": "Rational numbers between two rational numbers",
+                                                    "level_color": "#a2d4ff"
+                                                },
+                                                {
+                                                    "level_number": 8,
+                                                    "level_name": "Addition operation on rational numbers and word problems",
+                                                    "level_color": "#fff583"
+                                                },
+                                                {
+                                                    "level_number": 9,
+                                                    "level_name": "Subtraction operation on rational numbers and word problems",
+                                                    "level_color": "#ffa0ad"
+                                                },
+                                                {
+                                                    "level_number": 10,
+                                                    "level_name": "Multiplication operation on rational numbers",
+                                                    "level_color": "#d1ffaa"
+                                                },
+                                                {
+                                                    "level_number": 11,
+                                                    "level_name": "Division operation on rational numbers",
+                                                    "level_color": "#a2d4ff"
+                                                },
+                                                {
+                                                    "level_number": 12,
+                                                    "level_name": "Challenging Questions integrating the above concepts",
+                                                    "level_color": "#fff583"
+                                                }
+                                            ]
+                                },
+                                {
+                                    "chapter_number": 10,
+                                    "chapter_name": "Practical Geometry",
+                                    "chapter_pdf": "https://pixel-editor-db.s3.ap-south-1.amazonaws.com/pdf/G7_C10.pdf",
+                                    "levels": [
+                                                {
+                                                    "level_number": 1,
+                                                    "level_name": "Construction of lines parallel to another line",
+                                                    "level_color": "#ffa0ad"
+                                                },
+                                                {
+                                                    "level_number": 2,
+                                                    "level_name": "Construction of triangles",
+                                                    "level_color": "#d1ffaa"
+                                                },
+                                                {
+                                                    "level_number": 3,
+                                                    "level_name": "Challenging Questions integrating the above concepts",
+                                                    "level_color": "#a2d4ff"
+                                                }
+                                            ]
+                                },
+                                {
+                                    "chapter_number": 11,
+                                    "chapter_name": "Perimeter and Area",
+                                    "chapter_pdf": "https://pixel-editor-db.s3.ap-south-1.amazonaws.com/pdf/G7_C11.pdf",
+                                    "levels": [
+                                                {
+                                                    "level_number": 1,
+                                                    "level_name": "Problems on perimeter and area of squares and rectangles",
+                                                    "level_color": "#ffa0ad"
+                                                },
+                                                {
+                                                    "level_number": 2,
+                                                    "level_name": "Area of parallelogram",
+                                                    "level_color": "#d1ffaa"
+                                                },
+                                                {
+                                                    "level_number": 3,
+                                                    "level_name": "Area of triangle",
+                                                    "level_color": "#a2d4ff"
+                                                },
+                                                {
+                                                    "level_number": 4,
+                                                    "level_name": "Circumference of circle",
+                                                    "level_color": "#fff583"
+                                                },
+                                                {
+                                                    "level_number": 5,
+                                                    "level_name": "Area of circle",
+                                                    "level_color": "#ffa0ad"
+                                                },
+                                                {
+                                                    "level_number": 6,
+                                                    "level_name": "Conversion of units in area",
+                                                    "level_color": "#d1ffaa"
+                                                },
+                                                {
+                                                    "level_number": 7,
+                                                    "level_name": "Challenging Questions integrating the above concepts",
+                                                    "level_color": "#a2d4ff"
+                                                }
+                                            ]
+                                },
+                                {
+                                    "chapter_number": 12,
+                                    "chapter_name": "Algebraic Expressions",
+                                    "chapter_pdf": "https://pixel-editor-db.s3.ap-south-1.amazonaws.com/pdf/G7_C12.pdf",
+                                    "levels": [
+                                                {
+                                                    "level_number": 1,
+                                                    "level_name": "Vocabulary of algebraic expressions",
+                                                    "level_color": "#ffa0ad"
+                                                },
+                                                {
+                                                    "level_number": 2,
+                                                    "level_name": "Addition and Subtraction of algebraic expressions",
+                                                    "level_color": "#d1ffaa"
+                                                },
+                                                {
+                                                    "level_number": 3,
+                                                    "level_name": "Finding the value of an algebraic expression",
+                                                    "level_color": "#a2d4ff"
+                                                },
+                                                {
+                                                    "level_number": 4,
+                                                    "level_name": "Using algebraic expressions in formulas and rules",
+                                                    "level_color": "#fff583"
+                                                },
+                                                {
+                                                    "level_number": 5,
+                                                    "level_name": "Creating algebraic expressions from patterns",
+                                                    "level_color": "#ffa0ad"
+                                                },
+                                                {
+                                                    "level_number": 6,
+                                                    "level_name": "Challenging Questions integrating the above concepts",
+                                                    "level_color": "#d1ffaa"
+                                                }
+                                            ]
+                                },
+                                {
+                                    "chapter_number": 13,
+                                    "chapter_name": "Exponents and Powers",
+                                    "chapter_pdf": "https://pixel-editor-db.s3.ap-south-1.amazonaws.com/pdf/G7_C13.pdf",
+                                    "levels": [
+                                                {
+                                                    "level_number": 1,
+                                                    "level_name": "Exponents and laws of exponents",
+                                                    "level_color": "#ffa0ad"
+                                                },
+                                                {
+                                                    "level_number": 2,
+                                                    "level_name": "Expressing numbers in standard form using decimal number system",
+                                                    "level_color": "#d1ffaa"
+                                                },
+                                                {
+                                                    "level_number": 3,
+                                                    "level_name": "Challenging Questions integrating the above concepts",
+                                                    "level_color": "#a2d4ff"
+                                                }
+                                            ]
+                                },
+                                {
+                                    "chapter_number": 14,
+                                    "chapter_name": "Symmetry",
+                                    "chapter_pdf": "https://pixel-editor-db.s3.ap-south-1.amazonaws.com/pdf/G7_C14.pdf",
+                                    "levels": [
+                                                {
+                                                    "level_number": 1,
+                                                    "level_name": "Lines of symmetry for regular polygons",
+                                                    "level_color": "#ffa0ad"
+                                                },
+                                                {
+                                                    "level_number": 2,
+                                                    "level_name": "Rotational Symmetry",
+                                                    "level_color": "#d1ffaa"
+                                                },
+                                                {
+                                                    "level_number": 3,
+                                                    "level_name": "Line symmetry and rotational symmetry",
+                                                    "level_color": "#a2d4ff"
+                                                },
+                                                {
+                                                    "level_number": 4,
+                                                    "level_name": "Challenging Questions integrating the above concepts",
+                                                    "level_color": "#fff583"
+                                                }
+                                            ]
+                                },
+                                {
+                                    "chapter_number": 15,
+                                    "chapter_name": "Visualizing Solid Shapes",
+                                    "chapter_pdf": "https://pixel-editor-db.s3.ap-south-1.amazonaws.com/pdf/G7_C15.pdf",
+                                    "levels": [
+                                                {
+                                                    "level_number": 1,
+                                                    "level_name": "Plane figures and solid shapes",
+                                                    "level_color": "#ffa0ad"
+                                                },
+                                                {
+                                                    "level_number": 2,
+                                                    "level_name": "Building 3D shapes using nets",
+                                                    "level_color": "#d1ffaa"
+                                                },
+                                                {
+                                                    "level_number": 3,
+                                                    "level_name": "3D shapes on a flat surface",
+                                                    "level_color": "#a2d4ff"
+                                                },
+                                                {
+                                                    "level_number": 4,
+                                                    "level_name": "Viewing different sections of a solid",
+                                                    "level_color": "#fff583"
+                                                },
+                                                {
+                                                    "level_number": 5,
+                                                    "level_name": "Challenging Questions integrating the above concepts",
+                                                    "level_color": "#ffa0ad"
+                                                }
+                                            ]
                                 }
                             ]
             },
