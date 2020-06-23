@@ -20,24 +20,31 @@ def login():
 def dashboard():
     session["question_id_list"] = None
     user_data = get_user_document_data(session.get('admin_id'))
+    active_grade = user_data.get("active_grade")
     return render_template( "/admin/dashboard/dashboard.html",
                             grade_breakdown=grade_breakdown,
-                            user_data=user_data
+                            user_data=user_data,
+                            active_grade=active_grade
                         )
 
 @admin.route("/editor")
 @required_role_as_admin()
 def editor():
     session["question_id_list"] = None
+    user_data = get_user_document_data(session.get('admin_id'))
+    active_grade = user_data.get("active_grade")
     return render_template( "/admin/question/editor/editor.html",
                             formula_list=formula_list,
-                            grade_breakdown=grade_breakdown
+                            grade_breakdown=grade_breakdown,
+                            active_grade=active_grade
                         )
 
 @admin.route("/levels")
 @required_role_as_admin()
 def levels():
     session["question_id_list"] = None
+    user_data = get_user_document_data(session.get('admin_id'))
+    active_grade = user_data.get("active_grade")
     try:
         grade = request.args.get("grade")
         grade_dict = next((grade_dict for grade_dict in grade_breakdown if grade_dict.get('grade_number') == int(grade)), None)
@@ -63,7 +70,8 @@ def levels():
                                 chapter_name=chapter_dict.get("chapter_name"),
                                 grade=grade,
                                 chapter=chapter,
-                                grade_breakdown=grade_breakdown
+                                grade_breakdown=grade_breakdown,
+                                active_grade=active_grade
                             )
     except ValueError:
         return jsonify({
@@ -74,6 +82,8 @@ def levels():
 @admin.route("/review-question")
 @required_role_as_admin()
 def review_question():
+    user_data = get_user_document_data(session.get('admin_id'))
+    active_grade = user_data.get("active_grade")
     try:
         grade = int(request.args.get("grade"))
         chapter = int(request.args.get("chapter"))
@@ -117,7 +127,8 @@ def review_question():
                                 next_document_id=next_document_id,
                                 document_id=document_id,
                                 question_data=question_data,
-                                formula_list=formula_list
+                                formula_list=formula_list,
+                                active_grade=active_grade
                             )
     except ValueError:
         return jsonify({
