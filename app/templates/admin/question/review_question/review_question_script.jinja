@@ -17,6 +17,12 @@
                 "correct_option": "{{correct_option}}"
               }
   $(function(){
+    $('#question_preview_column li a').click(function(){
+      $('li a').each(function(){
+        $(this).parent().removeClass('active')
+      })
+      $(this).parent().addClass('active')
+    })
     $("#question_text").summernote();
     $(".note-editable").addClass("latex-input")
     $('.latex-input').focus(function(){

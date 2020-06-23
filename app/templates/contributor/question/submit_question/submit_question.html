@@ -4,6 +4,8 @@
 {% include("contributor/question/submit_question/submit_question_script.jinja") %}
 {% include("contributor/question/question_style.jinja") %}
 
+{% set question_percentage = (total_contributions_by_contributor * 100) / 5.0 %}
+
 <div class="text-center">
   <div class="row p-2">
     <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4 text-left">
@@ -13,6 +15,18 @@
         </div>
         <div class="col-sm-3 col-md-3 col-lg-3 text-right">
           <span class="grade-tag">Grade {{grade}} - Chapter {{chapter}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <div class="progress-bg mt-3">
+            <div class="progress-bar" style="width: {{question_percentage}}%; background-color: #a39ef5;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <h5 class="mt-5 heavy-font">{{total_contributions_by_contributor}} out of 5 questions contributed for this level</h5>
         </div>
       </div>
     </div>
@@ -33,7 +47,7 @@
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
-          <textarea rows="5" class="form-control form-input latex-input" name="question_text" id="question_text">{{preview_question.get("question_text")}}</textarea>
+          <textarea rows="5" class="form-control form-input latex-input" name="question_text" id="question_text"></textarea>
         </div>
       </div>
       <div class="row">
@@ -42,98 +56,60 @@
           <input type="file" class="upload-question-image" />
         </div>
         <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center mt-5">
-          {% if preview_question.get("question_image") != "#" %}
-            <i class="fa fa-trash fa-lg delete-question-image" style="position: absolute; left: -20%; bottom: -0.5em;"></i>
-          {% else %}
-            <i class="fa fa-trash fa-lg hidden delete-question-image" style="position: absolute; left: -20%; bottom: -0.5em;"></i>
-          {% endif %}
+          <i class="fa fa-trash fa-lg hidden delete-question-image" style="position: absolute; left: -20%; bottom: -0.5em;"></i>
         </div>
       </div>
       <div class="row mt-3">
         <div class="col-sm-12 col-md-12 col-lg-12 question-image-name">
-          {% if preview_question.get("question_image") != "#" %}
-            <p class="guide-text" id="question_image_name" style="margin-left: 5%;">{{preview_question.get('question_image')}}</p>
-          {% endif %}
+
         </div>
       </div>
       <div class="row mt-4">
         <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
-          {% if "amazonaws" not in preview_question.get('options').get('option_a') %}
-            <input type="text" class="form-control form-input-option latex-input" name="option_a_text" id="option_a_text" placeholder="Option A" value="{{preview_question.get('options').get('option_a')}}" />
-          {% else %}
-            <input type="text" class="form-control form-input-option latex-input" name="option_a_text" id="option_a_text" placeholder="Option A" value="{{preview_question.get('options').get('option_a')}}" readonly/>
-          {% endif %}
+          <input type="text" class="form-control form-input-option latex-input" name="option_a_text" id="option_a_text" placeholder="Option A" />
           <span class="input-group-addon hide">
             <span class="option-img-upload">Upload</span>
             <input type="file" class="upload-image-a" />
           </span>
         </div>
         <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center">
-          {% if "amazonaws" not in preview_question.get('options').get('option_a') %}
-            <i class="fa fa-trash fa-lg hidden delete-option-a-image"></i>
-          {% else %}
-            <i class="fa fa-trash fa-lg delete-option-a-image"></i>
-          {% endif %}
+          <i class="fa fa-trash fa-lg hidden delete-option-a-image"></i>
         </div>
       </div>
       <div class="row mt-4">
         <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
-          {% if "amazonaws" not in preview_question.get('options').get('option_b') %}
-            <input type="text" class="form-control form-input-option latex-input" name="option_b_text" id="option_b_text" placeholder="Option B" value="{{preview_question.get('options').get('option_b')}}" />
-          {% else %}
-            <input type="text" class="form-control form-input-option latex-input" name="option_b_text" id="option_b_text" placeholder="Option B" value="{{preview_question.get('options').get('option_b')}}" readonly/>
-          {% endif %}
+          <input type="text" class="form-control form-input-option latex-input" name="option_b_text" id="option_b_text" placeholder="Option B" />
           <span class="input-group-addon hide">
             <span class="option-img-upload">Upload</span>
             <input type="file" class="upload-image-b" />
           </span>
         </div>
         <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center">
-          {% if "amazonaws" not in preview_question.get('options').get('option_b') %}
-            <i class="fa fa-trash fa-lg hidden delete-option-b-image"></i>
-          {% else %}
-            <i class="fa fa-trash fa-lg delete-option-b-image"></i>
-          {% endif %}
+          <i class="fa fa-trash fa-lg hidden delete-option-b-image"></i>
         </div>
       </div>
       <div class="row mt-4">
         <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
-          {% if "amazonaws" not in preview_question.get('options').get('option_c') %}
-            <input type="text" class="form-control form-input-option latex-input" name="option_c_text" id="option_c_text" placeholder="Option C" value="{{preview_question.get('options').get('option_c')}}" />
-          {% else %}
-            <input type="text" class="form-control form-input-option latex-input" name="option_c_text" id="option_c_text" placeholder="Option C" value="{{preview_question.get('options').get('option_c')}}" readonly/>
-          {% endif %}
+          <input type="text" class="form-control form-input-option latex-input" name="option_c_text" id="option_c_text" placeholder="Option C" />
           <span class="input-group-addon hide">
             <span class="option-img-upload">Upload</span>
             <input type="file" class="upload-image-c" />
           </span>
         </div>
         <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center">
-          {% if "amazonaws" not in preview_question.get('options').get('option_c') %}
-            <i class="fa fa-trash fa-lg hidden delete-option-c-image"></i>
-          {% else %}
-            <i class="fa fa-trash fa-lg delete-option-c-image"></i>
-          {% endif %}
+          <i class="fa fa-trash fa-lg hidden delete-option-c-image"></i>
         </div>
       </div>
       <div class="row mt-4">
         <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
-          {% if "amazonaws" not in preview_question.get('options').get('option_d') %}
-            <input type="text" class="form-control form-input-option latex-input" name="option_d_text" id="option_d_text" placeholder="Option D" value="{{preview_question.get('options').get('option_d')}}" />
-          {% else %}
-            <input type="text" class="form-control form-input-option latex-input" name="option_d_text" id="option_d_text" placeholder="Option D" value="{{preview_question.get('options').get('option_d')}}" readonly/>
-          {% endif %}
+          <input type="text" class="form-control form-input-option latex-input" name="option_d_text" id="option_d_text" placeholder="Option D" />
           <span class="input-group-addon hide">
             <span class="option-img-upload">Upload</span>
             <input type="file" class="upload-image-d" />
           </span>
         </div>
         <div class="col-sm-1 col-md-1 col-lg-1 delete-icon align-self-center">
-          {% if "amazonaws" not in preview_question.get('options').get('option_d') %}
-            <i class="fa fa-trash fa-lg hidden delete-option-d-image"></i>
-          {% else %}
-            <i class="fa fa-trash fa-lg delete-option-d-image"></i>
-          {% endif %}
+          <i class="fa fa-trash fa-lg hidden delete-option-d-image"></i>
         </div>
       </div>
       <div class="row">
@@ -146,25 +122,74 @@
           <select class="form-control form-input" name="correct_option" id="correct_option">
             <option value="">Correct answer</option>
             {% for option in ['a', 'b', 'c', 'd'] %}
-            {% if preview_question.get("correct_option")[-1] == option %}
-              <option value="{{option}}" selected>Option {{option | upper}}</option>
-            {% else %}
-              <option value="{{option}}">Option {{option | upper}}</option>
-            {% endif %}
+            <option value="{{option}}">Option {{option | upper}}</option>
             {% endfor %}
           </select>
         </div>
       </div>
     </div>
-    <div class="col-sm-12 col-md-12 col-lg-7 white-container p-4 text-left" style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;">
-      <embed src="{{pdf_url}}" width="100%" height="100%" />
+    <div class="col-sm-12 col-md-12 col-lg-7 white-container p-4 text-left" style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;" id="question_preview_column">
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#preview_tab">Preview</a></li>
+            <li><a data-toggle="tab" href="#pdf_tab">PDF</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="tab-content">
+        <div id="preview_tab" class="tab-pane fade in active">
+          <div class="row mt-3 pl-2 pr-5">
+            <div class="col-sm-12 col-md-12 col-lg-12" id="question_preview_container">
+              <p id="question_preview"></p>
+            </div>
+          </div>
+          <div class="row mt-3 pl-2 pr-5">
+            <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="question_image_preview_container">
+
+            </div>
+          </div>
+          <div class="row mt-3 pl-2 pr-5">
+            <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_a_preview_container">
+              <p id="option_a_preview">Option A</p>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-12 hidden text-center" id="option_a_image_preview_container">
+
+            </div>
+          </div>
+          <div class="row mt-3 pl-2 pr-5">
+            <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_b_preview_container">
+              <p id="option_b_preview">Option B</p>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-12 hidden text-center" id="option_b_image_preview_container">
+
+            </div>
+          </div>
+          <div class="row mt-3 pl-2 pr-5">
+            <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_c_preview_container">
+              <p id="option_c_preview">Option C</p>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-12 hidden text-center" id="option_c_image_preview_container">
+
+            </div>
+          </div>
+          <div class="row mt-3 pl-2 pr-5">
+            <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_d_preview_container">
+              <p id="option_d_preview">Option D</p>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-12 hidden text-center" id="option_d_image_preview_container">
+
+            </div>
+          </div>
+        </div>
+        <div id="pdf_tab" class="tab-pane fade">
+          <embed class="mt-5" src="{{pdf_url}}" width="100%" height="80%" />
+        </div>
+      </div>
     </div>
   </div>
   <div class="row p-2 mt-5">
-    <div class="col-sm-6 col-md-6 col-lg-6 text-right">
-      <button class='action-button-style' id="preview_question">Preview question</button>
-    </div>
-    <div class="col-sm-6 col-md-6 col-lg-6 text-left">
+    <div class="col-sm-12 col-md-12 col-lg-12 text-center">
       <button class='action-button-style' id="submit_question">Submit question</button>
     </div>
   </div>

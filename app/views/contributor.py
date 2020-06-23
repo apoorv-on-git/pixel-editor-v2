@@ -114,48 +114,27 @@ def create_question():
     try:
         user_data = get_user_document_data(session.get('contributor_id'))
         active_grade = user_data.get("active_grade")
-        preview_question = user_data.get("preview_question")
-        if not preview_question:
-            grade = request.args.get("grade")
-            chapter = request.args.get("chapter")
-            level = request.args.get("level")
-            grade_dict, chapter_dict, level_dict = get_grade_breakdown_dict(grade, chapter, level)
-            level_id = f"NCERT_G{int(grade):02}_TOPIC{int(chapter):02}_LEVEL{int(level):02}"
-            individual_log = user_data.get("individual_log")
-            total_contributions_by_contributor = individual_log.get(level_id)
-            if total_contributions_by_contributor >= 5:
-                return redirect(url_for("contributor.levels", grade=grade, chapter=chapter))
-            return render_template( "/contributor/question/create_question/create_question.html",
-                                    grade=grade,
-                                    chapter=chapter,
-                                    level=level,
-                                    level_name=level_dict.get("level_name"),
-                                    formula_list=formula_list,
-                                    pdf_url=chapter_dict.get("chapter_pdf"),
-                                    grade_breakdown=grade_breakdown,
-                                    preview_question={},
-                                    is_preview=False,
-                                    total_contributions_by_contributor=total_contributions_by_contributor,
-                                    active_grade=active_grade
-                                )
-        else:
-            grade=preview_question.get("grade")
-            chapter=preview_question.get("chapter")
-            level=preview_question.get("level")
-            grade_dict, chapter_dict, level_dict = get_grade_breakdown_dict(grade, chapter, level)
-            return render_template(
-                                    "/contributor/question/submit_question/submit_question.html",
-                                    grade=grade,
-                                    chapter=chapter,
-                                    level=level,
-                                    level_name=level_dict.get("level_name"),
-                                    formula_list=formula_list,
-                                    pdf_url=chapter_dict.get("chapter_pdf"),
-                                    grade_breakdown=grade_breakdown,
-                                    preview_question=preview_question,
-                                    is_preview=True,
-                                    active_grade=active_grade
-                                )
+        grade = request.args.get("grade")
+        chapter = request.args.get("chapter")
+        level = request.args.get("level")
+        grade_dict, chapter_dict, level_dict = get_grade_breakdown_dict(grade, chapter, level)
+        level_id = f"NCERT_G{int(grade):02}_TOPIC{int(chapter):02}_LEVEL{int(level):02}"
+        individual_log = user_data.get("individual_log")
+        total_contributions_by_contributor = individual_log.get(level_id)
+        if total_contributions_by_contributor >= 5:
+            return redirect(url_for("contributor.levels", grade=grade, chapter=chapter))
+        return render_template(
+                                "/contributor/question/submit_question/submit_question.html",
+                                grade=grade,
+                                chapter=chapter,
+                                level=level,
+                                level_name=level_dict.get("level_name"),
+                                formula_list=formula_list,
+                                pdf_url=chapter_dict.get("chapter_pdf"),
+                                grade_breakdown=grade_breakdown,
+                                active_grade=active_grade,
+                                total_contributions_by_contributor=total_contributions_by_contributor
+                            )
     except ValueError:
         return jsonify({
             "status": "error",

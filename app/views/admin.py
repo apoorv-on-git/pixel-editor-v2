@@ -128,6 +128,7 @@ def review_question():
                                 document_id=document_id,
                                 question_data=question_data,
                                 formula_list=formula_list,
+                                pdf_url=chapter_dict.get("chapter_pdf"),
                                 active_grade=active_grade
                             )
     except ValueError:

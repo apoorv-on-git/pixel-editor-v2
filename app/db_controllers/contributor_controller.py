@@ -92,39 +92,6 @@ def check_preview_question(contributor_id):
     user_data = user_data.to_dict()
     return user_data.get("preview_question")
 
-def firebase_save_preview_question(contributor_id):
-    try:
-        data = json.loads(request.form.get('json'))
-        check_data(data)
-        grade, chapter, level = int(data.get("grade")), int(data.get("chapter")), int(data.get("level"))
-        question_image, option_a, option_b, option_c, option_d = handle_submitted_images(data, contributor_id)
-        question_text = remove_style(data.get("question"))
-        preview_question = dict(
-                                    grade=grade,
-                                    chapter=chapter,
-                                    level=level,
-                                    question_text=question_text,
-                                    question_image=question_image,
-                                    options=dict(
-                                                    option_a=option_a,
-                                                    option_b=option_b,
-                                                    option_c=option_c,
-                                                    option_d=option_d
-                                                ),
-                                    correct_option=data.get("correct_option")
-                            )
-        document_ref = firebase_db.collection('users')
-        save_preview_question = document_ref.document(contributor_id).update({"preview_question": preview_question})
-    except Exception as e:
-        raise e
-
-def firebase_delete_preview_question(contributor_id):
-    try:
-        document_ref = firebase_db.collection("users")
-        document_ref.document(contributor_id).update({"preview_question": firestore.DELETE_FIELD})
-    except Exception as e:
-        raise e
-
 def firebase_submit_question(contributor_id):
     try:
         data = json.loads(request.form.get('json'))

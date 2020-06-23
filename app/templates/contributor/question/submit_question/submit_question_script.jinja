@@ -1,17 +1,21 @@
-{% set question_image = preview_question.get("question_image") %}
 <script>
   var input_focus = ""
   var json = {
                 "question": "",
-                "question_image": "{{question_image}}",
+                "question_image": "#",
                 "option_a": "",
                 "option_b": "",
                 "option_c": "",
                 "option_d": "",
                 "correct_option": ""
               }
-  var old_json = {{preview_question | tojson}}
   $(function(){
+    $('#question_preview_column li a').click(function(){
+      $('li a').each(function(){
+        $(this).parent().removeClass('active')
+      })
+      $(this).parent().addClass('active')
+    })
     $("#question_text").summernote();
     $(".note-editable").addClass("latex-input")
     $('.latex-input').focus(function(){
@@ -43,6 +47,8 @@
       if (this.files && this.files[0]) {
         var reader = new FileReader();
         reader.onload = function (e) {
+          $("#question_image_preview_container").empty()
+          $("#question_image_preview_container").html(`<img src="${e.target.result}" class="question_preview_img" />`)
           $('.delete-question-image').removeClass('hidden')
           update_json()
         };
@@ -53,17 +59,21 @@
       }
     })
     $('.delete-question-image').click(function(){
+      $("#question_image_preview_container").empty()
       $('.upload-question-image').val('')
       $('.delete-question-image').addClass('hidden')
       $(".question-image-name").empty()
       update_json()
-      delete_preview_image("question_image")
     })
     $('.upload-image-a').change(function(){
       if (this.files && this.files[0]) {
         var reader = new FileReader();
         reader.onload = function(e) {
+          $('#option_a_image_preview_container').empty()
+          $('#option_a_image_preview_container').html(`<img src="${e.target.result}" class="option_a_preview_image">`)
           $('.delete-option-a-image').removeClass('hidden')
+          $("#option_a_preview_container").addClass("hidden")
+          $("#option_a_image_preview_container").removeClass("hidden")
           update_json()
         }
         reader.readAsDataURL(this.files[0])
@@ -73,18 +83,24 @@
       }
     })
     $('.delete-option-a-image').click(function(){
+      $('#option_a_image_preview_container').empty()
       $(".upload-image-a").val('')
       $(".delete-option-a-image").addClass('hidden')
       $("#option_a_text").val("")
       $("#option_a_text").attr('readonly', false)
+      $("#option_a_image_preview_container").addClass('hidden')
+      $("#option_a_preview_container").removeClass('hidden')
       update_json()
-      delete_preview_image("option_a")
     })
     $('.upload-image-b').change(function(){
       if (this.files && this.files[0]) {
         var reader = new FileReader();
         reader.onload = function(e) {
+          $('#option_b_image_preview_container').empty()
+          $('#option_b_image_preview_container').html(`<img src="${e.target.result}" class="option_b_preview_image">`)
           $('.delete-option-b-image').removeClass('hidden')
+          $("#option_b_preview_container").addClass("hidden")
+          $("#option_b_image_preview_container").removeClass("hidden")
           update_json()
         }
         reader.readAsDataURL(this.files[0])
@@ -94,18 +110,24 @@
       }
     })
     $('.delete-option-b-image').click(function(){
+      $('#option_b_image_preview_container').empty()
       $(".upload-image-b").val('')
       $(".delete-option-b-image").addClass('hidden')
       $("#option_b_text").val("")
       $("#option_b_text").attr('readonly', false)
+      $("#option_b_image_preview_container").addClass('hidden')
+      $("#option_b_preview_container").removeClass('hidden')
       update_json()
-      delete_preview_image("option_b")
     })
     $('.upload-image-c').change(function(){
       if (this.files && this.files[0]) {
         var reader = new FileReader();
         reader.onload = function(e) {
+          $('#option_c_image_preview_container').empty()
+          $('#option_c_image_preview_container').html(`<img src="${e.target.result}" class="option_c_preview_image">`)
           $('.delete-option-c-image').removeClass('hidden')
+          $("#option_c_preview_container").addClass("hidden")
+          $("#option_c_image_preview_container").removeClass("hidden")
           update_json()
         }
         reader.readAsDataURL(this.files[0])
@@ -115,18 +137,24 @@
       }
     })
     $('.delete-option-c-image').click(function(){
+      $('#option_c_image_preview_container').empty()
       $(".upload-image-c").val('')
       $(".delete-option-c-image").addClass('hidden')
       $("#option_c_text").val("")
       $("#option_c_text").attr('readonly', false)
+      $("#option_c_image_preview_container").addClass('hidden')
+      $("#option_c_preview_container").removeClass('hidden')
       update_json()
-      delete_preview_image("option_c")
     })
     $('.upload-image-d').change(function(){
       if (this.files && this.files[0]) {
         var reader = new FileReader();
         reader.onload = function(e) {
+          $('#option_d_image_preview_container').empty()
+          $('#option_d_image_preview_container').html(`<img src="${e.target.result}" class="option_d_preview_image">`)
           $('.delete-option-d-image').removeClass('hidden')
+          $("#option_d_preview_container").addClass("hidden")
+          $("#option_d_image_preview_container").removeClass("hidden")
           update_json()
         }
         reader.readAsDataURL(this.files[0])
@@ -136,92 +164,77 @@
       }
     })
     $('.delete-option-d-image').click(function(){
+      $('#option_d_image_preview_container').empty()
       $(".upload-image-d").val('')
       $(".delete-option-d-image").addClass('hidden')
       $("#option_d_text").val("")
       $("#option_d_text").attr('readonly', false)
+      $("#option_d_image_preview_container").addClass('hidden')
+      $("#option_d_preview_container").removeClass('hidden')
       update_json()
-      delete_preview_image("option_d")
     })
     $('.note-editable').keyup(function(){
+      $('#question_preview').empty()
+      $('#question_preview').html($("#question_text").val())
       update_json()
+      MathJax.Hub.Typeset()
     })
     $('#option_a_text').keyup(function(){
       let current_value = $(this).val()
       if (!current_value) {
         current_value = "Option A"
       }
+      $('#option_a_preview').empty()
+      $('#option_a_preview').html(current_value)
       update_json()
+      MathJax.Hub.Typeset()
     })
     $('#option_b_text').keyup(function(){
       let current_value = $(this).val()
       if (!current_value) {
         current_value = "Option B"
       }
+      $('#option_b_preview').empty()
+      $('#option_b_preview').html(current_value)
       update_json()
+      MathJax.Hub.Typeset()
     })
     $('#option_c_text').keyup(function(){
       let current_value = $(this).val()
       if (!current_value) {
         current_value = "Option C"
       }
+      $('#option_c_preview').empty()
+      $('#option_c_preview').html(current_value)
       update_json()
+      MathJax.Hub.Typeset()
     })
     $('#option_d_text').keyup(function(){
       let current_value = $(this).val()
       if (!current_value) {
         current_value = "Option D"
       }
+      $('#option_d_preview').empty()
+      $('#option_d_preview').html(current_value)
       update_json()
+      MathJax.Hub.Typeset()
     })
     $('#correct_option').change(function(){
-      update_json()
-    })
-    $("#preview_question").click(function(){
-      update_json();
-      json.grade = "{{grade}}";
-      json.chapter = "{{chapter}}";
-      json.level = "{{level}}";
-      var fd = new FormData();
-      fd.append('json', JSON.stringify(json))
-      fd.append('question_image', $('.upload-question-image')[0].files[0])
-      fd.append('option_a', $('.upload-image-a')[0].files[0])
-      fd.append('option_b', $('.upload-image-b')[0].files[0])
-      fd.append('option_c', $('.upload-image-c')[0].files[0])
-      fd.append('option_d', $('.upload-image-d')[0].files[0])
-      $.ajax({
-        url: "{{url_for('contributor_api.save_preview_question')}}",
-        type: "post",
-        contentType: false,
-        processData: false,
-        data: fd,
-        beforeSend: function(){
-          $('.main-container').addClass('blur');
-          $(':button').prop('disabled', true);
-          $("#loader").show();
-        },
-        success: function (result) {
-          window.location.reload();
-        },
-        error: function (result) {
-          Swal.fire(
-           'Houston! We got a problem',
-           result.responseJSON.message,
-           'error'
-          )
-        },
-        complete:function(data){
-          $('.main-container').removeClass('blur');
-          $(':button').prop('disabled', false);
-          $("#loader").hide();
-        }
+      let option_selected = $(this).val();
+      let option_list = ['option_a', 'option_b', 'option_c', 'option_d']
+      option_list.map(function(option){
+        $(`#${option}_preview_container`).css('background-color', '#eee');
+        $(`#${option}_image_preview_container`).css('background-color', '#eee');
       })
+      $(`#option_${option_selected}_preview_container`).css('background-color', 'green');
+      $(`#option_${option_selected}_image_preview_container`).css('background-color', 'green');
+      update_json()
     })
     $("#submit_question").click(function(){
       update_json();
-      json.grade = "{{grade}}";
-      json.chapter = "{{chapter}}";
-      json.level = "{{level}}";
+      json.grade = "{{grade}}"
+      json.chapter = "{{chapter}}"
+      json.level = "{{level}}"
       var fd = new FormData();
       fd.append('json', JSON.stringify(json))
       fd.append('question_image', $('.upload-question-image')[0].files[0])
@@ -269,63 +282,5 @@
     json.option_c = $('.upload-image-c').val() ? "OPTION_C.png" : $('#option_c_text').val();
     json.option_d = $('.upload-image-d').val() ? "OPTION_D.png" : $('#option_d_text').val();
     json.correct_option = `option_${$('#correct_option').val()}`
-  }
-  function delete_preview_image(key) {
-    if (key === "question_image") {
-      var delete_url = old_json.question_image
-    } else {
-      if (key === "option_a") {
-        var delete_url = old_json.options.option_a
-      } else if (key === "option_b") {
-        var delete_url = old_json.options.option_b
-      } else if (key === "option_c") {
-        var delete_url = old_json.options.option_c
-      } else if (key === "option_d") {
-        var delete_url = old_json.options.option_d
-      }
-    }
-    let data = {
-      delete_url: delete_url
-    }
-    $.ajax({
-      url: "{{url_for('contributor_api.delete_preview_image')}}",
-      type: "post",
-      data: JSON.stringify(data),
-      dataType: 'json',
-      contentType: 'application/json',
-      beforeSend: function(){
-        $('.main-container').addClass('blur');
-        $(':button').prop('disabled', true);
-        $("#loader").show();
-      },
-      success: function (result) {
-        if (key === "question_image") {
-          old_json.question_image = "#";
-        } else {
-          if (key === "option_a") {
-            old_json.options.option_a = "";
-          } else if (key === "option_b") {
-            old_json.options.option_b = "";
-          } else if (key === "option_c") {
-            old_json.options.option_c = "";
-          } else if (key === "option_d") {
-            old_json.options.option_d = "";
-          }
-        }
-      },
-      error: function (result) {
-        $("#loader").hide();
-        Swal.fire(
-         'Houston! We got a problem',
-         result.responseJSON.message,
-         'error'
-        )
-      },
-      complete:function(data){
-        $('.main-container').removeClass('blur');
-        $(':button').prop('disabled', false);
-        $("#loader").hide();
-      }
-    })
   }
 </script>
