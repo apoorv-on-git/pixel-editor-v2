@@ -9,6 +9,14 @@ def remove_style(html):
     soup = bs4.BeautifulSoup(html, features="html.parser")
     for match in soup.findAll('span'):
         match.unwrap()
+    for match in soup.findAll('font'):
+        match.unwrap()
+    for match in soup.findAll('a'):
+        match.unwrap()
+    for match in soup.findAll('nobr'):
+        match.unwrap()
+    for match in soup.findAll('img'):
+        match.decompose()
     for tag in soup():
         for attribute in ["class", "id", "name", "style"]:
             del tag[attribute]
