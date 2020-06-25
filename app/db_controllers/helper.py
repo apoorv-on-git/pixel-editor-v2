@@ -26,7 +26,6 @@ def remove_style(html):
             del tag[attribute]
     question_text = str(soup)
     question_text = question_text.replace(u'\xa0', u' ')
-    question_text = question_text.replace("\"", "\'")
     return question_text
 
 def get_grade_breakdown_dict(grade, chapter, level):
