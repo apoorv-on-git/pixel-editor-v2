@@ -17,11 +17,16 @@ def remove_style(html):
         match.unwrap()
     for match in soup.findAll('img'):
         match.decompose()
+    for match in soup.findAll('script'):
+        match.decompose()
+    for match in soup.findAll('math'):
+        match.decompose()
     for tag in soup():
         for attribute in ["class", "id", "name", "style"]:
             del tag[attribute]
     question_text = str(soup)
     question_text = question_text.replace(u'\xa0', u' ')
+    question_text = question_text.replace("\"", "\'")
     return question_text
 
 def get_grade_breakdown_dict(grade, chapter, level):
