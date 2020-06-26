@@ -115,9 +115,9 @@
                     <p id="option_{{key.split('_')[-1]}}_preview">{{value}}</p>
                   </div>
                   {% if "amazonaws" not in value %}
-                  <div class="col-sm-12 col-md-12 col-lg-12 hidden text-center" id="option_{{key.split('_')[-1]}}_preview_container">
+                  <div class="col-sm-12 col-md-12 col-lg-12 hidden text-center" id="option_{{key.split('_')[-1]}}_image_preview_container">
                   {% else %}
-                  <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_{{key.split('_')[-1]}}_preview_container">
+                  <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_{{key.split('_')[-1]}}_image_preview_container">
                   {% endif %}
                     <img src="{{value}}" />
                   </div>

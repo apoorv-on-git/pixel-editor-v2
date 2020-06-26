@@ -89,27 +89,26 @@ def file_allowed(extension):
 def handle_image_upload(key, contributor_id):
     try:
         image = request.files.get(key)
-        random_param = randint(100, 999)
         if image and file_allowed(image.filename.split('.')[-1].lower()):
             if key == 'question_image':
                 url_endpoint = f"preview_images/{contributor_id}_preview.{image.filename.split('.')[-1].lower()}"
                 upload_to_s3(url_endpoint, image)
-                return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
+                return f"{os.environ.get('S3_URL')}{url_endpoint}"
             elif key == 'option_a':
                 url_endpoint = f"preview_images/{contributor_id}_preview_OPTION_A.{image.filename.split('.')[-1].lower()}"
                 upload_to_s3(url_endpoint, image)
-                return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
+                return f"{os.environ.get('S3_URL')}{url_endpoint}"
             elif key == 'option_b':
                 url_endpoint = f"preview_images/{contributor_id}_preview_OPTION_B.{image.filename.split('.')[-1].lower()}"
                 upload_to_s3(url_endpoint, image)
-                return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
+                return f"{os.environ.get('S3_URL')}{url_endpoint}"
             elif key == 'option_c':
                 url_endpoint = f"preview_images/{contributor_id}_preview_OPTION_C.{image.filename.split('.')[-1].lower()}"
                 upload_to_s3(url_endpoint, image)
-                return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
+                return f"{os.environ.get('S3_URL')}{url_endpoint}"
             elif key == 'option_d':
                 url_endpoint = f"preview_images/{contributor_id}_preview_OPTION_D.{image.filename.split('.')[-1].lower()}"
                 upload_to_s3(url_endpoint, image)
-                return f"{os.environ.get('S3_URL')}{url_endpoint}?param={random_param}"
+                return f"{os.environ.get('S3_URL')}{url_endpoint}"
     except Exception as e:
         raise e
