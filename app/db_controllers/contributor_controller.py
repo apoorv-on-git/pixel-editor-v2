@@ -141,5 +141,6 @@ def firebase_submit_question(contributor_id):
         firebase_db.collection("daily_question_log").document(local_date).set({"count": Increment(1)}, merge=True)
         firebase_db.collection("total_questions").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").set({level_collection_id: Increment(1)}, merge=True)
         firebase_db.collection("admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").set({level_collection_id: Increment(1)}, merge=True)
+        firebase_db.collection("cumulative_data").document("data").set({"submitted": Increment(1)}, merge=True)
     except Exception as e:
         raise e

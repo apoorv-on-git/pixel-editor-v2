@@ -48,6 +48,27 @@ def logout():
         }, 200
     )
 
+@admin_api.route("/upload-profile-image", methods=["POST"])
+@required_role_as_admin()
+def update_profile_image():
+    try:
+        profile_image = request.files.get('profile_image')
+        if profile_image:
+            url_endpoint = f"profile_images/{session.get('admin_id')}.{profile_image.filename.split('.')[-1]}"
+            delete_from_s3(url_endpoint)
+            upload_to_s3(url_endpoint, profile_image)
+            firebase_update_profile_image(session.get('admin_id'), f"{os.environ.get('S3_URL')}{url_endpoint}")
+        return jsonify(
+            {
+                "status": "success",
+            }, 200
+        )
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 400
+
 @admin_api.route("/get-chapter-list")
 @required_role_as_admin()
 def get_chapter_list():

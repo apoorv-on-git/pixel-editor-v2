@@ -47,6 +47,31 @@ def firebase_get_question(question_id, grade, chapter, level):
         raise ValueError("No such question")
     return question_data
 
+def firebase_update_profile_image(admin_id, profile_image_url):
+    document_ref = firebase_db.collection('users')
+    update_user = document_ref.document(admin_id).update({"profile_image": profile_image_url})
+
+def get_admin_review_stats():
+    document_ref = firebase_db.collection("users").where("type", "==", "Admin")
+    admin_id_list = []
+    for admin in document_ref.stream():
+        admin_id_list.append(admin.id)
+    return_list = []
+    for admin_id in admin_id_list:
+        admin_data = firebase_db.collection("users").document(admin_id).get().to_dict()
+        _d = dict(
+                    name = admin_data.get("name"),
+                    profile_image = admin_data.get("profile_image"),
+                    total_questions_reviewed = admin_data.get("total_questions_reviewed")
+                )
+        return_list.append(_d)
+    return return_list
+
+def get_cumulative_chart_data():
+    document_ref = firebase_db.collection("cumulative_data")
+    cumulative_data = document_ref.document("data").get().to_dict()
+    return cumulative_data
+
 def firebase_submit_question(admin_id):
     try:
         data = json.loads(request.form.get('json'))
@@ -93,6 +118,7 @@ def firebase_submit_question(admin_id):
         firebase_db.collection("daily_question_log").document(local_date).set({"count": Increment(1)}, merge=True)
         firebase_db.collection("total_questions").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").set({level_collection_id: Increment(1)}, merge=True)
         firebase_db.collection("admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").set({level_collection_id: Increment(1)}, merge=True)
+        firebase_db.collection("cumulative_data").document("data").set({"submitted": Increment(1)}, merge=True)
     except Exception as e:
         raise e
 
@@ -140,6 +166,7 @@ def firebase_disapprove_question(admin_id):
         questions_for_review = firebase_get_questions_for_review(f"NCERT_G{grade:02}_TOPIC{chapter:02}")
         current_questions_for_review = questions_for_review.get(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")
         firebase_db.collection("admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": (current_questions_for_review - 1)})
+        firebase_db.collection("cumulative_data").document("data").set({"reviewed": Increment(1)}, merge=True)
     except Exception as e:
         raise e
 
@@ -194,5 +221,6 @@ def firebase_approve_question(admin_id):
         questions_for_review = firebase_get_questions_for_review(f"NCERT_G{grade:02}_TOPIC{chapter:02}")
         current_questions_for_review = questions_for_review.get(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")
         firebase_db.collection("admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": (current_questions_for_review - 1)})
+        firebase_db.collection("cumulative_data").document("data").set({"reviewed": Increment(1)}, merge=True)
     except Exception as e:
         raise e
