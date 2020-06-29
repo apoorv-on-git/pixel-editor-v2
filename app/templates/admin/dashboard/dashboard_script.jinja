@@ -1,0 +1,71 @@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+  google.charts.load("current", {packages:['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+      ["Action", "Number", { role: "style" } ],
+      ["Submitted", {{chart_data.get('submitted')}}, "blue"],
+      ["Reviewed", {{chart_data.get('reviewed')}}, "red"]
+    ]);
+
+    var view = new google.visualization.DataView(data);
+    view.setColumns([0, 1,
+                     { calc: "stringify",
+                       sourceColumn: 1,
+                       type: "string",
+                       role: "annotation" },
+                     2]);
+
+    var options = {
+      bar: {groupWidth: "95%"},
+      legend: { position: "none" },
+      vAxis: {minValue: 0}
+    };
+    var chart = new google.visualization.ColumnChart(document.getElementById("bar_chart"));
+    chart.draw(view, options);
+  }
+  $(function(){
+    $('.upload-profile-image').change(function(){
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          $('.profile-image-display').attr('src', e.target.result)
+        };
+        reader.readAsDataURL(this.files[0]);
+        var fd = new FormData();
+        fd.append('profile_image', $('.upload-profile-image')[0].files[0])
+        $.ajax({
+          url: "{{url_for('admin_api.update_profile_image')}}",
+          type: 'post',
+          contentType: false,
+          processData: false,
+          data: fd,
+          beforeSend: function(){
+            $('.main-container').addClass('blur');
+            $(':button').prop('disabled', true);
+            $("#loader").show();
+          },
+          success: function (result) {
+            ;
+          },
+          error: function (result) {
+            Swal.fire(
+             'Error',
+             result.responseJSON.message,
+             'error'
+            )
+          },
+          complete:function(data){
+            $('.main-container').removeClass('blur');
+            $(':button').prop('disabled', false);
+            $("#loader").hide();
+          }
+        });
+      }
+    })
+  })
+  $(document).ready(function(){
+    $("#dashboard_navigator").addClass("active")
+  })
+</script>
