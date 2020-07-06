@@ -1,0 +1,227 @@
+<script>
+  var json = {
+                "question": "",
+                "question_image": "#",
+                "option_a": "",
+                "option_b": "",
+                "option_c": "",
+                "option_d": "",
+                "correct_option": ""
+              }
+  $(function(){
+    $('#question_preview_column li a').click(function(){
+      $('li a').each(function(){
+        $(this).parent().removeClass('active')
+      })
+      $(this).parent().addClass('active')
+    })
+    $("#question_text").summernote("disable");
+    $(".note-editable").addClass("latex-input")
+    $('.latex-input').focus(function(){
+      if (!$(this).hasClass("note-editable")) {
+        input_focus = $(this).attr("id")
+      }
+    })
+    $('.upload-question-image').change(function(){
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          $("#question_image_preview_container").empty()
+          $("#question_image_preview_container").html(`<img src="${e.target.result}" class="question_preview_img" />`)
+          $('.delete-question-image').removeClass('hidden')
+          update_json()
+        };
+        reader.readAsDataURL(this.files[0]);
+        var filename = $('.upload-question-image').val().split('\\').pop()
+        $(".question-image-name").empty()
+        $(".question-image-name").append(`<p class="guide-text" id="question_image_name" style="margin-left: 5%;">${filename}</p>`)
+      }
+    })
+    $('.delete-question-image').click(function(){
+      $("#question_image_preview_container").empty()
+      $('.upload-question-image').val('')
+      $('.delete-question-image').addClass('hidden')
+      $(".question-image-name").empty()
+      update_json()
+    })
+    $('.upload-image-a').change(function(){
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $('#option_a_image_preview_container').empty()
+          $('#option_a_image_preview_container').html(`<img src="${e.target.result}" class="option_a_preview_image">`)
+          $('.delete-option-a-image').removeClass('hidden')
+          $("#option_a_preview_container").addClass("hidden")
+          $("#option_a_image_preview_container").removeClass("hidden")
+          update_json()
+        }
+        reader.readAsDataURL(this.files[0])
+        var filename = $('.upload-image-a').val().split('\\').pop()
+        $("#option_a_text").val(filename)
+      }
+    })
+    $('.delete-option-a-image').click(function(){
+      $('#option_a_image_preview_container').empty()
+      $(".upload-image-a").val('')
+      $(".delete-option-a-image").addClass('hidden')
+      $("#option_a_text").val("")
+      $("#option_a_image_preview_container").addClass('hidden')
+      $("#option_a_preview_container").removeClass('hidden')
+      update_json()
+    })
+    $('.upload-image-b').change(function(){
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $('#option_b_image_preview_container').empty()
+          $('#option_b_image_preview_container').html(`<img src="${e.target.result}" class="option_b_preview_image">`)
+          $('.delete-option-b-image').removeClass('hidden')
+          $("#option_b_preview_container").addClass("hidden")
+          $("#option_b_image_preview_container").removeClass("hidden")
+          update_json()
+        }
+        reader.readAsDataURL(this.files[0])
+        var filename = $('.upload-image-b').val().split('\\').pop()
+        $("#option_b_text").val(filename)
+      }
+    })
+    $('.delete-option-b-image').click(function(){
+      $('#option_b_image_preview_container').empty()
+      $(".upload-image-b").val('')
+      $(".delete-option-b-image").addClass('hidden')
+      $("#option_b_text").val("")
+      $("#option_b_image_preview_container").addClass('hidden')
+      $("#option_b_preview_container").removeClass('hidden')
+      update_json()
+    })
+    $('.upload-image-c').change(function(){
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $('#option_c_image_preview_container').empty()
+          $('#option_c_image_preview_container').html(`<img src="${e.target.result}" class="option_c_preview_image">`)
+          $('.delete-option-c-image').removeClass('hidden')
+          $("#option_c_preview_container").addClass("hidden")
+          $("#option_c_image_preview_container").removeClass("hidden")
+          update_json()
+        }
+        reader.readAsDataURL(this.files[0])
+        var filename = $('.upload-image-c').val().split('\\').pop()
+        $("#option_c_text").val(filename)
+      }
+    })
+    $('.delete-option-c-image').click(function(){
+      $('#option_c_image_preview_container').empty()
+      $(".upload-image-c").val('')
+      $(".delete-option-c-image").addClass('hidden')
+      $("#option_c_text").val("")
+      $("#option_c_image_preview_container").addClass('hidden')
+      $("#option_c_preview_container").removeClass('hidden')
+      update_json()
+    })
+    $('.upload-image-d').change(function(){
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $('#option_d_image_preview_container').empty()
+          $('#option_d_image_preview_container').html(`<img src="${e.target.result}" class="option_d_preview_image">`)
+          $('.delete-option-d-image').removeClass('hidden')
+          $("#option_d_preview_container").addClass("hidden")
+          $("#option_d_image_preview_container").removeClass("hidden")
+          update_json()
+        }
+        reader.readAsDataURL(this.files[0])
+        var filename = $('.upload-image-d').val().split('\\').pop()
+        $("#option_d_text").val(filename)
+      }
+    })
+    $('.delete-option-d-image').click(function(){
+      $('#option_d_image_preview_container').empty()
+      $(".upload-image-d").val('')
+      $(".delete-option-d-image").addClass('hidden')
+      $("#option_d_text").val("")
+      $("#option_d_image_preview_container").addClass('hidden')
+      $("#option_d_preview_container").removeClass('hidden')
+      update_json()
+    })
+    $("#skip_question").click(function(){
+      if ("{{next_document_id}}") {
+        window.location.href = `{{url_for('graphics.edit_question')}}?grade={{grade}}&chapter={{chapter}}&level={{level}}&document_id={{next_document_id}}`
+      } else {
+        window.location.href = `{{url_for('graphics.levels')}}?grade={{grade}}&chapter={{chapter}}`
+      }
+    })
+    $("#save_question").click(function(){
+      update_json()
+      let data = {
+        "document_id": "{{document_id}}",
+        "grade": "{{grade}}",
+        "chapter": "{{chapter}}",
+        "level": "{{level}}",
+        "question_json": json
+      }
+      var fd = new FormData();
+      fd.append('json', JSON.stringify(data))
+      fd.append('question_image', $('.upload-question-image')[0].files[0])
+      fd.append('option_a', $('.upload-image-a')[0].files[0])
+      fd.append('option_b', $('.upload-image-b')[0].files[0])
+      fd.append('option_c', $('.upload-image-c')[0].files[0])
+      fd.append('option_d', $('.upload-image-d')[0].files[0])
+      $.ajax({
+        url: "{{url_for('graphics_api.save_question')}}",
+        type: "post",
+        contentType: false,
+        processData: false,
+        data: fd,
+        beforeSend: function(){
+          $('.main-container').addClass('blur');
+          $(':button').prop('disabled', true);
+          $("#loader").show();
+        },
+        success: function (result) {
+          if ("{{next_document_id}}") {
+            window.location.href = `{{url_for('graphics.edit_question')}}?grade={{grade}}&chapter={{chapter}}&level={{level}}&document_id={{next_document_id}}`
+          } else {
+            window.location.href = `{{url_for('graphics.levels')}}?grade={{grade}}&chapter={{chapter}}`
+          }
+        },
+        error: function (result) {
+          $("#loader").hide();
+          Swal.fire(
+           'Hey!',
+           result.responseJSON.message,
+           'error'
+          )
+        },
+        complete:function(data){
+          $('.main-container').removeClass('blur');
+          $(':button').prop('disabled', false);
+          $("#loader").hide();
+        }
+      })
+    })
+  })
+  $(document).ready(function(){
+    update_json()
+    highlight_correct_option()
+  })
+  function highlight_correct_option() {
+      let option_selected = $("#correct_option").val();
+      let option_list = ['option_a', 'option_b', 'option_c', 'option_d']
+      option_list.map(function(option){
+        $(`#${option}_preview_container`).css('background-color', '#eee');
+        $(`#${option}_image_preview_container`).css('background-color', '#eee');
+      })
+      $(`#option_${option_selected}_preview_container`).css('background-color', 'green');
+      $(`#option_${option_selected}_image_preview_container`).css('background-color', 'green');
+  }
+  function update_json() {
+    json.question = $('#question_text').val();
+    json.question_image = $('#question_image_name').html() ? $('#question_image_name').html() : "#";
+    json.option_a = $('.upload-image-a').val() ? "OPTION_A.png" : $('#option_a_text').val();
+    json.option_b = $('.upload-image-b').val() ? "OPTION_B.png" : $('#option_b_text').val();
+    json.option_c = $('.upload-image-c').val() ? "OPTION_C.png" : $('#option_c_text').val();
+    json.option_d = $('.upload-image-d').val() ? "OPTION_D.png" : $('#option_d_text').val();
+    json.correct_option = `option_${$('#correct_option').val()}`
+  }
+</script>

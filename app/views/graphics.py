@@ -1,56 +1,39 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify
 from app.utils.role_util import *
-from app.db_controllers.admin_controller import *
+from app.db_controllers.graphics_controller import *
 from app.db_controllers.helper import *
 from app.data.grade_breakdown import data as grade_breakdown
 from app.data.formula import formula_list
 
-admin = Blueprint('admin', __name__, url_prefix="/admin")
+graphics = Blueprint('graphics', __name__, url_prefix="/graphics")
 
-@admin.route('/')
+@graphics.route('/')
 def login():
-    if session.get("admin_id"):
+    if session.get("graphics_id"):
+        return redirect(url_for("graphics.dashboard"))
+    elif session.get("admin_id"):
         return redirect(url_for("admin.dashboard"))
     elif session.get("contributor_id"):
         return redirect(url_for("contributor.dashboard"))
-    elif session.get("graphics_id"):
-        return redirect(url_for("graphics.dashboard"))
-    return render_template("/admin/login/login.html")
+    return render_template("/graphics/login/login.html")
 
-@admin.route("/dashboard")
-@required_role_as_admin()
+@graphics.route("/dashboard")
+@required_role_as_graphics()
 def dashboard():
     session["question_id_list"] = None
-    user_data = get_user_document_data(session.get('admin_id'))
-    leaderboard_data = get_admin_review_stats()
-    chart_data = get_cumulative_chart_data()
-    active_grade = user_data.get("active_grade")
-    return render_template( "/admin/dashboard/dashboard.html",
+    user_data = get_user_document_data(session.get('graphics_id'))
+    sidebar_filter_based_on_requirement = firebase_get_questions_for_graphics()
+    return render_template( "/graphics/dashboard/dashboard.html",
                             grade_breakdown=grade_breakdown,
                             user_data=user_data,
-                            active_grade=active_grade,
-                            leaderboard_data=leaderboard_data,
-                            chart_data=chart_data
+                            sidebar_filter_based_on_requirement=sidebar_filter_based_on_requirement
                         )
 
-@admin.route("/editor")
-@required_role_as_admin()
-def editor():
-    session["question_id_list"] = None
-    user_data = get_user_document_data(session.get('admin_id'))
-    active_grade = user_data.get("active_grade")
-    return render_template( "/admin/question/editor/editor.html",
-                            formula_list=formula_list,
-                            grade_breakdown=grade_breakdown,
-                            active_grade=active_grade
-                        )
-
-@admin.route("/levels")
-@required_role_as_admin()
+@graphics.route("/levels")
+@required_role_as_graphics()
 def levels():
     session["question_id_list"] = None
-    user_data = get_user_document_data(session.get('admin_id'))
-    active_grade = user_data.get("active_grade")
+    user_data = get_user_document_data(session.get('graphics_id'))
     try:
         grade = request.args.get("grade")
         grade_dict = next((grade_dict for grade_dict in grade_breakdown if grade_dict.get('grade_number') == int(grade)), None)
@@ -67,17 +50,18 @@ def levels():
                 "message": "Invalid Chapter!"
             }), 400
         levels = chapter_dict.get("levels")
-        questions_for_review = firebase_get_questions_for_review(f"NCERT_G{int(grade):02}_TOPIC{int(chapter):02}")
+        sidebar_filter_based_on_requirement = firebase_get_questions_for_graphics()
+        questions_for_graphics = sidebar_filter_based_on_requirement.get(f"NCERT_G{int(grade):02}_TOPIC{int(chapter):02}")
         for level in levels:
             level_id = f"NCERT_G{int(grade):02}_TOPIC{int(chapter):02}_LEVEL{int(level.get('level_number')):02}"
-            level["questions_for_review"] = questions_for_review.get(level_id) or 0
-        return render_template( "/admin/level/level.html",
+            level["questions_for_graphics"] = questions_for_graphics.get(level_id) or 0
+        return render_template( "/graphics/level/level.html",
                                 levels=levels,
                                 chapter_name=chapter_dict.get("chapter_name"),
                                 grade=grade,
                                 chapter=chapter,
                                 grade_breakdown=grade_breakdown,
-                                active_grade=active_grade
+                                sidebar_filter_based_on_requirement=sidebar_filter_based_on_requirement
                             )
     except ValueError:
         return jsonify({
@@ -85,11 +69,11 @@ def levels():
             "message": "Do not tamper with the URL. Go to dashboard and try again!"
         }), 400
 
-@admin.route("/review-question")
-@required_role_as_admin()
-def review_question():
-    user_data = get_user_document_data(session.get('admin_id'))
-    active_grade = user_data.get("active_grade")
+@graphics.route("edit-question")
+@required_role_as_graphics()
+def edit_question():
+    user_data = get_user_document_data(session.get('graphics_id'))
+    sidebar_filter_based_on_requirement = firebase_get_questions_for_graphics()
     try:
         grade = int(request.args.get("grade"))
         chapter = int(request.args.get("chapter"))
@@ -101,16 +85,16 @@ def review_question():
                 "message": "Do not tamper with the URL. Go to dashboard and try again!"
             })
         if not document_id:
-            question_document_ids = firebase_get_questions_for_review_list(grade, chapter, level)
+            question_document_ids = firebase_get_questions_for_graphics_list(grade, chapter, level)
             if len(question_document_ids) == 0:
                 return jsonify({
                     "status": "error",
-                    "message": "No questions for review!"
+                    "message": "No questions for graphics!"
                 }), 400
             session["question_id_list"] = question_document_ids
         question_document_list = session.get("question_id_list")
         if not question_document_list:
-            return redirect(url_for("admin.dashboard"))
+            return redirect(url_for("graphics.dashboard"))
         elif len(question_document_list) == 0:
             return jsonify({
                 "status": "error",
@@ -124,7 +108,7 @@ def review_question():
             next_document_id = ""
         question_data = firebase_get_question(document_id, grade, chapter, level)
         grade_dict, chapter_dict, level_dict = get_grade_breakdown_dict(grade, chapter, level)
-        return render_template( "/admin/question/review_question/review_question.html",
+        return render_template( "/graphics/question/edit_question.html",
                                 grade=grade,
                                 chapter=chapter,
                                 level=level,
@@ -133,9 +117,7 @@ def review_question():
                                 next_document_id=next_document_id,
                                 document_id=document_id,
                                 question_data=question_data,
-                                formula_list=formula_list,
-                                pdf_url=chapter_dict.get("chapter_pdf"),
-                                active_grade=active_grade
+                                sidebar_filter_based_on_requirement=sidebar_filter_based_on_requirement
                             )
     except ValueError:
         return jsonify({

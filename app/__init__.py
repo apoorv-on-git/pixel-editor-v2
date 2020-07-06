@@ -19,12 +19,16 @@ def create_app(script_info=None):
     app.register_blueprint(contributor)
     from app.views.admin import admin
     app.register_blueprint(admin)
+    from app.views.graphics import graphics
+    app.register_blueprint(graphics)
 
     #API
     from app.api.contributor import contributor_api
     app.register_blueprint(contributor_api)
     from app.api.admin import admin_api
     app.register_blueprint(admin_api)
+    from app.api.graphics import graphics_api
+    app.register_blueprint(graphics_api)
 
     @app.shell_context_processor
     def ctx():

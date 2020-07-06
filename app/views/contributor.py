@@ -13,6 +13,8 @@ def login():
         return redirect(url_for("contributor.dashboard"))
     elif session.get("admin_id"):
         return redirect(url_for("admin.dashboard"))
+    elif session.get("graphics_id"):
+        return redirect(url_for("graphics.dashboard"))
     return render_template("/contributor/login/login.html")
 
 @contributor.route("/dashboard")

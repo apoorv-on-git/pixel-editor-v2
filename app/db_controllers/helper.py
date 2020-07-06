@@ -112,3 +112,20 @@ def handle_image_upload(key, contributor_id):
                 return f"{os.environ.get('S3_URL')}{url_endpoint}"
     except Exception as e:
         raise e
+
+def get_total_images_uploaded():
+    try:
+        counter = 0
+        if request.files.get("question_image"):
+            counter += 1
+        if request.files.get("option_a"):
+            counter += 1
+        if request.files.get("option_b"):
+            counter += 1
+        if request.files.get("option_c"):
+            counter += 1
+        if request.files.get("option_d"):
+            counter += 1
+        return counter
+    except Exception as e:
+        raise e

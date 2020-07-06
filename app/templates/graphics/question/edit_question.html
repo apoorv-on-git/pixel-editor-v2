@@ -1,0 +1,138 @@
+{% extends "graphics/main.jinja" %}
+{% block main %}
+
+{% include("graphics/question/edit_question_script.jinja") %}
+{% include("graphics/question/edit_question_style.jinja") %}
+
+<div class="text-center">
+    <div class="row p-2">
+        <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4 text-left">
+            <div class="row">
+                <div class="col-sm-9 col-md-9 col-lg-9">
+                    <h3>{{level_name}}</h3>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 text-right">
+                    <span class="grade-tag">Grade {{grade}} - Chapter {{chapter}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row p-2">
+        <div class="col-sm-12 col-md-12 col-lg-5 white-container p-4 text-left"
+            style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;">
+            <div class="row mt-5">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <p class="heavy-font">Question Text</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <textarea rows="5" class="form-control form-input latex-input" name="question_text"
+                        id="question_text">{{question_data.get("question_text")}}</textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-11 col-md-11 col-lg-11 text-center mt-5">
+                    <span class="question-img-upload">Upload an image for question</span>
+                    <input type="file" class="upload-question-image" />
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-sm-12 col-md-12 col-lg-12 question-image-name">
+                    {% if "amazonaws" in question_data.get("question_image") %}
+                    <p class="guide-text" id="question_image_name" style="margin-left: 5%;">
+                        {{question_data.get('question_image')}}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% for option_key in ["option_a", "option_b", "option_c", "option_d"] %}
+            {% for key, value in question_data.get("options").items() %}
+            {% if option_key == key %}
+            <div class="row mt-4">
+                <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
+                    <input type="text" class="form-control form-input-option latex-input" name="{{key}}_text"
+                        id="{{key}}_text" placeholder="Option {{key.split('_')[-1] | upper}}" value="{{value}}"
+                        readonly />
+                    <span class="input-group-addon hide">
+                        <span class="option-img-upload">Upload</span>
+                        <input type="file" class="upload-image-{{key.split('_')[-1] | lower}}" />
+                    </span>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+            <div class="row mt-4">
+                <div class="col-sm-11 col-md-11 col-lg-11 input-group">
+                    <select class="form-control form-input" name="correct_option" id="correct_option" readonly disabled>
+                        <option value="">Correct answer</option>
+                        {% for option in ['a', 'b', 'c', 'd'] %}
+                        {% if question_data.get("correct_option")[-1] == option %}
+                        <option value="{{option}}" selected>Option {{option | upper}}</option>
+                        {% else %}
+                        <option value="{{option}}">Option {{option | upper}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-7 white-container p-4 text-left"
+            style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;"
+            id="question_preview_column">
+            <div class="tab-content">
+                <div id="preview_tab" class="tab-pane fade in active">
+                    <div class="row mt-3 pl-2 pr-5">
+                        <div class="col-sm-12 col-md-12 col-lg-12" id="question_preview_container">
+                            {{question_data.get("question_text") | safe}}
+                        </div>
+                    </div>
+                    <div class="row mt-3 pl-2 pr-5">
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="question_image_preview_container">
+                            {% if question_data.get('question_image') != "#" %}
+                            <img src="{{question_data.get('question_image')}}" />
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% for option_key in ["option_a", "option_b", "option_c", "option_d"]  %}
+                    {% for key, value in question_data.get("options").items() %}
+                    {% if key == option_key %}
+                    <div class="row mt-3 pl-2 pr-5">
+                        {% if "amazonaws" in value %}
+                        <div class="col-sm-12 col-md-12 col-lg-12 hidden text-center"
+                            id="option_{{key.split('_')[-1]}}_preview_container">
+                            {% else %}
+                            <div class="col-sm-12 col-md-12 col-lg-12 text-center"
+                                id="option_{{key.split('_')[-1]}}_preview_container">
+                                {% endif %}
+                                <p id="option_{{key.split('_')[-1]}}_preview">{{value}}</p>
+                            </div>
+                            {% if "amazonaws" not in value %}
+                            <div class="col-sm-12 col-md-12 col-lg-12 hidden text-center"
+                                id="option_{{key.split('_')[-1]}}_image_preview_container">
+                                {% else %}
+                                <div class="col-sm-12 col-md-12 col-lg-12 text-center"
+                                    id="option_{{key.split('_')[-1]}}_image_preview_container">
+                                    {% endif %}
+                                    <img src="{{value}}" />
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row p-2 mt-5">
+                <div class="col-sm-12 col-md-6 col-lg-6 text-center">
+                    <button class='action-button-style' id="save_question" style="width: 90%">Save
+                        question</button>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6 text-center">
+                    <button class='action-button-style' id="skip_question" style="width: 90%">Skip question</button>
+                </div>
+            </div>
+        </div>
+
+        {% endblock %}

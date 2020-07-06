@@ -1,4 +1,3 @@
-import requests
 from firebase_admin import firestore
 import json
 from app.db_controllers.helper import *
