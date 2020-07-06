@@ -1,4 +1,3 @@
-import requests
 from firebase_admin import firestore
 import json
 from app.db_controllers.helper import *
@@ -225,5 +224,9 @@ def firebase_approve_question(admin_id):
         local_date = time.localtime()
         local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
         firebase_db.collection("users").document(contributor_id).collection("daily_log").document(local_date).set({"approved": Increment(1)}, merge=True)
+        if graphics_required:
+            graphics_dict = firebase_db.collection("questions_for_graphics").document("data").get().to_dict()
+            graphics_dict[f"NCERT_G{grade:02}_TOPIC{chapter:02}"][f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}"] += 1
+            firebase_db.collection("questions_for_graphics").document("data").update(graphics_dict)
     except Exception as e:
         raise e
