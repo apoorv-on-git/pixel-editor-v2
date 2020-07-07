@@ -1,3 +1,4 @@
+from google.cloud.firestore_v1 import Increment
 from firebase_admin import firestore
 from app.db_controllers.helper import *
 from flask import request
@@ -68,11 +69,12 @@ def firebase_save_question(graphics_id):
         question_updates = dict(
                                     graphics_by = user_data.get("email"),
                                     options = dict(
-                                                    option_a = new_question_data.get("option_a"),
-                                                    option_b = new_question_data.get("option_b"),
-                                                    option_c = new_question_data.get("option_c"),
-                                                    option_d = new_question_data.get("option_d")
+                                                    option_a = option_a,
+                                                    option_b = option_b,
+                                                    option_c = option_c,
+                                                    option_d = option_d
                                                 ),
+                                    question_image = question_image,
                                     state = "approved"
                             )
         firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).update(question_updates)
