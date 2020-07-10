@@ -78,7 +78,7 @@ def firebase_save_question(graphics_id):
                                     state = "approved"
                             )
         firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).update(question_updates)
-        firebase_db.collection("users").document(graphics_id).set({"total_images_submitted": Increment(get_total_images_uploaded_countg)}, merge=True)
+        firebase_db.collection("users").document(graphics_id).set({"total_images_submitted": Increment(get_total_images_uploaded_count)}, merge=True)
         graphics_dict = firebase_db.collection("questions_for_graphics").document("data").get().to_dict()
         graphics_dict[f"NCERT_G{grade:02}_TOPIC{chapter:02}"][f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}"] -= 1
         firebase_db.collection("questions_for_graphics").document("data").update(graphics_dict)
