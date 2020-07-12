@@ -20,6 +20,19 @@
     <div class="row p-2">
         <div class="col-sm-12 col-md-12 col-lg-5 white-container p-4 text-left"
             style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;">
+            {% if question_data.get("super_admin_feedback") %}
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <p class="heavy-font">Feedback given by Super Admin</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <textarea rows="5" class="form-control form-input latex-input" name="feedback" id="feedback"
+                        placeholder="Feedback" readonly>{{question_data.get("super_admin_feedback")}}</textarea>
+                </div>
+            </div>
+            {% endif %}
             <div class="row mt-5">
                 <div class="col-sm-12 col-md-12 col-lg-12">
                     <p class="heavy-font">Question Text</p>

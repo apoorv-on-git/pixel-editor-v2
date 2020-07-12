@@ -1,0 +1,204 @@
+<script>
+  $(function(){
+    $('#question_preview_column li a').click(function(){
+      $('li a').each(function(){
+        $(this).parent().removeClass('active')
+      })
+      $(this).parent().addClass('active')
+    })
+    $("#question_text").summernote("disable");
+    $(".note-editable").addClass("latex-input")
+    $('.latex-input').focus(function(){
+      if (!$(this).hasClass("note-editable")) {
+        input_focus = $(this).attr("id")
+      }
+    })
+    $("#disapprove_quality").click(function(){
+        var feedback = $("#feedback").val();
+        if (!feedback) {
+            Swal.fire(
+                'Hey!',
+                "Feedback is important!",
+                'error'
+            )
+        }
+        let data = {
+            "feedback": feedback,
+            "document_id": "{{document_id}}",
+            "grade": "{{grade}}",
+            "chapter": "{{chapter}}",
+            "level": "{{level}}",
+        }
+        $.ajax({
+            url: "{{url_for('super_admin_api.disapprove_quality')}}",
+            type: "post",
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json',
+            beforeSend: function(){
+                $('.main-container').addClass('blur');
+                $(':button').prop('disabled', true);
+                $("#loader").show();
+            },
+            success: function (result) {
+                if ("{{next_document_id}}") {
+                    window.location.href = `{{url_for('super_admin.review_question')}}?grade={{grade}}&chapter={{chapter}}&level={{level}}&document_id={{next_document_id}}`
+                } else {
+                    window.location.href = `{{url_for('super_admin.levels')}}?grade={{grade}}&chapter={{chapter}}`
+                }
+            },
+            error: function (result) {
+                $("#loader").hide();
+                Swal.fire(
+                    'Hey!',
+                    result.responseJSON.message,
+                    'error'
+                )
+            },
+            complete:function(data){
+                $('.main-container').removeClass('blur');
+                $(':button').prop('disabled', false);
+                $("#loader").hide();
+            }
+        })
+    })
+    $("#disapprove_graphics").click(function(){
+        var feedback = $("#feedback").val();
+        if (!feedback) {
+            Swal.fire(
+                'Hey!',
+                "Feedback is important!",
+                'error'
+            )
+        }
+        let data = {
+            "feedback": feedback,
+            "document_id": "{{document_id}}",
+            "grade": "{{grade}}",
+            "chapter": "{{chapter}}",
+            "level": "{{level}}",
+        }
+        $.ajax({
+            url: "{{url_for('super_admin_api.disapprove_graphics')}}",
+            type: "post",
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json',
+            beforeSend: function(){
+                $('.main-container').addClass('blur');
+                $(':button').prop('disabled', true);
+                $("#loader").show();
+            },
+            success: function (result) {
+                if ("{{next_document_id}}") {
+                    window.location.href = `{{url_for('super_admin.review_question')}}?grade={{grade}}&chapter={{chapter}}&level={{level}}&document_id={{next_document_id}}`
+                } else {
+                    window.location.href = `{{url_for('super_admin.levels')}}?grade={{grade}}&chapter={{chapter}}`
+                }
+            },
+            error: function (result) {
+                $("#loader").hide();
+                Swal.fire(
+                    'Hey!',
+                    result.responseJSON.message,
+                    'error'
+                )
+            },
+            complete:function(data){
+                $('.main-container').removeClass('blur');
+                $(':button').prop('disabled', false);
+                $("#loader").hide();
+            }
+        })
+    })
+    $("#star_question").click(function(){
+        let data = {
+            "document_id": "{{document_id}}",
+            "grade": "{{grade}}",
+            "chapter": "{{chapter}}",
+            "level": "{{level}}",
+        }
+        $.ajax({
+            url: "{{url_for('super_admin_api.star_question')}}",
+            type: "post",
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json',
+            beforeSend: function(){
+                $('.main-container').addClass('blur');
+                $(':button').prop('disabled', true);
+                $("#loader").show();
+            },
+            success: function (result) {
+                alert("Question marked as star successfully!")
+            },
+            error: function (result) {
+                $("#loader").hide();
+                Swal.fire(
+                    'Hey!',
+                    result.responseJSON.message,
+                    'error'
+                )
+            },
+            complete:function(data){
+                $('.main-container').removeClass('blur');
+                $(':button').prop('disabled', false);
+                $("#loader").hide();
+            }
+        })
+    })
+    $("#deploy_question").click(function(){
+        let data = {
+            "document_id": "{{document_id}}",
+            "grade": "{{grade}}",
+            "chapter": "{{chapter}}",
+            "level": "{{level}}",
+        }
+        $.ajax({
+            url: "{{url_for('super_admin_api.deploy_question')}}",
+            type: "post",
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json',
+            beforeSend: function(){
+                $('.main-container').addClass('blur');
+                $(':button').prop('disabled', true);
+                $("#loader").show();
+            },
+            success: function (result) {
+                if ("{{next_document_id}}") {
+                    window.location.href = `{{url_for('super_admin.review_question')}}?grade={{grade}}&chapter={{chapter}}&level={{level}}&document_id={{next_document_id}}`
+                } else {
+                    window.location.href = `{{url_for('super_admin.levels')}}?grade={{grade}}&chapter={{chapter}}`
+                }
+            },
+            error: function (result) {
+                $("#loader").hide();
+                Swal.fire(
+                    'Hey!',
+                    result.responseJSON.message,
+                    'error'
+                )
+            },
+            complete:function(data){
+                $('.main-container').removeClass('blur');
+                $(':button').prop('disabled', false);
+                $("#loader").hide();
+            }
+        })
+    })
+  })
+  $(document).ready(function(){
+    highlight_correct_option()
+  })
+  function highlight_correct_option() {
+      let option_selected = "{{question_data.get('correct_option')}}";
+      let option_list = ['option_a', 'option_b', 'option_c', 'option_d']
+      option_list.map(function(option){
+        $(`#${option}_preview_container`).css('background-color', '#eee');
+        $(`#${option}_image_preview_container`).css('background-color', '#eee');
+      })
+      $(`#${option_selected}_preview_container`).css('background-color', 'green');
+      $(`#${option_selected}_image_preview_container`).css('background-color', 'green');
+  }
+</script>

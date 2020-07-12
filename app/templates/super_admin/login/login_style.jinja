@@ -1,0 +1,87 @@
+<style>
+  body {
+    min-height: 100vh;
+    background-color: #f0f1f3;
+    font-family: 'Roboto', sans-serif;
+  }
+  input{
+    width: 100%;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    margin: 8px 0;
+    outline: none;
+    padding: 8px;
+    box-sizing: border-box;
+    transition: 0.3s;
+  }
+  input:focus {
+    border-color: dodgerBlue;
+    box-shadow: 0 0 8px 0 dodgerBlue;
+  }
+  .inputWithIcon input {
+    padding-left: 40px;
+  }
+  .inputWithIcon {
+    position: relative;
+  }
+  .inputWithIcon i {
+    position: absolute;
+    left: 0;
+    top: 8px;
+    padding: 14px 14px;
+    color: #aaa;
+    transition: 0.3s;
+  }
+  .inputWithIcon input:focus + i {
+    color: dodgerBlue;
+  }
+  .inputWithIcon.inputIconBg i {
+    background-color: #aaa;
+    color: #fff;
+    padding: 9px 4px;
+    border-radius: 4px 0 0 4px;
+  }
+  .inputWithIcon.inputIconBg input:focus + i {
+    color: #fff;
+    background-color: dodgerBlue;
+  }
+  #contest_form_container {
+    background-color: #efeeee;
+    padding: 1em;
+    border-radius: 1em;
+  }
+  a, a:hover {
+    text-decoration: none;
+    color: black;
+  }
+  .login-super-admin {
+    width: 100%;
+    background-color: #5dca88;
+    color: white;
+    padding: 1em;
+    border-radius: 1em;
+  }
+  .loading-gif {
+    width: 50%;
+    height: auto;
+  }
+  #loader {
+    position: fixed;
+    display: none;
+    align-items: center;
+    width: 50%;
+    top: 30%;
+    left: 37.5%;
+    z-index: 999;
+  }
+  .blur {
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -o-filter: blur(5px);
+    -ms-filter: blur(5px);
+  }
+  button {
+    border: none;
+  }
+</style>
