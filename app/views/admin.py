@@ -15,6 +15,8 @@ def login():
         return redirect(url_for("contributor.dashboard"))
     elif session.get("graphics_id"):
         return redirect(url_for("graphics.dashboard"))
+    elif session.get("super_admin_id"):
+        return redirect(url_for("super_admin.dashboard"))
     return render_template("/admin/login/login.html")
 
 @admin.route("/dashboard")

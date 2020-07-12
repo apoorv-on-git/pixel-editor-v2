@@ -1,0 +1,5 @@
+<script>
+  function edit_question(level) {
+    window.location.href = `{{url_for('super_admin.review_question')}}?grade={{grade}}&chapter={{chapter}}&level=${level}`
+  }
+</script>
