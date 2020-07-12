@@ -29,6 +29,7 @@ def firebase_get_questions_for_super_admin_list(grade, chapter, level):
                             .document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")\
                             .collection("question_bank")\
                             .where("state", "==", "approved")\
+                            .where("is_deployed", "==", False)\
                             .stream()
     document_id_list = []
     for question in questions_for_super_admin:

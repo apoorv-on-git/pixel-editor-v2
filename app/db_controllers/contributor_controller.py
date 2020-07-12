@@ -123,7 +123,8 @@ def firebase_submit_question(contributor_id):
                             question_type = "MCQ",
                             feedback = None,
                             approved_by = None,
-                            deployed_by = None
+                            deployed_by = None,
+                            is_deployed = False
                     )
         local_date = time.localtime()
         local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
