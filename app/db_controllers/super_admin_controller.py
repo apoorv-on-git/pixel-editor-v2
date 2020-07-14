@@ -3,6 +3,7 @@ from firebase_admin import firestore
 from app.db_controllers.helper import *
 from flask import request
 import datetime
+import time
 import json
 
 firebase_db = firestore.client()
@@ -63,14 +64,31 @@ def firebase_disapprove_quality(super_admin_id):
             raise ValueError("Invalid Question")
         if not all((grade, chapter, level)):
             raise ValueError("Grade, chapter or level unidentified!")
+        question_data = firebase_get_question(question_id, grade, chapter, level)
+        admin_email = question_data.get("approved_by")
+        if not admin_email:
+            raise ValueError("Admin not identified!")
+        for admin in firebase_db.collection("users").where("email", "==", admin_email).stream():
+            admin_id = admin.id
+        contributor_id = question_data.get("contributor_id")
+        if not contributor_id:
+            raise ValueError("Contributor not identified!")
+        contributor_data = get_user_document_data(contributor_id)
         question_updates = dict(
                                     state="under_review",
                                     super_admin_feedback = feedback
                             )
         firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).update(question_updates)
+        firebase_db.collection("users").document(admin_id).set({"total_questions_reviewed": Increment(-1)}, merge=True)
+        firebase_db.collection("users").document(contributor_id).set({"total_reviewed": Increment(-1)}, merge=True)
+        firebase_db.collection("users").document(contributor_id).set({"total_approved": Increment(-1)}, merge=True)
         firebase_db.collection("admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").set({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(1)}, merge=True)
         firebase_db.collection("cumulative_data").document("data").set({"reviewed": Increment(-1)}, merge=True)
+        local_date = time.localtime()
+        local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
+        firebase_db.collection("users").document(contributor_id).collection("daily_log").document(local_date).set({"approved": Increment(-1)}, merge=True)
         firebase_db.collection("users").document(super_admin_id).set({"questions_reviewed": Increment(1)}, merge=True)
+        firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(-1)})
     except Exception as e:
         raise e
 
@@ -96,6 +114,7 @@ def firebase_disapprove_graphics(super_admin_id):
         graphics_dict[f"NCERT_G{grade:02}_TOPIC{chapter:02}"][f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}"] += 1
         firebase_db.collection("questions_for_graphics").document("data").update(graphics_dict)
         firebase_db.collection("users").document(super_admin_id).set({"questions_reviewed": Increment(1)}, merge=True)
+        firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(-1)})
     except Exception as e:
         raise e
 
@@ -126,7 +145,12 @@ def firebase_star_question(super_admin_id):
                                     marked_at = datetime.datetime.utcnow(),
                                     options = question_data.get("options"),
                                     question_image = question_data.get("question_image"),
-                                    question_text = question_data.get("question_text")
+                                    question_text = question_data.get("question_text"),
+                                    tags = [
+                                                f"Grade {grade}",
+                                                f"Chapter {chapter}",
+                                                f"Level {level}"
+                                            ]
                                 )
         firebase_db.collection("star_questions").document().create(star_question_log)
     except Exception as e:
@@ -155,5 +179,6 @@ def firebase_deploy_question(super_admin_id):
         firebase_db.collection("users").document(admin_id).set({"total_questions_deployed": Increment(1)}, merge=True)
         firebase_db.collection("users").document(super_admin_id).set({"questions_deployed": Increment(1)}, merge=True)
         firebase_db.collection("users").document(super_admin_id).set({"questions_reviewed": Increment(1)}, merge=True)
+        firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(-1)})
     except Exception as e:
         raise e

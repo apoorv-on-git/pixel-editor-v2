@@ -13,7 +13,8 @@
           <h1>Hello <b style="color: #5dca88">{{user_data.get('name')}}</b></h1>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-12 text-center mt-3">
-          <img src="{{user_data.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="150" height="150" />
+          <img src="{{user_data.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image"
+            width="150" height="150" />
         </div>
         <div class="col-sm-12 col-md-12 col-lg-12 text-center mt-5">
           <span class="profile-img-upload">Upload</span>
@@ -28,46 +29,48 @@
       {% for leaderboard in leaderboard_data %}
       {% if loop.index % 2 == 0 %}
       <div class="row p-5" style="background: #eee;">
-      {% else %}
-      <div class="row p-5">
-      {% endif %}
-        <div class="col-sm-12 col-md-6 col-lg-6 text-center">
-          <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-              <div class="profile_image"><img src="{{leaderboard.get('profile_image')}}" class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+        {% else %}
+        <div class="row p-5">
+          {% endif %}
+          <div class="col-sm-12 col-md-6 col-lg-6 text-center">
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                <div class="profile_image"><img src="{{leaderboard.get('profile_image')}}"
+                    class="rounded-circle profile-image-display" alt="Profile Image" width="75" height="75" /></div>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                <h1>{{leaderboard.get("name")}}</h1>
+              </div>
             </div>
-            <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-              <h1>{{leaderboard.get("name")}}</h1>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-6 text-center align-self-center">
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                <h5>Has Reviewed</h5>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                <h1 style="color: #5dca88;">{{leaderboard.get("total_questions_reviewed")}}</h1>
+                <h3 style="color: #5dca88;">{{leaderboard.get("total_questions_deployed")}} deployed</h3>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-6 text-center align-self-center">
-          <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-              <h5>Has Reviewed</h5>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-              <h1 style="color: #5dca88;">{{leaderboard.get("total_questions_reviewed")}}</h1>
-            </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="row p-2 mt-5">
+      <div class="col-sm-12 col-md-12 col-lg-12 white-container p-5">
+        <div class="overlap-box" style="background: #5dca88;"></div>
+        <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <h5 class="heavy-font">Analytics</h5>
+          </div>
+          <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="chart_container">
+            <div id="bar_chart" style="height: 50vh;"></div>
           </div>
         </div>
       </div>
-      {% endfor %}
     </div>
   </div>
-  <div class="row p-2 mt-5">
-    <div class="col-sm-12 col-md-12 col-lg-12 white-container p-5">
-      <div class="overlap-box" style="background: #5dca88;"></div>
-      <div class="row">
-        <div class="col-sm-12 col-md-12 col-lg-12">
-          <h5 class="heavy-font">Analytics</h5>
-        </div>
-        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="chart_container">
-          <div id="bar_chart" style="height: 50vh;"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-{% endblock %}
+  {% endblock %}

@@ -61,7 +61,8 @@ def get_admin_review_stats():
         _d = dict(
                     name = admin_data.get("name"),
                     profile_image = admin_data.get("profile_image"),
-                    total_questions_reviewed = admin_data.get("total_questions_reviewed")
+                    total_questions_reviewed = admin_data.get("total_questions_reviewed"),
+                    total_questions_reviewed = admin_data.get("total_questions_deployed")
                 )
         return_list.append(_d)
     return return_list
@@ -229,5 +230,7 @@ def firebase_approve_question(admin_id):
             graphics_dict = firebase_db.collection("questions_for_graphics").document("data").get().to_dict()
             graphics_dict[f"NCERT_G{grade:02}_TOPIC{chapter:02}"][f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}"] += 1
             firebase_db.collection("questions_for_graphics").document("data").update(graphics_dict)
+        else:
+            firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(1)})
     except Exception as e:
         raise e
