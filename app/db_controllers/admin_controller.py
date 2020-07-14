@@ -62,7 +62,7 @@ def get_admin_review_stats():
                     name = admin_data.get("name"),
                     profile_image = admin_data.get("profile_image"),
                     total_questions_reviewed = admin_data.get("total_questions_reviewed"),
-                    total_questions_reviewed = admin_data.get("total_questions_deployed")
+                    total_questions_deployed = admin_data.get("total_questions_deployed")
                 )
         return_list.append(_d)
     return return_list
