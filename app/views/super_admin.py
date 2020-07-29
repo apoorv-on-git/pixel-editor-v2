@@ -24,9 +24,13 @@ def login():
 def dashboard():
     session["question_id_list"] = None
     user_data = get_user_document_data(session.get('super_admin_id'))
+    leaderboard_data = get_admin_review_stats()
+    chart_data = get_cumulative_chart_data()
     return render_template( "/super_admin/dashboard/dashboard.html",
                             grade_breakdown=grade_breakdown,
-                            user_data=user_data
+                            user_data=user_data,
+                            leaderboard_data=leaderboard_data,
+                            chart_data=chart_data
                         )
 
 @super_admin.route("/levels")

@@ -17,6 +17,28 @@ def firebase_update_profile_image(super_admin_id, profile_image_url):
     document_ref = firebase_db.collection('users')
     update_user = document_ref.document(super_admin_id).update({"profile_image": profile_image_url})
 
+def get_admin_review_stats():
+    document_ref = firebase_db.collection("users").where("type", "==", "Admin")
+    admin_id_list = []
+    for admin in document_ref.stream():
+        admin_id_list.append(admin.id)
+    return_list = []
+    for admin_id in admin_id_list:
+        admin_data = firebase_db.collection("users").document(admin_id).get().to_dict()
+        _d = dict(
+                    name = admin_data.get("name"),
+                    profile_image = admin_data.get("profile_image"),
+                    total_questions_reviewed = admin_data.get("total_questions_reviewed"),
+                    total_questions_deployed = admin_data.get("total_questions_deployed")
+                )
+        return_list.append(_d)
+    return return_list
+
+def get_cumulative_chart_data():
+    document_ref = firebase_db.collection("cumulative_data")
+    cumulative_data = document_ref.document("data").get().to_dict()
+    return cumulative_data
+
 def firebase_get_approved_question_count(topic_id):
     document_ref = firebase_db.collection("super_admin_questions_for_review")
     topic_data = document_ref.document(topic_id).get()
@@ -83,7 +105,7 @@ def firebase_disapprove_quality(super_admin_id):
         firebase_db.collection("users").document(contributor_id).set({"total_reviewed": Increment(-1)}, merge=True)
         firebase_db.collection("users").document(contributor_id).set({"total_approved": Increment(-1)}, merge=True)
         firebase_db.collection("admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").set({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(1)}, merge=True)
-        firebase_db.collection("cumulative_data").document("data").set({"reviewed": Increment(-1)}, merge=True)
+        firebase_db.collection("cumulative_data").document("data").set({"reviewed": Increment(-1), "admin_approved": Increment(-1)}, merge=True)
         local_date = time.localtime()
         local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
         firebase_db.collection("users").document(contributor_id).collection("daily_log").document(local_date).set({"approved": Increment(-1)}, merge=True)
@@ -115,6 +137,7 @@ def firebase_disapprove_graphics(super_admin_id):
         firebase_db.collection("questions_for_graphics").document("data").update(graphics_dict)
         firebase_db.collection("users").document(super_admin_id).set({"questions_reviewed": Increment(1)}, merge=True)
         firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(-1)})
+        firebase_db.collection("cumulative_data").document("data").set({"admin_approved": Increment(-1)}, merge=True)
     except Exception as e:
         raise e
 
@@ -180,5 +203,6 @@ def firebase_deploy_question(super_admin_id):
         firebase_db.collection("users").document(super_admin_id).set({"questions_deployed": Increment(1)}, merge=True)
         firebase_db.collection("users").document(super_admin_id).set({"questions_reviewed": Increment(1)}, merge=True)
         firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(-1)})
+        firebase_db.collection("cumulative_data").document("data").set({"super_admin_deployed": Increment(1)}, merge=True)
     except Exception as e:
         raise e

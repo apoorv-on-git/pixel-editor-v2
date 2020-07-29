@@ -1,4 +1,30 @@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
+  google.charts.load("current", {packages:['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+      ["Action", "Number", { role: "style" } ],
+      ["Approved", {{chart_data.get('admin_approved')}}, "blue"],
+      ["Deployed", {{chart_data.get('super_admin_deployed')}}, "red"]
+    ]);
+
+    var view = new google.visualization.DataView(data);
+    view.setColumns([0, 1,
+                     { calc: "stringify",
+                       sourceColumn: 1,
+                       type: "string",
+                       role: "annotation" },
+                     2]);
+
+    var options = {
+      bar: {groupWidth: "95%"},
+      legend: { position: "none" },
+      vAxis: {minValue: 0}
+    };
+    var chart = new google.visualization.ColumnChart(document.getElementById("bar_chart"));
+    chart.draw(view, options);
+  }
   $(function(){
     $('.upload-profile-image').change(function(){
       if (this.files && this.files[0]) {

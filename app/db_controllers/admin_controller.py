@@ -232,5 +232,6 @@ def firebase_approve_question(admin_id):
             firebase_db.collection("questions_for_graphics").document("data").update(graphics_dict)
         else:
             firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(1)})
+            firebase_db.collection("cumulative_data").document("data").set({"admin_approved": Increment(1)}, merge=True)
     except Exception as e:
         raise e
