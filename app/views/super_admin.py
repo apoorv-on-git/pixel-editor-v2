@@ -120,7 +120,8 @@ def review_question():
                                 document_id=document_id,
                                 question_data=question_data,
                                 pdf_url=chapter_dict.get("chapter_pdf"),
-                                admin_name=admin_name
+                                admin_name=admin_name,
+                                formula_list=formula_list
                             )
     except ValueError:
         return jsonify({
