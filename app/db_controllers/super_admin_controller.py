@@ -195,8 +195,19 @@ def firebase_deploy_question(super_admin_id):
             raise ValueError("Admin not identified!")
         for admin in firebase_db.collection("users").where("email", "==", admin_email).stream():
             admin_id = admin.id
+        new_question_data = request.json.get("question_json")
+        check_data(new_question_data)
+        question_text = remove_style(new_question_data.get("question"))
         question_updates = dict(
-                                    is_deployed = True
+                                    is_deployed = True,
+                                    question_text = question_text,
+                                    options = dict(
+                                                    option_a = new_question_data.get("option_a"),
+                                                    option_b = new_question_data.get("option_b"),
+                                                    option_c = new_question_data.get("option_c"),
+                                                    option_d = new_question_data.get("option_d")
+                                                ),
+                                    correct_option = new_question_data.get("correct_option")
                             )
         firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).update(question_updates)
         firebase_db.collection("users").document(admin_id).set({"total_questions_deployed": Increment(1)}, merge=True)
