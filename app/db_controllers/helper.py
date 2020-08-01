@@ -69,6 +69,7 @@ def handle_submitted_images(data, contributor_id):
         raise e
 
 def get_files_renamed(question_image, option_a, option_b, option_c, option_d):
+    question_image = question_image.split(' ')[-1]
     if "amazonaws" in question_image:
         question_image = rename_image(question_image)
     if "amazonaws" in option_a:
