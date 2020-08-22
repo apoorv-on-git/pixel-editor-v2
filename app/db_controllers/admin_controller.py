@@ -18,12 +18,12 @@ def get_chart_data(admin_id):
         temp_list = [day.replace("_", "/")]
         total_contributions_on_day = firebase_db.collection("daily_question_log").document(day).get().to_dict()
         if total_contributions_on_day:
-            temp_list.append(total_contributions_on_day.get("admin_reviewed"))
+            temp_list.append(total_contributions_on_day.get("admin_reviewed") or 0)
         else:
             temp_list.append(0)
         individual_contribution_on_day = document_ref.document(admin_id).collection("daily_log").document(day).get().to_dict()
         if individual_contribution_on_day:
-            temp_list.append(individual_contribution_on_day.get("count"))
+            temp_list.append(individual_contribution_on_day.get("count") or 0)
         else:
             temp_list.append(0)
         if len(temp_list) == 3:
