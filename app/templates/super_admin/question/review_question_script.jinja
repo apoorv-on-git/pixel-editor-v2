@@ -236,6 +236,53 @@
             }
         })
     })
+    $("#skip_question").click(function(){
+      if ("{{next_document_id}}") {
+        window.location.href = `{{url_for('super_admin.review_question')}}?grade={{grade}}&chapter={{chapter}}&level={{level}}&document_id={{next_document_id}}`
+      } else {
+        window.location.href = `{{url_for('super_admin.levels')}}?grade={{grade}}&chapter={{chapter}}`
+      }
+    })
+    $("#discard_question").click(function(){
+      let data = {
+            "document_id": "{{document_id}}",
+            "grade": "{{grade}}",
+            "chapter": "{{chapter}}",
+            "level": "{{level}}"
+        }
+      $.ajax({
+            url: "{{url_for('super_admin_api.discard_question')}}",
+            type: "post",
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json',
+            beforeSend: function(){
+                $('.main-container').addClass('blur');
+                $(':button').prop('disabled', true);
+                $("#loader").show();
+            },
+            success: function (result) {
+                if ("{{next_document_id}}") {
+                    window.location.href = `{{url_for('super_admin.review_question')}}?grade={{grade}}&chapter={{chapter}}&level={{level}}&document_id={{next_document_id}}`
+                } else {
+                    window.location.href = `{{url_for('super_admin.levels')}}?grade={{grade}}&chapter={{chapter}}`
+                }
+            },
+            error: function (result) {
+                $("#loader").hide();
+                Swal.fire(
+                    'Hey!',
+                    result.responseJSON.message,
+                    'error'
+                )
+            },
+            complete:function(data){
+                $('.main-container').removeClass('blur');
+                $(':button').prop('disabled', false);
+                $("#loader").hide();
+            }
+        })
+    })
     $("#deploy_question").click(function(){
         update_json()
         let data = {

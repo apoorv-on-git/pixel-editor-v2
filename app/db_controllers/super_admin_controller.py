@@ -179,6 +179,24 @@ def firebase_star_question(super_admin_id):
     except Exception as e:
         raise e
 
+def firebase_discard_question(super_admin_id):
+    try:
+        question_id = request.json.get("document_id")
+        grade = int(request.json.get("grade"))
+        chapter = int(request.json.get("chapter"))
+        level = int(request.json.get("level"))
+        if not question_id:
+            raise ValueError("Invalid Question")
+        if not all((grade, chapter, level)):
+            raise ValueError("Grade, chapter or level unidentified!")
+        question_updates = dict(
+                                    state = "disapproved",
+                            )
+        firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).update(question_updates)
+        firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(-1)})
+    except Exception as e:
+        raise e
+
 def firebase_deploy_question(super_admin_id):
     try:
         question_id = request.json.get("document_id")

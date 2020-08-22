@@ -128,3 +128,18 @@ def deploy_question():
             "message": str(e),
             "status": "error"
         }), 400
+
+@super_admin_api.route("/discard-question", methods=["POST"])
+@required_role_as_super_admin()
+def discard_question():
+    try:
+        firebase_discard_question(session.get('super_admin_id'))
+        return jsonify({
+            "message": "Question discarded!",
+            "status": "success"
+        }), 204
+    except Exception as e:
+        return jsonify({
+            "message": str(e),
+            "status": "error"
+        }), 400
