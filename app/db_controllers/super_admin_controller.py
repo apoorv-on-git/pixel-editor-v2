@@ -8,6 +8,28 @@ import json
 
 firebase_db = firestore.client()
 
+def get_chart_data(super_admin_id):
+    document_ref = firebase_db.collection("users")
+    last_7_days = []
+    for days in range(1, 8):
+        last_7_days.append(datetime.datetime.strftime(datetime.datetime.fromtimestamp(time.mktime(time.localtime())) - datetime.timedelta(days=days), "%d_%m_%Y"))
+    return_list = [["date", "Total", "Individual"]]
+    for day in last_7_days[::-1]:
+        temp_list = [day.replace("_", "/")]
+        total_contributions_on_day = firebase_db.collection("daily_question_log").document(day).get().to_dict()
+        if total_contributions_on_day:
+            temp_list.append(total_contributions_on_day.get("super_admin_reviewed"))
+        else:
+            temp_list.append(0)
+        individual_contribution_on_day = document_ref.document(super_admin_id).collection("daily_log").document(day).get().to_dict()
+        if individual_contribution_on_day:
+            temp_list.append(individual_contribution_on_day.get("count"))
+        else:
+            temp_list.append(0)
+        if len(temp_list) == 3:
+            return_list.append(temp_list)
+    return return_list
+
 def get_user_document_data(super_admin_id):
     document_ref = firebase_db.collection('users')
     user_data = document_ref.document(super_admin_id).get()
@@ -100,6 +122,8 @@ def firebase_disapprove_quality(super_admin_id):
                                     state="under_review",
                                     super_admin_feedback = feedback
                             )
+        local_date = time.localtime()
+        local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
         firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).update(question_updates)
         firebase_db.collection("users").document(admin_id).set({"total_questions_reviewed": Increment(-1)}, merge=True)
         firebase_db.collection("users").document(contributor_id).set({"total_reviewed": Increment(-1)}, merge=True)
@@ -111,6 +135,8 @@ def firebase_disapprove_quality(super_admin_id):
         firebase_db.collection("users").document(contributor_id).collection("daily_log").document(local_date).set({"approved": Increment(-1)}, merge=True)
         firebase_db.collection("users").document(super_admin_id).set({"questions_reviewed": Increment(1)}, merge=True)
         firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(-1)})
+        document_ref.document(super_admin_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
+        firebase_db.collection("daily_question_log").document(local_date).set({"super_admin_reviewed": Increment(1)}, merge=True)
     except Exception as e:
         raise e
 
@@ -131,6 +157,8 @@ def firebase_disapprove_graphics(super_admin_id):
                                     state="graphics_required",
                                     super_admin_feedback = feedback
                             )
+        local_date = time.localtime()
+        local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
         firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).update(question_updates)
         graphics_dict = firebase_db.collection("questions_for_graphics").document("data").get().to_dict()
         graphics_dict[f"NCERT_G{grade:02}_TOPIC{chapter:02}"][f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}"] += 1
@@ -138,6 +166,8 @@ def firebase_disapprove_graphics(super_admin_id):
         firebase_db.collection("users").document(super_admin_id).set({"questions_reviewed": Increment(1)}, merge=True)
         firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(-1)})
         firebase_db.collection("cumulative_data").document("data").set({"admin_approved": Increment(-1)}, merge=True)
+        document_ref.document(super_admin_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
+        firebase_db.collection("daily_question_log").document(local_date).set({"super_admin_reviewed": Increment(1)}, merge=True)
     except Exception as e:
         raise e
 
@@ -192,8 +222,12 @@ def firebase_discard_question(super_admin_id):
         question_updates = dict(
                                     state = "disapproved",
                             )
+        local_date = time.localtime()
+        local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
         firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).update(question_updates)
         firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(-1)})
+        document_ref.document(super_admin_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
+        firebase_db.collection("daily_question_log").document(local_date).set({"super_admin_reviewed": Increment(1)}, merge=True)
     except Exception as e:
         raise e
 
@@ -227,11 +261,15 @@ def firebase_deploy_question(super_admin_id):
                                                 ),
                                     correct_option = new_question_data.get("correct_option")
                             )
+        local_date = time.localtime()
+        local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
         firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).update(question_updates)
         firebase_db.collection("users").document(admin_id).set({"total_questions_deployed": Increment(1)}, merge=True)
         firebase_db.collection("users").document(super_admin_id).set({"questions_deployed": Increment(1)}, merge=True)
         firebase_db.collection("users").document(super_admin_id).set({"questions_reviewed": Increment(1)}, merge=True)
         firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(-1)})
         firebase_db.collection("cumulative_data").document("data").set({"super_admin_deployed": Increment(1)}, merge=True)
+        document_ref.document(super_admin_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
+        firebase_db.collection("daily_question_log").document(local_date).set({"super_admin_reviewed": Increment(1)}, merge=True)
     except Exception as e:
         raise e

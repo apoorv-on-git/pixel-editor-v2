@@ -26,13 +26,15 @@ def dashboard():
     user_data = get_user_document_data(session.get('admin_id'))
     leaderboard_data = get_admin_review_stats()
     chart_data = get_cumulative_chart_data()
+    line_chart_data = get_chart_data(session.get('admin_id'))
     active_grade = user_data.get("active_grade")
     return render_template( "/admin/dashboard/dashboard.html",
                             grade_breakdown=grade_breakdown,
                             user_data=user_data,
                             active_grade=active_grade,
                             leaderboard_data=leaderboard_data,
-                            chart_data=chart_data
+                            chart_data=chart_data,
+                            line_chart_data=line_chart_data
                         )
 
 @admin.route("/editor")

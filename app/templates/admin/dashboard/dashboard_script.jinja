@@ -25,6 +25,23 @@
     var chart = new google.visualization.ColumnChart(document.getElementById("bar_chart"));
     chart.draw(view, options);
   }
+  {% if line_chart_data|length > 1 %}
+    google.charts.setOnLoadCallback(drawLineChart);
+    function drawLineChart() {
+     var data = google.visualization.arrayToDataTable({{line_chart_data}});
+
+     var options = {
+       curveType: 'function',
+       legend: { position: 'top', alignment: 'center', textStyle: {fontSize: 20} },
+       colors: ["#a39ef5", "#5dca88"],
+       lineWidth: 5
+     };
+
+     var chart = new google.visualization.LineChart(document.getElementById('line_chart'));
+
+     chart.draw(data, options);
+    }
+  {% endif %}
   $(function(){
     $('.upload-profile-image').change(function(){
       if (this.files && this.files[0]) {

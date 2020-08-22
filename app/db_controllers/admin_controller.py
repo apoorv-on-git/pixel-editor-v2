@@ -8,6 +8,28 @@ import time
 
 firebase_db = firestore.client()
 
+def get_chart_data(admin_id):
+    document_ref = firebase_db.collection("users")
+    last_7_days = []
+    for days in range(1, 8):
+        last_7_days.append(datetime.datetime.strftime(datetime.datetime.fromtimestamp(time.mktime(time.localtime())) - datetime.timedelta(days=days), "%d_%m_%Y"))
+    return_list = [["date", "Total", "Individual"]]
+    for day in last_7_days[::-1]:
+        temp_list = [day.replace("_", "/")]
+        total_contributions_on_day = firebase_db.collection("daily_question_log").document(day).get().to_dict()
+        if total_contributions_on_day:
+            temp_list.append(total_contributions_on_day.get("admin_reviewed"))
+        else:
+            temp_list.append(0)
+        individual_contribution_on_day = document_ref.document(admin_id).collection("daily_log").document(day).get().to_dict()
+        if individual_contribution_on_day:
+            temp_list.append(individual_contribution_on_day.get("count"))
+        else:
+            temp_list.append(0)
+        if len(temp_list) == 3:
+            return_list.append(temp_list)
+    return return_list
+
 def get_user_document_data(admin_id):
     document_ref = firebase_db.collection('users')
     user_data = document_ref.document(admin_id).get()
@@ -163,11 +185,15 @@ def firebase_disapprove_question(admin_id):
                                     is_read = False,
                                     tags = [f"Grade {grade}", f"Chapter {chapter}", f"Level {level}"]
                                 )
+        local_date = time.localtime()
+        local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
         firebase_db.collection("users").document(contributor_id).collection("notifications").document().create(notification_dict)
         questions_for_review = firebase_get_questions_for_review(f"NCERT_G{grade:02}_TOPIC{chapter:02}")
         current_questions_for_review = questions_for_review.get(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")
         firebase_db.collection("admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": (current_questions_for_review - 1)})
         firebase_db.collection("cumulative_data").document("data").set({"reviewed": Increment(1)}, merge=True)
+        document_ref.document(admin_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
+        firebase_db.collection("daily_question_log").document(local_date).set({"admin_reviewed": Increment(1)}, merge=True)
     except Exception as e:
         raise e
 
@@ -215,6 +241,8 @@ def firebase_approve_question(admin_id):
             question_updates["state"] = "graphics_required"
         else:
             question_updates["state"] = "approved"
+        local_date = time.localtime()
+        local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
         firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).update(question_updates)
         firebase_db.collection("users").document(admin_id).set({"total_questions_reviewed": Increment(1)}, merge=True)
         firebase_db.collection("users").document(contributor_id).set({"total_reviewed": Increment(1)}, merge=True)
@@ -226,6 +254,8 @@ def firebase_approve_question(admin_id):
         local_date = time.localtime()
         local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
         firebase_db.collection("users").document(contributor_id).collection("daily_log").document(local_date).set({"approved": Increment(1)}, merge=True)
+        document_ref.document(admin_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
+        firebase_db.collection("daily_question_log").document(local_date).set({"admin_reviewed": Increment(1)}, merge=True)
         if graphics_required:
             graphics_dict = firebase_db.collection("questions_for_graphics").document("data").get().to_dict()
             graphics_dict[f"NCERT_G{grade:02}_TOPIC{chapter:02}"][f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}"] += 1
