@@ -192,7 +192,7 @@ def firebase_disapprove_question(admin_id):
         current_questions_for_review = questions_for_review.get(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")
         firebase_db.collection("admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": (current_questions_for_review - 1)})
         firebase_db.collection("cumulative_data").document("data").set({"reviewed": Increment(1)}, merge=True)
-        document_ref.document(admin_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
+        firebase_db.collection("users").document(admin_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
         firebase_db.collection("daily_question_log").document(local_date).set({"admin_reviewed": Increment(1)}, merge=True)
     except Exception as e:
         raise e
@@ -254,7 +254,7 @@ def firebase_approve_question(admin_id):
         local_date = time.localtime()
         local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
         firebase_db.collection("users").document(contributor_id).collection("daily_log").document(local_date).set({"approved": Increment(1)}, merge=True)
-        document_ref.document(admin_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
+        firebase_db.collection("users").document(admin_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
         firebase_db.collection("daily_question_log").document(local_date).set({"admin_reviewed": Increment(1)}, merge=True)
         if graphics_required:
             graphics_dict = firebase_db.collection("questions_for_graphics").document("data").get().to_dict()
