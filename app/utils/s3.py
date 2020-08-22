@@ -19,5 +19,9 @@ def rename_image(file_name):
                         'Key': f"{file_name.split('amazonaws.com/')[-1].split('.')[0]}.{file_name.split('amazonaws.com/')[-1].split('.')[-1].split('?')[0].lower()}"
                 }
     s3.meta.client.copy(copy_source, os.environ.get('S3_BUCKET_NAME'), new_file_name)
-    s3.Object(os.environ.get('S3_BUCKET_NAME'), f"{file_name.split('amazonaws.com/')[-1].split('?')[0]}").delete()
+    if "guest" in file_name:
+        bucket_name = os.environ.get('S3_BUCKET_NAME_GUEST')
+    else:
+        bucket_name = os.environ.get('S3_BUCKET_NAME')
+    s3.Object(bucket_name, f"{file_name.split('amazonaws.com/')[-1].split('?')[0]}").delete()
     return f"{os.environ.get('S3_URL')}{new_file_name}"
