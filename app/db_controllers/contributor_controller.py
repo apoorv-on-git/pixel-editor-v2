@@ -108,6 +108,7 @@ def firebase_submit_question(contributor_id):
                             contributor_id = contributor_id,
                             contributor_name = user_data.get("name"),
                             is_star_question = False,
+                            is_paid = False,
                             state = "under_review",
                             date_created = datetime.datetime.utcnow(),
                             date_approved = None,
