@@ -205,6 +205,8 @@ def firebase_star_question(super_admin_id):
                                                 f"Level {level}"
                                             ]
                                 )
+        if request.json.get("feedback"):
+            star_question_log["feedback"] = request.json.get("feedback")
         firebase_db.collection("star_questions").document().create(star_question_log)
     except Exception as e:
         raise e
