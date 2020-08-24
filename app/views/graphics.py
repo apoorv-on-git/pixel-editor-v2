@@ -4,32 +4,47 @@ from app.db_controllers.graphics_controller import *
 from app.db_controllers.helper import *
 from app.data.grade_breakdown import data as grade_breakdown
 from app.data.formula import formula_list
+from app.db_controllers.logging import *
 
 graphics = Blueprint('graphics', __name__, url_prefix="/graphics")
 
 @graphics.route('/')
 def login():
-    if session.get("graphics_id"):
-        return redirect(url_for("graphics.dashboard"))
-    elif session.get("admin_id"):
-        return redirect(url_for("admin.dashboard"))
-    elif session.get("contributor_id"):
-        return redirect(url_for("contributor.dashboard"))
-    elif session.get("super_admin_id"):
-        return redirect(url_for("super_admin.dashboard"))
-    return render_template("/graphics/login/login.html")
+    try:
+        if session.get("graphics_id"):
+            return redirect(url_for("graphics.dashboard"))
+        elif session.get("admin_id"):
+            return redirect(url_for("admin.dashboard"))
+        elif session.get("contributor_id"):
+            return redirect(url_for("contributor.dashboard"))
+        elif session.get("super_admin_id"):
+            return redirect(url_for("super_admin.dashboard"))
+        return render_template("/graphics/login/login.html")
+    except Exception as e:
+        log_error("view", "graphics", str(e), "login")
+        return jsonify({
+            "message": str(e),
+            "status": "error"
+        }), 400
 
 @graphics.route("/dashboard")
 @required_role_as_graphics()
 def dashboard():
-    session["question_id_list"] = None
-    user_data = get_user_document_data(session.get('graphics_id'))
-    sidebar_filter_based_on_requirement = firebase_get_questions_for_graphics()
-    return render_template( "/graphics/dashboard/dashboard.html",
-                            grade_breakdown=grade_breakdown,
-                            user_data=user_data,
-                            sidebar_filter_based_on_requirement=sidebar_filter_based_on_requirement
-                        )
+    try:
+        session["question_id_list"] = None
+        user_data = get_user_document_data(session.get('graphics_id'))
+        sidebar_filter_based_on_requirement = firebase_get_questions_for_graphics()
+        return render_template( "/graphics/dashboard/dashboard.html",
+                                grade_breakdown=grade_breakdown,
+                                user_data=user_data,
+                                sidebar_filter_based_on_requirement=sidebar_filter_based_on_requirement
+                            )
+    except Exception as e:
+        log_error("view", "graphics", str(e), "dashboard")
+        return jsonify({
+            "message": str(e),
+            "status": "error"
+        }), 400
 
 @graphics.route("/levels")
 @required_role_as_graphics()
@@ -66,6 +81,7 @@ def levels():
                                 sidebar_filter_based_on_requirement=sidebar_filter_based_on_requirement
                             )
     except ValueError:
+        log_error("view", "graphics", str(e), "levels")
         return jsonify({
             "status": "error",
             "message": "Do not tamper with the URL. Go to dashboard and try again!"
@@ -122,6 +138,7 @@ def edit_question():
                                 sidebar_filter_based_on_requirement=sidebar_filter_based_on_requirement
                             )
     except ValueError:
+        log_error("view", "graphics", str(e), "edit_question")
         return jsonify({
             "status": "error",
             "message": "Do not tamper with the URL. Go to dashboard and try again!"

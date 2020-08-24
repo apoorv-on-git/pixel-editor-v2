@@ -9,91 +9,115 @@ import json
 firebase_db = firestore.client()
 
 def get_chart_data(super_admin_id):
-    document_ref = firebase_db.collection("users")
-    last_7_days = []
-    for days in range(1, 8):
-        last_7_days.append(datetime.datetime.strftime(datetime.datetime.fromtimestamp(time.mktime(time.localtime())) - datetime.timedelta(days=days), "%d_%m_%Y"))
-    return_list = [["date", "Total", "Individual"]]
-    for day in last_7_days[::-1]:
-        temp_list = [day.replace("_", "/")]
-        total_contributions_on_day = firebase_db.collection("daily_question_log").document(day).get().to_dict()
-        if total_contributions_on_day:
-            temp_list.append(total_contributions_on_day.get("super_admin_reviewed") or 0)
-        else:
-            temp_list.append(0)
-        individual_contribution_on_day = document_ref.document(super_admin_id).collection("daily_log").document(day).get().to_dict()
-        if individual_contribution_on_day:
-            temp_list.append(individual_contribution_on_day.get("count") or 0)
-        else:
-            temp_list.append(0)
-        if len(temp_list) == 3:
-            return_list.append(temp_list)
-    return return_list
+    try:
+        document_ref = firebase_db.collection("users")
+        last_7_days = []
+        for days in range(1, 8):
+            last_7_days.append(datetime.datetime.strftime(datetime.datetime.fromtimestamp(time.mktime(time.localtime())) - datetime.timedelta(days=days), "%d_%m_%Y"))
+        return_list = [["date", "Total", "Individual"]]
+        for day in last_7_days[::-1]:
+            temp_list = [day.replace("_", "/")]
+            total_contributions_on_day = firebase_db.collection("daily_question_log").document(day).get().to_dict()
+            if total_contributions_on_day:
+                temp_list.append(total_contributions_on_day.get("super_admin_reviewed") or 0)
+            else:
+                temp_list.append(0)
+            individual_contribution_on_day = document_ref.document(super_admin_id).collection("daily_log").document(day).get().to_dict()
+            if individual_contribution_on_day:
+                temp_list.append(individual_contribution_on_day.get("count") or 0)
+            else:
+                temp_list.append(0)
+            if len(temp_list) == 3:
+                return_list.append(temp_list)
+        return return_list
+    except Exception as e:
+        raise e
 
 def get_user_document_data(super_admin_id):
-    document_ref = firebase_db.collection('users')
-    user_data = document_ref.document(super_admin_id).get()
-    return user_data.to_dict()
+    try:
+        document_ref = firebase_db.collection('users')
+        user_data = document_ref.document(super_admin_id).get()
+        return user_data.to_dict()
+    except Exception as e:
+        raise e
 
 def firebase_update_profile_image(super_admin_id, profile_image_url):
-    document_ref = firebase_db.collection('users')
-    update_user = document_ref.document(super_admin_id).update({"profile_image": profile_image_url})
+    try:
+        document_ref = firebase_db.collection('users')
+        update_user = document_ref.document(super_admin_id).update({"profile_image": profile_image_url})
+    except Exception as e:
+        raise e
 
 def get_admin_review_stats():
-    document_ref = firebase_db.collection("users").where("type", "==", "Admin")
-    admin_id_list = []
-    for admin in document_ref.stream():
-        admin_id_list.append(admin.id)
-    return_list = []
-    for admin_id in admin_id_list:
-        admin_data = firebase_db.collection("users").document(admin_id).get().to_dict()
-        _d = dict(
-                    name = admin_data.get("name"),
-                    profile_image = admin_data.get("profile_image"),
-                    total_questions_reviewed = admin_data.get("total_questions_reviewed"),
-                    total_questions_deployed = admin_data.get("total_questions_deployed")
-                )
-        return_list.append(_d)
-    return return_list
+    try:
+        document_ref = firebase_db.collection("users").where("type", "==", "Admin")
+        admin_id_list = []
+        for admin in document_ref.stream():
+            admin_id_list.append(admin.id)
+        return_list = []
+        for admin_id in admin_id_list:
+            admin_data = firebase_db.collection("users").document(admin_id).get().to_dict()
+            _d = dict(
+                        name = admin_data.get("name"),
+                        profile_image = admin_data.get("profile_image"),
+                        total_questions_reviewed = admin_data.get("total_questions_reviewed"),
+                        total_questions_deployed = admin_data.get("total_questions_deployed")
+                    )
+            return_list.append(_d)
+        return return_list
+    except Exception as e:
+        raise e
 
 def get_cumulative_chart_data():
-    document_ref = firebase_db.collection("cumulative_data")
-    cumulative_data = document_ref.document("data").get().to_dict()
-    return cumulative_data
+    try:
+        document_ref = firebase_db.collection("cumulative_data")
+        cumulative_data = document_ref.document("data").get().to_dict()
+        return cumulative_data
+    except Exception as e:
+        raise e
 
 def firebase_get_approved_question_count(topic_id):
-    document_ref = firebase_db.collection("super_admin_questions_for_review")
-    topic_data = document_ref.document(topic_id).get()
-    return topic_data.to_dict() or {}
+    try:
+        document_ref = firebase_db.collection("super_admin_questions_for_review")
+        topic_data = document_ref.document(topic_id).get()
+        return topic_data.to_dict() or {}
+    except Exception as e:
+        raise e
 
 def firebase_get_questions_for_super_admin_list(grade, chapter, level):
-    document_ref = firebase_db.collection("questions")
-    questions_for_super_admin = document_ref\
-                            .document(f"G{grade:02}")\
-                            .collection("levels")\
-                            .document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")\
-                            .collection("question_bank")\
-                            .where("state", "==", "approved")\
-                            .where("is_deployed", "==", False)\
-                            .stream()
-    document_id_list = []
-    for question in questions_for_super_admin:
-        document_id_list.append(question.id)
-    return document_id_list
+    try:
+        document_ref = firebase_db.collection("questions")
+        questions_for_super_admin = document_ref\
+                                .document(f"G{grade:02}")\
+                                .collection("levels")\
+                                .document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")\
+                                .collection("question_bank")\
+                                .where("state", "==", "approved")\
+                                .where("is_deployed", "==", False)\
+                                .stream()
+        document_id_list = []
+        for question in questions_for_super_admin:
+            document_id_list.append(question.id)
+        return document_id_list
+    except Exception as e:
+        raise e
 
 def firebase_get_question(question_id, grade, chapter, level):
-    document_ref = firebase_db.collection("questions")
-    question_data = document_ref\
-                    .document(f"G{grade:02}")\
-                    .collection("levels")\
-                    .document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")\
-                    .collection("question_bank")\
-                    .document(question_id)\
-                    .get()\
-                    .to_dict() or {}
-    if not question_data:
-        raise ValueError("No such question")
-    return question_data
+    try:
+        document_ref = firebase_db.collection("questions")
+        question_data = document_ref\
+                        .document(f"G{grade:02}")\
+                        .collection("levels")\
+                        .document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")\
+                        .collection("question_bank")\
+                        .document(question_id)\
+                        .get()\
+                        .to_dict() or {}
+        if not question_data:
+            raise ValueError("No such question")
+        return question_data
+    except Exception as e:
+        raise e
 
 def firebase_disapprove_quality(super_admin_id):
     try:

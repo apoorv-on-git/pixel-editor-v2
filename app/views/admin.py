@@ -4,50 +4,72 @@ from app.db_controllers.admin_controller import *
 from app.db_controllers.helper import *
 from app.data.grade_breakdown import data as grade_breakdown
 from app.data.formula import formula_list
+from app.db_controllers.logging import *
 
 admin = Blueprint('admin', __name__, url_prefix="/admin")
 
 @admin.route('/')
 def login():
-    if session.get("admin_id"):
-        return redirect(url_for("admin.dashboard"))
-    elif session.get("contributor_id"):
-        return redirect(url_for("contributor.dashboard"))
-    elif session.get("graphics_id"):
-        return redirect(url_for("graphics.dashboard"))
-    elif session.get("super_admin_id"):
-        return redirect(url_for("super_admin.dashboard"))
-    return render_template("/admin/login/login.html")
+    try:
+        if session.get("admin_id"):
+            return redirect(url_for("admin.dashboard"))
+        elif session.get("contributor_id"):
+            return redirect(url_for("contributor.dashboard"))
+        elif session.get("graphics_id"):
+            return redirect(url_for("graphics.dashboard"))
+        elif session.get("super_admin_id"):
+            return redirect(url_for("super_admin.dashboard"))
+        return render_template("/admin/login/login.html")
+    except Exception as e:
+        log_error("view", "admin", str(e), "login")
+        return jsonify({
+            "message": str(e),
+            "status": "error"
+        }), 400
 
 @admin.route("/dashboard")
 @required_role_as_admin()
 def dashboard():
-    session["question_id_list"] = None
-    user_data = get_user_document_data(session.get('admin_id'))
-    leaderboard_data = get_admin_review_stats()
-    chart_data = get_cumulative_chart_data()
-    line_chart_data = get_chart_data(session.get('admin_id'))
-    active_grade = user_data.get("active_grade")
-    return render_template( "/admin/dashboard/dashboard.html",
-                            grade_breakdown=grade_breakdown,
-                            user_data=user_data,
-                            active_grade=active_grade,
-                            leaderboard_data=leaderboard_data,
-                            chart_data=chart_data,
-                            line_chart_data=line_chart_data
-                        )
+    try:
+        session["question_id_list"] = None
+        user_data = get_user_document_data(session.get('admin_id'))
+        leaderboard_data = get_admin_review_stats()
+        chart_data = get_cumulative_chart_data()
+        line_chart_data = get_chart_data(session.get('admin_id'))
+        active_grade = user_data.get("active_grade")
+        return render_template( "/admin/dashboard/dashboard.html",
+                                grade_breakdown=grade_breakdown,
+                                user_data=user_data,
+                                active_grade=active_grade,
+                                leaderboard_data=leaderboard_data,
+                                chart_data=chart_data,
+                                line_chart_data=line_chart_data
+                            )
+    except Exception as e:
+        log_error("view", "admin", str(e), "dashboard")
+        return jsonify({
+            "message": str(e),
+            "status": "error"
+        }), 400
 
 @admin.route("/editor")
 @required_role_as_admin()
 def editor():
-    session["question_id_list"] = None
-    user_data = get_user_document_data(session.get('admin_id'))
-    active_grade = user_data.get("active_grade")
-    return render_template( "/admin/question/editor/editor.html",
-                            formula_list=formula_list,
-                            grade_breakdown=grade_breakdown,
-                            active_grade=active_grade
-                        )
+    try:
+        session["question_id_list"] = None
+        user_data = get_user_document_data(session.get('admin_id'))
+        active_grade = user_data.get("active_grade")
+        return render_template( "/admin/question/editor/editor.html",
+                                formula_list=formula_list,
+                                grade_breakdown=grade_breakdown,
+                                active_grade=active_grade
+                            )
+    except Exception as e:
+        log_error("view", "admin", str(e), "editor")
+        return jsonify({
+            "message": str(e),
+            "status": "error"
+        }), 400
 
 @admin.route("/levels")
 @required_role_as_admin()
@@ -84,6 +106,7 @@ def levels():
                                 active_grade=active_grade
                             )
     except ValueError:
+        log_error("view", "admin", str(e), "levels")
         return jsonify({
             "status": "error",
             "message": "Do not tamper with the URL. Go to dashboard and try again!"
@@ -142,6 +165,7 @@ def review_question():
                                 active_grade=active_grade
                             )
     except ValueError:
+        log_error("view", "admin", str(e), "review_question")
         return jsonify({
             "status": "error",
             "message": "Do not tamper with the URL. Go to dashboard and try again!"

@@ -7,46 +7,61 @@ import json
 firebase_db = firestore.client()
 
 def get_user_document_data(graphics_id):
-    document_ref = firebase_db.collection('users')
-    user_data = document_ref.document(graphics_id).get()
-    return user_data.to_dict()
+    try:
+        document_ref = firebase_db.collection('users')
+        user_data = document_ref.document(graphics_id).get()
+        return user_data.to_dict()
+    except Exception as e:
+        raise e
 
 def firebase_update_profile_image(graphics_id, profile_image_url):
-    document_ref = firebase_db.collection('users')
-    update_user = document_ref.document(graphics_id).update({"profile_image": profile_image_url})
+    try:
+        document_ref = firebase_db.collection('users')
+        update_user = document_ref.document(graphics_id).update({"profile_image": profile_image_url})
+    except Exception as e:
+        raise e
 
 def firebase_get_questions_for_graphics():
-    document_ref = firebase_db.collection("questions_for_graphics")
-    topic_data = document_ref.document("data").get()
-    return topic_data.to_dict() or {}
+    try:
+        document_ref = firebase_db.collection("questions_for_graphics")
+        topic_data = document_ref.document("data").get()
+        return topic_data.to_dict() or {}
+    except Exception as e:
+        raise e
 
 def firebase_get_questions_for_graphics_list(grade, chapter, level):
-    document_ref = firebase_db.collection("questions")
-    questions_for_graphics = document_ref\
-                            .document(f"G{grade:02}")\
-                            .collection("levels")\
-                            .document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")\
-                            .collection("question_bank")\
-                            .where("state", "==", "graphics_required")\
-                            .stream()
-    document_id_list = []
-    for question in questions_for_graphics:
-        document_id_list.append(question.id)
-    return document_id_list
+    try:
+        document_ref = firebase_db.collection("questions")
+        questions_for_graphics = document_ref\
+                                .document(f"G{grade:02}")\
+                                .collection("levels")\
+                                .document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")\
+                                .collection("question_bank")\
+                                .where("state", "==", "graphics_required")\
+                                .stream()
+        document_id_list = []
+        for question in questions_for_graphics:
+            document_id_list.append(question.id)
+        return document_id_list
+    except Exception as e:
+        raise e
 
 def firebase_get_question(question_id, grade, chapter, level):
-    document_ref = firebase_db.collection("questions")
-    question_data = document_ref\
-                    .document(f"G{grade:02}")\
-                    .collection("levels")\
-                    .document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")\
-                    .collection("question_bank")\
-                    .document(question_id)\
-                    .get()\
-                    .to_dict() or {}
-    if not question_data:
-        raise ValueError("No such question")
-    return question_data
+    try:
+        document_ref = firebase_db.collection("questions")
+        question_data = document_ref\
+                        .document(f"G{grade:02}")\
+                        .collection("levels")\
+                        .document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")\
+                        .collection("question_bank")\
+                        .document(question_id)\
+                        .get()\
+                        .to_dict() or {}
+        if not question_data:
+            raise ValueError("No such question")
+        return question_data
+    except Exception as e:
+        raise e
 
 def firebase_save_question(graphics_id):
     try:

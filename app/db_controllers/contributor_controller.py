@@ -9,87 +9,117 @@ import time
 firebase_db = firestore.client()
 
 def get_user_document_data(contributor_id):
-    document_ref = firebase_db.collection('users')
-    user_data = document_ref.document(contributor_id).get()
-    return user_data.to_dict()
+    try:
+        document_ref = firebase_db.collection('users')
+        user_data = document_ref.document(contributor_id).get()
+        return user_data.to_dict()
+    except Exception as e:
+        raise e
 
 def get_chart_data(contributor_id):
-    document_ref = firebase_db.collection("users")
-    last_7_days = []
-    for days in range(1, 8):
-        last_7_days.append(datetime.datetime.strftime(datetime.datetime.fromtimestamp(time.mktime(time.localtime())) - datetime.timedelta(days=days), "%d_%m_%Y"))
-    return_list = [["date", "Total", "Individual"]]
-    for day in last_7_days[::-1]:
-        temp_list = [day.replace("_", "/")]
-        total_contributions_on_day = firebase_db.collection("daily_question_log").document(day).get().to_dict()
-        if total_contributions_on_day:
-            temp_list.append(total_contributions_on_day.get("count"))
-        else:
-            temp_list.append(0)
-        individual_contribution_on_day = document_ref.document(contributor_id).collection("daily_log").document(day).get().to_dict()
-        if individual_contribution_on_day:
-            temp_list.append(individual_contribution_on_day.get("count"))
-        else:
-            temp_list.append(0)
-        if len(temp_list) == 3:
-            return_list.append(temp_list)
-    return return_list
+    try:
+        document_ref = firebase_db.collection("users")
+        last_7_days = []
+        for days in range(1, 8):
+            last_7_days.append(datetime.datetime.strftime(datetime.datetime.fromtimestamp(time.mktime(time.localtime())) - datetime.timedelta(days=days), "%d_%m_%Y"))
+        return_list = [["date", "Total", "Individual"]]
+        for day in last_7_days[::-1]:
+            temp_list = [day.replace("_", "/")]
+            total_contributions_on_day = firebase_db.collection("daily_question_log").document(day).get().to_dict()
+            if total_contributions_on_day:
+                temp_list.append(total_contributions_on_day.get("count"))
+            else:
+                temp_list.append(0)
+            individual_contribution_on_day = document_ref.document(contributor_id).collection("daily_log").document(day).get().to_dict()
+            if individual_contribution_on_day:
+                temp_list.append(individual_contribution_on_day.get("count"))
+            else:
+                temp_list.append(0)
+            if len(temp_list) == 3:
+                return_list.append(temp_list)
+        return return_list
+    except Exception as e:
+        raise e
 
 def firebase_update_profile_image(contributor_id, profile_image_url):
-    document_ref = firebase_db.collection('users')
-    update_user = document_ref.document(contributor_id).update({"profile_image": profile_image_url})
+    try:
+        document_ref = firebase_db.collection('users')
+        update_user = document_ref.document(contributor_id).update({"profile_image": profile_image_url})
+    except Exception as e:
+        raise e
 
 def get_leaderboard_data(contributor_id):
-    document_ref = firebase_db.collection('users')
-    user_data = document_ref.document(contributor_id).get()
-    leaderboard_data_1 = [
-                            {
-                                "position": 1,
-                                "name": user_data.get("name"),
-                                "questions": user_data.get("total_questions")
-                            }
-                        ]
-    leaderboard_data_2 = [
-                            {
-                                "position": 1,
-                                "name": user_data.get("name"),
-                                "approval_rate": user_data.get("approval_rate"),
-                                "questions_reviewed": user_data.get("total_reviewed"),
-                                "total_questions": user_data.get("total_questions")
-                            }
-                        ]
-    return leaderboard_data_1, leaderboard_data_2
+    try:
+        document_ref = firebase_db.collection('users')
+        user_data = document_ref.document(contributor_id).get()
+        leaderboard_data_1 = [
+                                {
+                                    "position": 1,
+                                    "name": user_data.get("name"),
+                                    "questions": user_data.get("total_questions")
+                                }
+                            ]
+        leaderboard_data_2 = [
+                                {
+                                    "position": 1,
+                                    "name": user_data.get("name"),
+                                    "approval_rate": user_data.get("approval_rate"),
+                                    "questions_reviewed": user_data.get("total_reviewed"),
+                                    "total_questions": user_data.get("total_questions")
+                                }
+                            ]
+        return leaderboard_data_1, leaderboard_data_2
+    except Exception as e:
+        raise e
 
 def get_top_contributors_for_total_question():
-    document_ref = firebase_db.collection("users")
-    top_contributors_total_question = document_ref.order_by("total_questions", direction=firestore.Query.DESCENDING).limit(10).get()
-    return [contributor.to_dict() for contributor in top_contributors_total_question]
+    try:
+        document_ref = firebase_db.collection("users")
+        top_contributors_total_question = document_ref.order_by("total_questions", direction=firestore.Query.DESCENDING).limit(10).get()
+        return [contributor.to_dict() for contributor in top_contributors_total_question]
+    except Exception as e:
+        raise e
 
 def get_top_contributors_for_approval_rate():
-    document_ref = firebase_db.collection("users")
-    top_contributors_approval_rate = document_ref.order_by("approval_rate", direction=firestore.Query.DESCENDING).limit(10).get()
-    return [contributor.to_dict() for contributor in top_contributors_approval_rate]
+    try:
+        document_ref = firebase_db.collection("users")
+        top_contributors_approval_rate = document_ref.order_by("approval_rate", direction=firestore.Query.DESCENDING).limit(10).get()
+        return [contributor.to_dict() for contributor in top_contributors_approval_rate]
+    except Exception as e:
+        raise e
 
 def get_star_questions():
-    document_ref = firebase_db.collection("star_questions")
-    star_questions_data = document_ref.order_by("marked_at", direction=firestore.Query.DESCENDING).limit(10).get()
-    return [star_question_data.to_dict() for star_question_data in star_questions_data]
+    try:
+        document_ref = firebase_db.collection("star_questions")
+        star_questions_data = document_ref.order_by("marked_at", direction=firestore.Query.DESCENDING).limit(10).get()
+        return [star_question_data.to_dict() for star_question_data in star_questions_data]
+    except Exception as e:
+        raise e
 
 def get_notifications(contributor_id):
-    document_ref = firebase_db.collection("users")
-    notifications = document_ref.document(contributor_id).collection("notifications").order_by("created_at", direction=firestore.Query.DESCENDING).where("is_read", "==", False).limit(20).get()
-    return [notification.to_dict() for notification in notifications]
+    try:
+        document_ref = firebase_db.collection("users")
+        notifications = document_ref.document(contributor_id).collection("notifications").order_by("created_at", direction=firestore.Query.DESCENDING).where("is_read", "==", False).limit(20).get()
+        return [notification.to_dict() for notification in notifications]
+    except Exception as e:
+        raise e
 
 def firebase_get_level_count(topic_id):
-    document_ref = firebase_db.collection("total_questions")
-    topic_data = document_ref.document(topic_id).get()
-    return topic_data.to_dict() or {}
+    try:
+        document_ref = firebase_db.collection("total_questions")
+        topic_data = document_ref.document(topic_id).get()
+        return topic_data.to_dict() or {}
+    except Exception as e:
+        raise e
 
 def check_preview_question(contributor_id):
-    document_ref = firebase_db.collection('users')
-    user_data = document_ref.document(contributor_id).get()
-    user_data = user_data.to_dict()
-    return user_data.get("preview_question")
+    try:
+        document_ref = firebase_db.collection('users')
+        user_data = document_ref.document(contributor_id).get()
+        user_data = user_data.to_dict()
+        return user_data.get("preview_question")
+    except Exception as e:
+        raise e
 
 def firebase_submit_question(contributor_id):
     try:

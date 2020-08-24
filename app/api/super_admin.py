@@ -4,49 +4,64 @@ from app.db_controllers.auth_controller import *
 from app.db_controllers.super_admin_controller import *
 from app.utils.s3 import *
 from app.db_controllers.helper import *
+from app.db_controllers.logging import *
 import json
 
 super_admin_api = Blueprint('super_admin_api', __name__, url_prefix="/super-admin-api")
 
 @super_admin_api.route('/login', methods=['POST'])
 def login():
-    email = request.json.get('email')
-    password = request.json.get('password')
-    if not all((email, password)):
-        return jsonify({
-                'status': 'error',
-                'message': 'Both email and password are required!'
-        }), 400
-    response = login_firebase_user(email, password)
-    if response.get("success") and response.get("type").lower() == "super admin":
-        session["super_admin_id"] = response.get("document_id")
-        session["email"] = response.get("email")
-        session["user_type"] = response.get("type")
-        return jsonify({
-            "status": "success",
-        }), 200
-    elif response.get("success"):
+    try:
+        email = request.json.get('email')
+        password = request.json.get('password')
+        if not all((email, password)):
+            return jsonify({
+                    'status': 'error',
+                    'message': 'Both email and password are required!'
+            }), 400
+        response = login_firebase_user(email, password)
+        if response.get("success") and response.get("type").lower() == "super admin":
+            session["super_admin_id"] = response.get("document_id")
+            session["email"] = response.get("email")
+            session["user_type"] = response.get("type")
+            return jsonify({
+                "status": "success",
+            }), 200
+        elif response.get("success"):
+            return jsonify({
+                "status": "error",
+                "message": "This login is only for super admins!"
+            }), 400
+        else:
+            return jsonify({
+                "status": "error",
+                "message": response.get("error")
+            }), 400
+    except Exception as e:
+        log_error("api", "super_admin", str(e), "login")
         return jsonify({
             "status": "error",
-            "message": "This login is only for super admins!"
-        }), 400
-    else:
-        return jsonify({
-            "status": "error",
-            "message": response.get("error")
+            "message": str(e)
         }), 400
 
 @super_admin_api.route("/logout", methods=["POST"])
 @required_role_as_super_admin()
 def logout():
-    session["super_admin_id"] = None
-    session["email"] = None
-    session["user_type"] = None
-    return jsonify(
-        {
-            "status": "success",
-        }, 200
-    )
+    try:
+        session["super_admin_id"] = None
+        session["email"] = None
+        session["user_type"] = None
+        return jsonify(
+            {
+                "status": "success",
+            }, 200
+        )
+    except Exception as e:
+        log_error("api", "super_admin", str(e), "logout")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 400
 
 @super_admin_api.route("/upload-profile-image", methods=["POST"])
 @required_role_as_super_admin()
@@ -64,6 +79,7 @@ def update_profile_image():
             }, 200
         )
     except Exception as e:
+        log_error("api", "super_admin", str(e), "update_profile_image")
         return jsonify({
             "status": "error",
             "message": str(e)
@@ -79,6 +95,7 @@ def disapprove_quality():
             "status": "success"
         }), 204
     except Exception as e:
+        log_error("api", "super_admin", str(e), "disapprove_quality")
         return jsonify({
             "message": str(e),
             "status": "error"
@@ -94,6 +111,7 @@ def disapprove_graphics():
             "status": "success"
         }), 204
     except Exception as e:
+        log_error("api", "super_admin", str(e), "disapprove_graphics")
         return jsonify({
             "message": str(e),
             "status": "error"
@@ -109,6 +127,7 @@ def star_question():
             "status": "success"
         }), 204
     except Exception as e:
+        log_error("api", "super_admin", str(e), "star_question")
         return jsonify({
             "message": str(e),
             "status": "error"
@@ -124,6 +143,7 @@ def deploy_question():
             "status": "success"
         }), 204
     except Exception as e:
+        log_error("api", "super_admin", str(e), "deploy_question")
         return jsonify({
             "message": str(e),
             "status": "error"
@@ -139,6 +159,7 @@ def discard_question():
             "status": "success"
         }), 204
     except Exception as e:
+        log_error("api", "super_admin", str(e), "discard_question")
         return jsonify({
             "message": str(e),
             "status": "error"
@@ -154,6 +175,7 @@ def delete_image():
             "status": "success"
         }), 204
     except Exception as e:
+        log_error("api", "super_admin", str(e), "delete_image")
         return jsonify({
             "message": str(e),
             "status": "error"
