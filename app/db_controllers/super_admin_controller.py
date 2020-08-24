@@ -281,3 +281,25 @@ def firebase_deploy_question(super_admin_id):
         firebase_db.collection("daily_question_log").document(local_date).set({"super_admin_reviewed": Increment(1)}, merge=True)
     except Exception as e:
         raise e
+
+def firebase_delete_image(super_admin_id):
+    try:
+        question_id = request.json.get("document_id")
+        image_type = request.json.get("image_type")
+        grade = int(request.json.get("grade"))
+        chapter = int(request.json.get("chapter"))
+        level = int(request.json.get("level"))
+        if not question_id or not image_type:
+            raise ValueError("Invalid Request")
+        if not all((grade, chapter, level)):
+            raise ValueError("Grade, chapter or level unidentified!")
+        if image_type == "question_image":
+            question_obj = firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).get().to_dict()
+            old_question_image = question_obj.get("question_image")
+            delete_question_image(old_question_image)
+            question_updates = dict(
+                                        question_image = "#"
+                                    )
+            firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).update(question_updates)
+    except Exception as e:
+        raise e
