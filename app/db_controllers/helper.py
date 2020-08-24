@@ -130,3 +130,10 @@ def get_total_images_uploaded():
         return counter
     except Exception as e:
         raise e
+
+def delete_question_image(old_image):
+    try:
+        url_endpoint = old_image.split("amazonaws.com/")[-1]
+        delete_from_s3(url_endpoint)
+    except Exception as e:
+        raise e

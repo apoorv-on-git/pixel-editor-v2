@@ -159,3 +159,18 @@ def approve_question():
             "message": str(e),
             "status": "error"
         }), 400
+
+@admin_api.route("/delete-image", methods=["POST"])
+@required_role_as_admin()
+def delete_image():
+    try:
+        firebase_delete_image(session.get('admin_id'))
+        return jsonify({
+            "message": "Image deleted successfully!",
+            "status": "success"
+        }), 204
+    except Exception as e:
+        return jsonify({
+            "message": str(e),
+            "status": "error"
+        }), 400

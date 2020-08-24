@@ -90,6 +90,9 @@
       update_json()
       MathJax.Hub.Typeset()
     })
+    $(".delete-question-image").click(function(){
+      delete_image("question_image")
+    })
     $('#correct_option').change(function(){
       let option_selected = $(this).val();
       let option_list = ['option_a', 'option_b', 'option_c', 'option_d']
@@ -117,49 +120,50 @@
          "Please tell us if this question requires graphic work or not!",
          'error'
         )
-      }
-      update_json()
-      let data = {
-        "graphics_required": graphics_required,
-        "feedback": $("#feedback").val(),
-        "document_id": "{{document_id}}",
-        "grade": "{{grade}}",
-        "chapter": "{{chapter}}",
-        "level": "{{level}}",
-        "question_json": json
-      }
-      $.ajax({
-        url: "{{url_for('admin_api.approve_question')}}",
-        type: "post",
-        data: JSON.stringify(data),
-        dataType: 'json',
-        contentType: 'application/json',
-        beforeSend: function(){
-          $('.main-container').addClass('blur');
-          $(':button').prop('disabled', true);
-          $("#loader").show();
-        },
-        success: function (result) {
-          if ("{{next_document_id}}") {
-            window.location.href = `{{url_for('admin.review_question')}}?grade={{grade}}&chapter={{chapter}}&level={{level}}&document_id={{next_document_id}}`
-          } else {
-            window.location.href = `{{url_for('admin.levels')}}?grade={{grade}}&chapter={{chapter}}`
-          }
-        },
-        error: function (result) {
-          $("#loader").hide();
-          Swal.fire(
-           'Hey!',
-           result.responseJSON.message,
-           'error'
-          )
-        },
-        complete:function(data){
-          $('.main-container').removeClass('blur');
-          $(':button').prop('disabled', false);
-          $("#loader").hide();
+      } else {
+        update_json()
+        let data = {
+          "graphics_required": graphics_required,
+          "feedback": $("#feedback").val(),
+          "document_id": "{{document_id}}",
+          "grade": "{{grade}}",
+          "chapter": "{{chapter}}",
+          "level": "{{level}}",
+          "question_json": json
         }
-      })
+        $.ajax({
+          url: "{{url_for('admin_api.approve_question')}}",
+          type: "post",
+          data: JSON.stringify(data),
+          dataType: 'json',
+          contentType: 'application/json',
+          beforeSend: function(){
+            $('.main-container').addClass('blur');
+            $(':button').prop('disabled', true);
+            $("#loader").show();
+          },
+          success: function (result) {
+            if ("{{next_document_id}}") {
+              window.location.href = `{{url_for('admin.review_question')}}?grade={{grade}}&chapter={{chapter}}&level={{level}}&document_id={{next_document_id}}`
+            } else {
+              window.location.href = `{{url_for('admin.levels')}}?grade={{grade}}&chapter={{chapter}}`
+            }
+          },
+          error: function (result) {
+            $("#loader").hide();
+            Swal.fire(
+            'Hey!',
+            result.responseJSON.message,
+            'error'
+            )
+          },
+          complete:function(data){
+            $('.main-container').removeClass('blur');
+            $(':button').prop('disabled', false);
+            $("#loader").hide();
+          }
+        })
+      }
     })
     $("#disapprove_question").click(function(){
       var feedback = $("#feedback").val();
@@ -169,47 +173,48 @@
          "Feedback is important!",
          'error'
         )
-      }
-      update_json();
-      let data = {
-        "feedback": feedback,
-        "document_id": "{{document_id}}",
-        "grade": "{{grade}}",
-        "chapter": "{{chapter}}",
-        "level": "{{level}}",
-      }
-      $.ajax({
-        url: "{{url_for('admin_api.disapprove_question')}}",
-        type: "post",
-        data: JSON.stringify(data),
-        dataType: 'json',
-        contentType: 'application/json',
-        beforeSend: function(){
-          $('.main-container').addClass('blur');
-          $(':button').prop('disabled', true);
-          $("#loader").show();
-        },
-        success: function (result) {
-          if ("{{next_document_id}}") {
-            window.location.href = `{{url_for('admin.review_question')}}?grade={{grade}}&chapter={{chapter}}&level={{level}}&document_id={{next_document_id}}`
-          } else {
-            window.location.href = `{{url_for('admin.levels')}}?grade={{grade}}&chapter={{chapter}}`
-          }
-        },
-        error: function (result) {
-          $("#loader").hide();
-          Swal.fire(
-           'Hey!',
-           result.responseJSON.message,
-           'error'
-          )
-        },
-        complete:function(data){
-          $('.main-container').removeClass('blur');
-          $(':button').prop('disabled', false);
-          $("#loader").hide();
+      } else {
+        update_json();
+        let data = {
+          "feedback": feedback,
+          "document_id": "{{document_id}}",
+          "grade": "{{grade}}",
+          "chapter": "{{chapter}}",
+          "level": "{{level}}",
         }
-      })
+        $.ajax({
+          url: "{{url_for('admin_api.disapprove_question')}}",
+          type: "post",
+          data: JSON.stringify(data),
+          dataType: 'json',
+          contentType: 'application/json',
+          beforeSend: function(){
+            $('.main-container').addClass('blur');
+            $(':button').prop('disabled', true);
+            $("#loader").show();
+          },
+          success: function (result) {
+            if ("{{next_document_id}}") {
+              window.location.href = `{{url_for('admin.review_question')}}?grade={{grade}}&chapter={{chapter}}&level={{level}}&document_id={{next_document_id}}`
+            } else {
+              window.location.href = `{{url_for('admin.levels')}}?grade={{grade}}&chapter={{chapter}}`
+            }
+          },
+          error: function (result) {
+            $("#loader").hide();
+            Swal.fire(
+            'Hey!',
+            result.responseJSON.message,
+            'error'
+            )
+          },
+          complete:function(data){
+            $('.main-container').removeClass('blur');
+            $(':button').prop('disabled', false);
+            $("#loader").hide();
+          }
+        })
+      }
     })
   })
   $(document).ready(function(){
@@ -232,5 +237,42 @@
       json.option_d = $('#option_d_text').val()
     }
     json.correct_option = `option_${$('#correct_option').val()}`
+  }
+  function delete_image(image_type) {
+    let data = {
+                  "document_id": "{{document_id}}",
+                  "image_type": image_type,
+                  "grade": "{{grade}}",
+                  "chapter": "{{chapter}}",
+                  "level": "{{level}}"
+              }
+    $.ajax({
+      url: "{{url_for('admin_api.delete_image')}}",
+      type: "post",
+      data: JSON.stringify(data),
+      dataType: 'json',
+      contentType: 'application/json',
+      beforeSend: function(){
+        $('.main-container').addClass('blur');
+        $(':button').prop('disabled', true);
+        $("#loader").show();
+      },
+      success: function (result) {
+        window.location.reload()
+      },
+      error: function (result) {
+        $("#loader").hide();
+        Swal.fire(
+        'Hey!',
+        result.responseJSON.message,
+        'error'
+        )
+      },
+      complete:function(data){
+        $('.main-container').removeClass('blur');
+        $(':button').prop('disabled', false);
+        $("#loader").hide();
+      }
+    })
   }
 </script>

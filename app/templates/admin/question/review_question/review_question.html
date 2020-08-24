@@ -122,13 +122,17 @@
               <p id="question_preview"></p>
             </div>
           </div>
+          {% if question_data.get('question_image') != "#" %}
           <div class="row mt-3 pl-2 pr-5">
             <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="question_image_preview_container">
-              {% if question_data.get('question_image') != "#" %}
               <img src="{{question_data.get('question_image')}}" />
-              {% endif %}
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-12 text-center p-2 delete-icon"
+              id="question_image_preview_delete_container">
+              <i class="fa fa-trash fa-lg delete-question-image"></i>
             </div>
           </div>
+          {% endif %}
           {% for option_key in ["option_a", "option_b", "option_c", "option_d"]  %}
           {% for key, value in question_data.get("options").items() %}
           {% if key == option_key %}
