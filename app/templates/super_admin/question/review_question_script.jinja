@@ -202,6 +202,13 @@
     })
     $("#star_question").click(function(){
         var feedback = $("#feedback").val();
+        if (!feedback) {
+          Swal.fire(
+          'Hey!',
+          "Feedback is important!",
+          'error'
+          )
+        }
         let data = {
             "document_id": "{{document_id}}",
             "grade": "{{grade}}",
@@ -247,11 +254,20 @@
       }
     })
     $("#discard_question").click(function(){
+      var feedback = $("#feedback").val();
+      if (!feedback) {
+        Swal.fire(
+         'Hey!',
+         "Feedback is important!",
+         'error'
+        )
+      }
       let data = {
             "document_id": "{{document_id}}",
             "grade": "{{grade}}",
             "chapter": "{{chapter}}",
-            "level": "{{level}}"
+            "level": "{{level}}",
+            "feedback": feedback
         }
       $.ajax({
             url: "{{url_for('super_admin_api.discard_question')}}",

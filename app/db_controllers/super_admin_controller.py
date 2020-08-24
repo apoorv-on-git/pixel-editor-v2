@@ -177,10 +177,13 @@ def firebase_star_question(super_admin_id):
         grade = int(request.json.get("grade"))
         chapter = int(request.json.get("chapter"))
         level = int(request.json.get("level"))
+        feedback = request.json.get("feedback")
         if not question_id:
             raise ValueError("Invalid Question")
         if not all((grade, chapter, level)):
             raise ValueError("Grade, chapter or level unidentified!")
+        if not feedback:
+            raise ValueError("Feedback is important!")
         question_data = firebase_get_question(question_id, grade, chapter, level)
         contributor_id = question_data.get("contributor_id")
         if not contributor_id:
@@ -203,10 +206,9 @@ def firebase_star_question(super_admin_id):
                                                 f"Grade {grade}",
                                                 f"Chapter {chapter}",
                                                 f"Level {level}"
-                                            ]
+                                            ],
+                                    feedback = feedback
                                 )
-        if request.json.get("feedback"):
-            star_question_log["feedback"] = request.json.get("feedback")
         firebase_db.collection("star_questions").document().create(star_question_log)
     except Exception as e:
         raise e
@@ -217,12 +219,16 @@ def firebase_discard_question(super_admin_id):
         grade = int(request.json.get("grade"))
         chapter = int(request.json.get("chapter"))
         level = int(request.json.get("level"))
+        feedback = request.json.get("feedback")
         if not question_id:
             raise ValueError("Invalid Question")
         if not all((grade, chapter, level)):
             raise ValueError("Grade, chapter or level unidentified!")
+        if not feedback:
+            raise ValueError("Feedback is important!")
         question_updates = dict(
                                     state = "disapproved",
+                                    super_admin_feedback = feedback
                             )
         local_date = time.localtime()
         local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
