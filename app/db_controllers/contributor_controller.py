@@ -112,21 +112,17 @@ def firebase_get_level_count(topic_id):
     except Exception as e:
         raise e
 
-def check_preview_question(contributor_id):
-    try:
-        document_ref = firebase_db.collection('users')
-        user_data = document_ref.document(contributor_id).get()
-        user_data = user_data.to_dict()
-        return user_data.get("preview_question")
-    except Exception as e:
-        raise e
-
 def firebase_submit_question(contributor_id):
     try:
         data = json.loads(request.form.get('json'))
+        grade = data.get("grade")
+        chapter = data.get("chapter")
+        level = data.get("level")
+        if not all((grade, chapter, level)):
+            raise ValueError("Grade, Chapter and Level are mandatory!")
+        grade, chapter, level = int(grade), int(chapter), int(level)
         user_data = get_user_document_data(contributor_id)
         check_data(data)
-        grade, chapter, level = int(data.get("grade")), int(data.get("chapter")), int(data.get("level"))
         question_image, option_a, option_b, option_c, option_d = handle_submitted_images(data, contributor_id)
         question_image, option_a, option_b, option_c, option_d = get_files_renamed(question_image, option_a, option_b, option_c, option_d)
         question_text = remove_style(data.get("question"))

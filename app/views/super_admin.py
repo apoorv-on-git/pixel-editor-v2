@@ -82,7 +82,7 @@ def levels():
                                 chapter=chapter,
                                 grade_breakdown=grade_breakdown
                             )
-    except ValueError:
+    except ValueError as e:
         log_error("view", "super_admin", str(e), "levels")
         return jsonify({
             "status": "error",
@@ -141,7 +141,7 @@ def review_question():
                                 admin_name=admin_name,
                                 formula_list=formula_list
                             )
-    except ValueError:
+    except ValueError as e:
         log_error("view", "super_admin", str(e), "review_question")
         return jsonify({
             "status": "error",

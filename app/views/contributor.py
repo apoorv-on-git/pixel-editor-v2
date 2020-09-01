@@ -142,7 +142,7 @@ def levels():
                                 grade_breakdown=grade_breakdown,
                                 active_grade=active_grade
                             )
-    except ValueError:
+    except ValueError as e:
         log_error("view", "contributor", str(e), "levels")
         return jsonify({
             "status": "error",
@@ -176,7 +176,7 @@ def create_question():
                                 active_grade=active_grade,
                                 total_contributions_by_contributor=total_contributions_by_contributor
                             )
-    except ValueError:
+    except ValueError as e:
         log_error("view", "contributor", str(e), "create_question")
         return jsonify({
             "status": "error",

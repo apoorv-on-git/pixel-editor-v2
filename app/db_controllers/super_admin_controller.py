@@ -259,6 +259,7 @@ def firebase_discard_question(super_admin_id):
         firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_id).update(question_updates)
         firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(-1)})
         firebase_db.collection("users").document(super_admin_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
+        firebase_db.collection("users").document(super_admin_id).set({"questions_reviewed": Increment(1)}, merge=True)
         firebase_db.collection("daily_question_log").document(local_date).set({"super_admin_reviewed": Increment(1)}, merge=True)
     except Exception as e:
         raise e
@@ -280,6 +281,8 @@ def firebase_deploy_question(super_admin_id):
         for admin in firebase_db.collection("users").where("email", "==", admin_email).stream():
             admin_id = admin.id
         new_question_data = request.json.get("question_json")
+        if not new_question_data:
+            raise ValueError("Question is required!")
         check_data(new_question_data)
         question_text = remove_style(new_question_data.get("question"))
         question_updates = dict(

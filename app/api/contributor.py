@@ -73,11 +73,16 @@ def update_profile_image():
             delete_from_s3(url_endpoint)
             upload_to_s3(url_endpoint, profile_image)
             firebase_update_profile_image(session.get('contributor_id'), f"{os.environ.get('S3_URL')}{url_endpoint}")
-        return jsonify(
-            {
-                "status": "success",
-            }, 200
-        )
+            return jsonify(
+                {
+                    "status": "success",
+                }, 200
+            )
+        else:
+            return jsonify({
+                "status": "error",
+                "message": "Profile picture is required!"
+            }), 400
     except Exception as e:
         log_error("api", "contributor", str(e), "update_profile_image")
         return jsonify({
