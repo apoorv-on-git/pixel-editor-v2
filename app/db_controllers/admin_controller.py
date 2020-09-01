@@ -121,11 +121,14 @@ def get_cumulative_chart_data():
 def firebase_submit_question(admin_id):
     try:
         data = json.loads(request.form.get('json'))
-        user_data = get_user_document_data(admin_id)
-        check_data(data)
-        grade, chapter, level = int(data.get("grade")) if data.get("grade") else None, int(data.get("chapter")) if data.get("chapter") else None, int(data.get("level")) if data.get("level") else None
+        grade = data.get("grade")
+        chapter = data.get("chapter")
+        level = data.get("level")
         if not all((grade, chapter, level)):
             raise ValueError("Grade, Chapter and Level are mandatory!")
+        grade, chapter, level = int(grade), int(chapter), int(level)
+        user_data = get_user_document_data(admin_id)
+        check_data(data)
         question_image, option_a, option_b, option_c, option_d = handle_submitted_images(data, admin_id)
         question_image, option_a, option_b, option_c, option_d = get_files_renamed(question_image, option_a, option_b, option_c, option_d)
         question_text = remove_style(data.get("question"))
@@ -137,6 +140,7 @@ def firebase_submit_question(admin_id):
                             contributor_id = admin_id,
                             contributor_name = user_data.get("name"),
                             is_star_question = False,
+                            is_paid = False,
                             state = "under_review",
                             date_created = datetime.datetime.utcnow(),
                             date_approved = None,
@@ -153,7 +157,8 @@ def firebase_submit_question(admin_id):
                             feedback = None,
                             approved_by = None,
                             deployed_by = None,
-                            is_deployed = False
+                            is_deployed = False,
+                            is_olympiad = False
                     )
         local_date = time.localtime()
         local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
@@ -244,6 +249,8 @@ def firebase_approve_question(admin_id):
             raise ValueError("Contributor not identified!")
         user_data = get_user_document_data(admin_id)
         new_question_data = request.json.get("question_json")
+        if not new_question_data:
+            raise ValueError("Question is required!")
         check_data(new_question_data)
         question_text = remove_style(new_question_data.get("question"))
         question_updates = dict(
@@ -275,8 +282,6 @@ def firebase_approve_question(admin_id):
         current_questions_for_review = questions_for_review.get(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}")
         firebase_db.collection("admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": (current_questions_for_review - 1)})
         firebase_db.collection("cumulative_data").document("data").set({"reviewed": Increment(1)}, merge=True)
-        local_date = time.localtime()
-        local_date = f"{local_date.tm_mday:02}_{local_date.tm_mon:02}_{local_date.tm_year:04}"
         firebase_db.collection("users").document(contributor_id).collection("daily_log").document(local_date).set({"approved": Increment(1)}, merge=True)
         firebase_db.collection("users").document(admin_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
         firebase_db.collection("daily_question_log").document(local_date).set({"admin_reviewed": Increment(1)}, merge=True)
@@ -285,7 +290,7 @@ def firebase_approve_question(admin_id):
             graphics_dict[f"NCERT_G{grade:02}_TOPIC{chapter:02}"][f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}"] += 1
             firebase_db.collection("questions_for_graphics").document("data").update(graphics_dict)
         else:
-            firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(1)})
+            firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").set({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(1)}, merge=True)
             firebase_db.collection("cumulative_data").document("data").set({"admin_approved": Increment(1)}, merge=True)
     except Exception as e:
         raise e

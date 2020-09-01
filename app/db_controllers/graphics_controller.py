@@ -77,6 +77,8 @@ def firebase_save_question(graphics_id):
         question_data = firebase_get_question(question_id, grade, chapter, level)
         user_data = get_user_document_data(graphics_id)
         new_question_data = data.get("question_json")
+        if not new_question_data:
+            raise ValueError("Question is required!")
         check_data(new_question_data)
         question_image, option_a, option_b, option_c, option_d = handle_submitted_images(new_question_data, graphics_id)
         question_image, option_a, option_b, option_c, option_d = get_files_renamed(question_image, option_a, option_b, option_c, option_d)

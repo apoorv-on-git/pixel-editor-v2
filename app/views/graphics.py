@@ -80,7 +80,7 @@ def levels():
                                 grade_breakdown=grade_breakdown,
                                 sidebar_filter_based_on_requirement=sidebar_filter_based_on_requirement
                             )
-    except ValueError:
+    except ValueError as e:
         log_error("view", "graphics", str(e), "levels")
         return jsonify({
             "status": "error",
@@ -137,7 +137,7 @@ def edit_question():
                                 question_data=question_data,
                                 sidebar_filter_based_on_requirement=sidebar_filter_based_on_requirement
                             )
-    except ValueError:
+    except ValueError as e:
         log_error("view", "graphics", str(e), "edit_question")
         return jsonify({
             "status": "error",

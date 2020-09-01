@@ -48,6 +48,8 @@ def get_grade_breakdown_dict(grade, chapter, level):
 
 def check_data(data):
     try:
+        if data.get("correct_option") not in ["option_a", "option_b", "option_c", "option_d"]:
+            raise ValueError("Invalid Correct Answer")
         if data.get("correct_option") == "option_" or not all((data.get("question"), data.get("option_a"), data.get("option_b"))):
             raise ValueError("At least 2 options, question and the correct answer is mandatory!")
         option_c = data.get('option_c')
@@ -56,13 +58,15 @@ def check_data(data):
         option_d = data.get('option_d')
         if not data.get("option_d"):
             option_d = "#"
-        if (option_c == "#" and option_d == "#") and (data.get("correct_option") == "option_c" or data.get("correct_option") == "option_d"):
+        if (option_c == "#" and data.get("correct_option") == "option_c") or (option_d == "#" and data.get("correct_option") == "option_d"):
             raise ValueError("Correct Option cannot be left empty!")
     except Exception as e:
         raise e
 
 def handle_submitted_images(data, contributor_id):
     try:
+        if not data.get("question_image"):
+            data["question_image"] = "#"
         if data.get("question_image") != "#" and 'amazonaws' not in data.get("question_image"):
             question_image = handle_image_upload('question_image', contributor_id)
         elif 'amazonaws' in data.get("question_image"):

@@ -12,6 +12,7 @@ class DevelopmentConfig(BaseConfig):
 class TestConfig(BaseConfig):
   """Testing configuration"""
   TESTING = True
+  PRESERVE_CONTEXT_ON_EXCEPTION = False
 
 class ProductionConfig(BaseConfig):
   """Production configuration"""  

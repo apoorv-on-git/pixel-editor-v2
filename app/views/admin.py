@@ -105,7 +105,7 @@ def levels():
                                 grade_breakdown=grade_breakdown,
                                 active_grade=active_grade
                             )
-    except ValueError:
+    except ValueError as e:
         log_error("view", "admin", str(e), "levels")
         return jsonify({
             "status": "error",
@@ -164,7 +164,7 @@ def review_question():
                                 pdf_url=chapter_dict.get("chapter_pdf"),
                                 active_grade=active_grade
                             )
-    except ValueError:
+    except ValueError as e:
         log_error("view", "admin", str(e), "review_question")
         return jsonify({
             "status": "error",
