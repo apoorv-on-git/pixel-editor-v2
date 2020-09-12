@@ -780,8 +780,8 @@ def test_admin_approve_daily_question_log_admin_approved(firebase_db_ins):
     assert daily_log_document.get("admin_reviewed") == 3
 
 def test_admin_approve_super_admin_questions_for_review(firebase_db_ins):
-    super_admin_questions_for_review_document = firebase_db_ins.collection("super_admin_questions_for_review").document("NCERT_G03_TOPIC01").get().to_dict()
-    assert super_admin_questions_for_review_document.get("NCERT_G03_TOPIC01_LEVEL01") == 1
+    super_admin_questions_for_review_document = firebase_db_ins.collection("super_admin_questions_for_review").document("data").get().to_dict()
+    assert super_admin_questions_for_review_document.get("NCERT_G03_TOPIC01").get("NCERT_G03_TOPIC01_LEVEL01") == 1
 
 def test_admin_approve_questions_for_graphics(firebase_db_ins):
     questions_for_graphics_document = firebase_db_ins.collection("questions_for_graphics").document("data").get().to_dict()
@@ -913,8 +913,8 @@ def test_graphics_submit_questions_for_graphics(firebase_db_ins):
     assert questions_for_graphics_document.get("NCERT_G03_TOPIC01").get("NCERT_G03_TOPIC01_LEVEL01") == 0
 
 def test_graphics_submit_super_admin_questions_for_review(firebase_db_ins):
-    super_admin_questions_for_review_document = firebase_db_ins.collection("super_admin_questions_for_review").document("NCERT_G03_TOPIC01").get().to_dict()
-    assert super_admin_questions_for_review_document.get("NCERT_G03_TOPIC01_LEVEL01") == 2
+    super_admin_questions_for_review_document = firebase_db_ins.collection("super_admin_questions_for_review").document("data").get().to_dict()
+    assert super_admin_questions_for_review_document.get("NCERT_G03_TOPIC01").get("NCERT_G03_TOPIC01_LEVEL01") == 2
 
 def test_graphics_submit_cumulative_admin_approved(firebase_db_ins):
     cumulative_data_document = firebase_db_ins.collection("cumulative_data").document("data").get().to_dict()
@@ -1036,8 +1036,8 @@ def test_super_admin_disapprove_quality_super_admin_questions_reviewed(firebase_
     assert document.get("questions_reviewed") == 1
 
 def test_super_admin_disapprove_quality_super_admin_questions_for_review(firebase_db_ins):
-    document = firebase_db_ins.collection("super_admin_questions_for_review").document("NCERT_G03_TOPIC01").get().to_dict()
-    assert document.get("NCERT_G03_TOPIC01_LEVEL01") == 1
+    super_admin_questions_for_review_document = firebase_db_ins.collection("super_admin_questions_for_review").document("data").get().to_dict()
+    assert super_admin_questions_for_review_document.get("NCERT_G03_TOPIC01").get("NCERT_G03_TOPIC01_LEVEL01") == 1
 
 def test_super_admin_disapprove_quality_super_admin_daily_log_count(firebase_db_ins):
     local_date = time.localtime()
@@ -1140,8 +1140,8 @@ def test_super_admin_disapprove_graphics_super_admin_questions_reviewed(firebase
     assert document.get("questions_reviewed") == 2
 
 def test_super_admin_disapprove_graphics_super_admin_questions_for_review(firebase_db_ins):
-    document = firebase_db_ins.collection("super_admin_questions_for_review").document("NCERT_G03_TOPIC01").get().to_dict()
-    assert document.get("NCERT_G03_TOPIC01_LEVEL01") == 0
+    super_admin_questions_for_review_document = firebase_db_ins.collection("super_admin_questions_for_review").document("data").get().to_dict()
+    assert super_admin_questions_for_review_document.get("NCERT_G03_TOPIC01").get("NCERT_G03_TOPIC01_LEVEL01") == 0
 
 def test_super_admin_disapprove_graphics_cumulative_admin_approved(firebase_db_ins):
     document = firebase_db_ins.collection("cumulative_data").document("data").get().to_dict()
@@ -1390,8 +1390,8 @@ def test_super_admin_discard_question_super_admin_questions_reviewed(firebase_db
     assert document.get("questions_reviewed") == 3
 
 def test_super_admin_discard_question_super_admin_questions_for_review(firebase_db_ins):
-    document = firebase_db_ins.collection("super_admin_questions_for_review").document("NCERT_G03_TOPIC01").get().to_dict()
-    assert document.get("NCERT_G03_TOPIC01_LEVEL01") == 1
+    super_admin_questions_for_review_document = firebase_db_ins.collection("super_admin_questions_for_review").document("data").get().to_dict()
+    assert super_admin_questions_for_review_document.get("NCERT_G03_TOPIC01").get("NCERT_G03_TOPIC01_LEVEL01") == 1
 
 def test_super_admin_discard_question_super_admin_daily_log(firebase_db_ins):
     local_date = time.localtime()
@@ -1538,8 +1538,8 @@ def test_super_admin_deploy_question_super_admin_questions_reviewed(firebase_db_
     assert document.get("questions_reviewed") == 4
 
 def test_super_admin_deploy_question_super_admin_questions_for_review(firebase_db_ins):
-    super_admin_questions_for_review_document = firebase_db_ins.collection("super_admin_questions_for_review").document("NCERT_G03_TOPIC01").get().to_dict()
-    assert super_admin_questions_for_review_document.get("NCERT_G03_TOPIC01_LEVEL01") == 0
+    super_admin_questions_for_review_document = firebase_db_ins.collection("super_admin_questions_for_review").document("data").get().to_dict()
+    assert super_admin_questions_for_review_document.get("NCERT_G03_TOPIC01").get("NCERT_G03_TOPIC01_LEVEL01") == 0
 
 def test_super_admin_deploy_question_cumulative_super_admin_deployed(firebase_db_ins):
     document = firebase_db_ins.collection("cumulative_data").document("data").get().to_dict()

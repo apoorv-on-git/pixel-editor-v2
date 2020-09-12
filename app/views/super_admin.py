@@ -36,12 +36,14 @@ def dashboard():
         leaderboard_data = get_admin_review_stats()
         chart_data = get_cumulative_chart_data()
         line_chart_data = get_chart_data(session.get('super_admin_id'))
+        sidebar_filter_based_on_requirement = firebase_get_approved_question_count()
         return render_template( "/super_admin/dashboard/dashboard.html",
                                 grade_breakdown=grade_breakdown,
                                 user_data=user_data,
                                 leaderboard_data=leaderboard_data,
                                 chart_data=chart_data,
-                                line_chart_data=line_chart_data
+                                line_chart_data=line_chart_data,
+                                sidebar_filter_based_on_requirement=sidebar_filter_based_on_requirement
                             )
     except Exception as e:
         log_error("view", "super_admin", str(e), "dashboard")
@@ -71,7 +73,8 @@ def levels():
                 "message": "Invalid Chapter!"
             }), 400
         levels = chapter_dict.get("levels")
-        questions_for_super_admin = firebase_get_approved_question_count(f"NCERT_G{int(grade):02}_TOPIC{int(chapter):02}")
+        sidebar_filter_based_on_requirement = firebase_get_approved_question_count()
+        questions_for_super_admin = sidebar_filter_based_on_requirement.get(f"NCERT_G{int(grade):02}_TOPIC{int(chapter):02}")
         for level in levels:
             level_id = f"NCERT_G{int(grade):02}_TOPIC{int(chapter):02}_LEVEL{int(level.get('level_number')):02}"
             level["questions_for_super_admin"] = questions_for_super_admin.get(level_id) or 0
@@ -80,7 +83,8 @@ def levels():
                                 chapter_name=chapter_dict.get("chapter_name"),
                                 grade=grade,
                                 chapter=chapter,
-                                grade_breakdown=grade_breakdown
+                                grade_breakdown=grade_breakdown,
+                                sidebar_filter_based_on_requirement=sidebar_filter_based_on_requirement
                             )
     except ValueError as e:
         log_error("view", "super_admin", str(e), "levels")
@@ -139,7 +143,8 @@ def review_question():
                                 question_data=question_data,
                                 pdf_url=chapter_dict.get("chapter_pdf"),
                                 admin_name=admin_name,
-                                formula_list=formula_list
+                                formula_list=formula_list,
+                                sidebar_filter_based_on_requirement=sidebar_filter_based_on_requirement
                             )
     except ValueError as e:
         log_error("view", "super_admin", str(e), "review_question")

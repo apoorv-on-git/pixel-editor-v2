@@ -242,6 +242,21 @@ def seed_users():
             final_dict[chapter_id] = temp_chapter_dict
     firebase_db.collection("questions_for_graphics").document("data").create(final_dict)
 
+    #Questions for Super Admin Placeholder
+    final_dict_super_admin = {}
+    for grade_dict in data:
+        for chapter_dict in grade_dict.get("chapters"):
+            chapter_id = f"NCERT_G{grade_dict.get('grade_number'):02}_TOPIC{chapter_dict.get('chapter_number'):02}"
+            temp_chapter_dict = {}
+            for level_dict in chapter_dict.get("levels"):
+                questions_for_review = firebase_db.collection("questions").document(f"G{grade_dict.get('grade_number'):02}").collection("levels").document(f"NCERT_G{grade_dict.get('grade_number'):02}_TOPIC{chapter_dict.get('chapter_number'):02}_LEVEL{level_dict.get('level_number'):02}").collection("question_bank").where("state", "==", "approved").where("is_deployed", "==", False).stream()
+                len_list = []
+                for question in questions_for_review:
+                    len_list.append(question.id)
+                temp_chapter_dict[f"{chapter_id}_LEVEL{level_dict.get('level_number'):02}"] = len(len_list)
+            final_dict_super_admin[chapter_id] = temp_chapter_dict
+    firebase_db.collection("super_admin_questions_for_review").document("data").create(final_dict_super_admin)
+
 
 #Initialising Test Suite
 if cred_json.get("project_id") == "pixel-editor-test":

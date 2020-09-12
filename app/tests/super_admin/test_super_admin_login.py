@@ -22,13 +22,13 @@ def test_graphics_login(super_admin_requests):
     resp = super_admin_requests.post('/super-admin-api/login', json=json)
     assert resp.status_code == 400
 
-def test_super_admin_login(super_admin_requests):
-    json = dict(
-                    email = "super_admin@pixelmath.org",
-                    password = "123456"
-            )
-    resp = super_admin_requests.post('/super-admin-api/login', json=json)
-    assert resp.status_code == 200
+# def test_super_admin_login(super_admin_requests):
+#     json = dict(
+#                     email = "super_admin@pixelmath.org",
+#                     password = "123456"
+#             )
+#     resp = super_admin_requests.post('/super-admin-api/login', json=json)
+#     assert resp.status_code == 200
 
 def test_super_admin_login_wrong_email(super_admin_requests):
     json = dict(

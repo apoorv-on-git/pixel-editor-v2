@@ -99,7 +99,9 @@ def firebase_save_question(graphics_id):
         graphics_dict = firebase_db.collection("questions_for_graphics").document("data").get().to_dict()
         graphics_dict[f"NCERT_G{grade:02}_TOPIC{chapter:02}"][f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}"] -= 1
         firebase_db.collection("questions_for_graphics").document("data").update(graphics_dict)
-        firebase_db.collection("super_admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").update({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(1)})
+        super_admin_questions_for_review_dict = firebase_db.collection("super_admin_questions_for_review").document("data").get().to_dict()
+        super_admin_questions_for_review_dict[f"NCERT_G{grade:02}_TOPIC{chapter:02}"][f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}"] += 1
+        firebase_db.collection("super_admin_questions_for_review").document("data").update(super_admin_questions_for_review_dict)
         firebase_db.collection("cumulative_data").document("data").set({"admin_approved": Increment(1)}, merge=True)
     except Exception as e:
         raise e
