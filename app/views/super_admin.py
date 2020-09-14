@@ -132,6 +132,7 @@ def review_question():
         question_data = firebase_get_question(document_id, grade, chapter, level)
         admin_name = question_data.get("approved_by")
         grade_dict, chapter_dict, level_dict = get_grade_breakdown_dict(grade, chapter, level)
+        sidebar_filter_based_on_requirement = firebase_get_approved_question_count()
         return render_template( "/super_admin/question/review_question.html",
                                 grade=grade,
                                 chapter=chapter,
