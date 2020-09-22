@@ -21,6 +21,16 @@ def required_role_as_admin():
         return wrapper
     return decorator
 
+def required_role_as_reviewer():
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if not session.get("user_type") or session.get("user_type").lower() != "reviewer":
+              abort(401)
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
 def required_role_as_graphics():
     def decorator(func):
         @wraps(func)

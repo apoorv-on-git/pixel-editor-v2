@@ -4,6 +4,7 @@ from app.db_controllers.helper import *
 from flask import request
 import datetime
 from google.cloud.firestore_v1 import Increment
+import uuid
 import time
 
 firebase_db = firestore.client()
@@ -135,7 +136,7 @@ def firebase_submit_question(contributor_id):
                             contributor_name = user_data.get("name"),
                             is_star_question = False,
                             is_paid = False,
-                            state = "under_review",
+                            state = "created",
                             date_created = datetime.datetime.utcnow(),
                             date_approved = None,
                             question_text = question_text,
@@ -160,7 +161,8 @@ def firebase_submit_question(contributor_id):
         document_ref = firebase_db.collection("users")
         question_document_ref = firebase_db.collection("questions")
         document_ref.document(contributor_id).update({"preview_question": firestore.DELETE_FIELD})
-        question_document_ref.document(f"G{grade:02}").collection("levels").document(level_collection_id).collection("question_bank").document().create(question)
+        question_document_id = str(uuid.uuid4())
+        question_obj_ref = question_document_ref.document(f"G{grade:02}").collection("levels").document(level_collection_id).collection("question_bank").document(question_document_id).create(question)
         document_ref.document(contributor_id).update({"total_questions": Increment(1)})
         updated_individual_log = user_data.get("individual_log")
         updated_individual_log[level_collection_id] += 1
@@ -168,7 +170,14 @@ def firebase_submit_question(contributor_id):
         document_ref.document(contributor_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
         firebase_db.collection("daily_question_log").document(local_date).set({"count": Increment(1)}, merge=True)
         firebase_db.collection("total_questions").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").set({level_collection_id: Increment(1)}, merge=True)
-        firebase_db.collection("admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").set({level_collection_id: Increment(1)}, merge=True)
         firebase_db.collection("cumulative_data").document("data").set({"submitted": Increment(1)}, merge=True)
+        question_obj_for_list = dict(
+                                        question_id = question_document_id,
+                                        assigned_to = None,
+                                        grade = grade,
+                                        chapter = chapter,
+                                        level = level
+                                    )
+        firebase_db.collection("question_list").document().create(question_obj_for_list)
     except Exception as e:
         raise e

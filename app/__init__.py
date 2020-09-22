@@ -27,6 +27,8 @@ def create_app(script_info=None):
     #API
     from app.api.contributor import contributor_api
     app.register_blueprint(contributor_api)
+    from app.api.reviewer import reviewer_api
+    app.register_blueprint(reviewer_api)
     from app.api.admin import admin_api
     app.register_blueprint(admin_api)
     from app.api.graphics import graphics_api
