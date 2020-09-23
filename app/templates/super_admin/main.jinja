@@ -39,6 +39,12 @@
             <span style="font-size: 1em; color: black;"><b>PixelEditor</b></span>
           </a>
           <ul class="nav navbar-nav ml-auto">
+              <li class="nav-item" id="student_reported_navigator">
+                  <a class="nav-link" href="{{url_for('super_admin.student_reported')}}">Student Reported</a>
+              </li>
+              <li class="nav-item" id="teacher_reported_navigator">
+                  <a class="nav-link" href="{{url_for('super_admin.teacher_reported')}}">Teacher Reported</a>
+              </li>
               <li class="nav-item" id="dashboard_navigator">
                   <a class="nav-link" href="{{url_for('super_admin.dashboard')}}">Dashboard</a>
               </li>

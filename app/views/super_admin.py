@@ -153,3 +153,13 @@ def review_question():
             "status": "error",
             "message": "Do not tamper with the URL. Go to dashboard and try again!"
         }), 400
+
+@super_admin.route("/student-reported")
+@required_role_as_super_admin()
+def student_reported():
+    return "Student Reported"
+
+@super_admin.route("/teacher-reported")
+@required_role_as_super_admin()
+def teacher_reported():
+    return "Teacher Reported"
