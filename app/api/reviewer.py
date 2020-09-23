@@ -46,7 +46,6 @@ def login():
         }), 400
 
 @reviewer_api.route("/logout", methods=["POST"])
-@required_role_as_reviewer()
 def logout():
     try:
         session["reviewer_id"] = None
@@ -65,7 +64,6 @@ def logout():
         }), 400
 
 @reviewer_api.route("/get-question-list")
-@required_role_as_reviewer()
 def get_question_list():
     try:
         document_id = request.args.get("reviewer_id")
@@ -89,7 +87,6 @@ def get_question_list():
         }), 400
 
 @reviewer_api.route("/get-question")
-@required_role_as_reviewer()
 def get_question():
     try:
         question_id = request.args.get("question_id")
@@ -107,7 +104,6 @@ def get_question():
         }), 400
 
 @reviewer_api.route("/mark-question-good", methods=["POST"])
-@required_role_as_reviewer()
 def mark_question_good():
     try:
         question_id = request.json.get("question_id")
@@ -124,7 +120,6 @@ def mark_question_good():
         }), 400
 
 @reviewer_api.route("/mark-question-bad", methods=["POST"])
-@required_role_as_reviewer()
 def mark_question_bad():
     try:
         question_id = request.json.get("question_id")
