@@ -176,7 +176,8 @@ def firebase_submit_question(contributor_id):
                                         assigned_to = None,
                                         grade = grade,
                                         chapter = chapter,
-                                        level = level
+                                        level = level,
+                                        reviewed = False
                                     )
         firebase_db.collection("question_list").document().create(question_obj_for_list)
     except Exception as e:

@@ -15,7 +15,7 @@ def get_user_document_data(document_id):
 def firebase_get_reviewer_question_list(document_id):
     try:
         question_ids = []
-        for question in firebase_db.collection("question_list").where("assigned_to", "==", document_id).stream():
+        for question in firebase_db.collection("question_list").where("assigned_to", "==", document_id).where("reviewed", "==", False).stream():
             question_ids.append(question.id)
         return question_ids
     except Exception as e:
@@ -89,6 +89,10 @@ def firebase_mark_question_good(question_id, reviewer_id):
         super_admin_questions_for_review_dict[f"NCERT_G{grade:02}_TOPIC{chapter:02}"][f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}"] += 1
         firebase_db.collection("super_admin_questions_for_review").document("data").update(super_admin_questions_for_review_dict)
         firebase_db.collection("cumulative_data").document("data").set({"admin_approved": Increment(1)}, merge=True)
+        question_list_update = dict(
+                                        reviewed = True
+                                    )
+        firebase_db.collection("question_list").document(question_id).update(question_list_update)
     except Exception as e:
         raise e
 
@@ -123,6 +127,10 @@ def firebase_mark_question_bad(question_id, reviewer_id, bad_type):
         firebase_db.collection("cumulative_data").document("data").set({"reviewed": Increment(1)}, merge=True)
         firebase_db.collection("users").document(reviewer_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
         firebase_db.collection("daily_question_log").document(local_date).set({"reviewer_reviewed": Increment(1)}, merge=True)
+        question_list_update = dict(
+                                        reviewed = True
+                                    )
+        firebase_db.collection("question_list").document(question_id).update(question_list_update)
         if bad_type in [1, 2]:
             firebase_db.collection("admin_questions_for_review").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}").set({f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}": Increment(1)}, merge=True)
             firebase_db.collection("cumulative_data").document("data").set({"admin_approved": Increment(1)}, merge=True)
