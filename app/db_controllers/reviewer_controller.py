@@ -97,7 +97,7 @@ def firebase_mark_question_good(question_id, reviewer_id):
     except Exception as e:
         raise e
 
-def firebase_mark_question_bad(question_id, reviewer_id, bad_type):
+def firebase_mark_question_bad(question_id, reviewer_id, bad_type, feedback):
     '''
     Bad Type 1 - Bad Question
     Bad Type 2 - Spelling Mistake
@@ -113,11 +113,13 @@ def firebase_mark_question_bad(question_id, reviewer_id, bad_type):
         contributor_id = question_data.get("contributor_id")
         if bad_type == 3:
             question_updates = dict(
-                                        state = "graphics_required"
+                                        state = "graphics_required",
+                                        reviewer_feedback = feedback
                                     )
         elif bad_type in [1, 2]:
             question_updates = dict(
-                                        state = "under_review"
+                                        state = "under_review",
+                                        reviewer_feedback = feedback
                                     )
         else:
             raise ValueError("bad_type should be an Integer. It's value can only be 1, 2 or 3")
