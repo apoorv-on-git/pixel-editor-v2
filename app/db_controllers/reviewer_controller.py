@@ -110,6 +110,7 @@ def firebase_mark_question_bad(question_id, reviewer_id, bad_type):
         chapter = question_meta_data.get("chapter")
         level = question_meta_data.get("level")
         question_data = firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_meta_data.get("question_id")).get().to_dict()
+        contributor_id = question_data.get("contributor_id")
         if bad_type == 3:
             question_updates = dict(
                                         state = "graphics_required"
