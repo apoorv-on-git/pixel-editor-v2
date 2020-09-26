@@ -125,7 +125,8 @@ def mark_question_bad():
         question_id = request.json.get("question_id")
         reviewer_id = request.json.get("reviewer_id")
         bad_type = request.json.get("bad_type")
-        firebase_mark_question_bad(question_id, reviewer_id, bad_type)
+        feedback = request.json.get("feedback")
+        firebase_mark_question_bad(question_id, reviewer_id, bad_type, feedback)
         return jsonify({
             "status": "success"
         }), 200
