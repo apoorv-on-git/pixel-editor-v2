@@ -126,7 +126,8 @@ def firebase_mark_question_bad(question_id, reviewer_id, bad_type):
         firebase_db.collection("questions").document(f"G{grade:02}").collection("levels").document(f"NCERT_G{grade:02}_TOPIC{chapter:02}_LEVEL{level:02}").collection("question_bank").document(question_meta_data.get("question_id")).update(question_updates)
         firebase_db.collection("users").document(reviewer_id).set({"total_questions_reviewed": Increment(1)}, merge=True)
         firebase_db.collection("users").document(contributor_id).set({"total_reviewed": Increment(1)}, merge=True)
-        firebase_db.collection("cumulative_data").document("data").set({"reviewed": Increment(1)}, merge=True)
+        if bad_type not in [1, 2]:
+            firebase_db.collection("cumulative_data").document("data").set({"reviewed": Increment(1)}, merge=True)
         firebase_db.collection("users").document(reviewer_id).collection("daily_log").document(local_date).set({"count": Increment(1)}, merge=True)
         firebase_db.collection("daily_question_log").document(local_date).set({"reviewer_reviewed": Increment(1)}, merge=True)
         question_list_update = dict(

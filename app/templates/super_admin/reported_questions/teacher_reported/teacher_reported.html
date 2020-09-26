@@ -1,0 +1,186 @@
+{% extends "super_admin/main.jinja" %}
+{% block main %}
+
+{% include("super_admin/reported_questions/teacher_reported/teacher_reported_script.jinja") %}
+{% include("super_admin/reported_questions/question_reported_style.jinja") %}
+
+<div class="text-center">
+    <div class="row p-2">
+        <div class="col-sm-12 col-md-12 col-lg-12 white-container p-4 text-left">
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <span class="grade-tag">Total {{total_questions}} questions remaining</span>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-sm-9 col-md-9 col-lg-9">
+                    <h3>{{level_name}}</h3>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 text-right">
+                    <span class="grade-tag">Grade {{grade}} - Chapter {{chapter}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row p-2">
+        <div class="col-sm-12 col-md-12 col-lg-5 white-container p-4 text-left"
+            style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;">
+            <div class="row mt-5">
+                <div class="col-sm-12 col-md-12 col-lg-12" style="flex: wrap;">
+                    {% for name, formula in formula_list.items() %}
+                    <button class="formula-button-1" data-value="{{formula}}">{{name}}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <p class="heavy-font">Question Text</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <textarea rows="5" class="form-control form-input latex-input" name="question_text"
+                        id="question_text">{{question_data.get("question_text")}}</textarea>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
+                    {% if "amazonaws" not in question_data.get('option_a') %}
+                    <input type="text" class="form-control form-input-option latex-input" name="option_a_text"
+                        id="option_a_text" placeholder="Option A" value="{{question_data.get('option_a')}}" />
+                    {% else %}
+                    <input type="text" class="form-control form-input-option latex-input" name="option_a_text"
+                        id="option_a_text" placeholder="Option A" value="{{question_data.get('option_a')}}" readonly />
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
+                    {% if "amazonaws" not in question_data.get('option_b') %}
+                    <input type="text" class="form-control form-input-option latex-input" name="option_b_text"
+                        id="option_b_text" placeholder="Option b" value="{{question_data.get('option_b')}}" />
+                    {% else %}
+                    <input type="text" class="form-control form-input-option latex-input" name="option_b_text"
+                        id="option_b_text" placeholder="Option b" value="{{question_data.get('option_b')}}" readonly />
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
+                    {% if "amazonaws" not in question_data.get('option_c') %}
+                    <input type="text" class="form-control form-input-option latex-input" name="option_c_text"
+                        id="option_c_text" placeholder="Option C" value="{{question_data.get('option_c')}}" />
+                    {% else %}
+                    <input type="text" class="form-control form-input-option latex-input" name="option_c_text"
+                        id="option_c_text" placeholder="Option C" value="{{question_data.get('option_c')}}" readonly />
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-sm-11 col-md-11 col-lg-11 input-group" style="overflow: hidden;">
+                    {% if "amazonaws" not in question_data.get('option_d') %}
+                    <input type="text" class="form-control form-input-option latex-input" name="option_d_text"
+                        id="option_d_text" placeholder="Option D" value="{{question_data.get('option_d')}}" />
+                    {% else %}
+                    <input type="text" class="form-control form-input-option latex-input" name="option_d_text"
+                        id="option_d_text" placeholder="Option D" value="{{question_data.get('option_d')}}" readonly />
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-sm-11 col-md-11 col-lg-11 input-group">
+                    <select class="form-control form-input" name="correct_option" id="correct_option">
+                        <option value="">Correct answer</option>
+                        {% for option in ['a', 'b', 'c', 'd'] %}
+                        {% if question_data.get("correct_option")[-1] == option %}
+                        <option value="{{option}}" selected>Option {{option | upper}}</option>
+                        {% else %}
+                        <option value="{{option}}">Option {{option | upper}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-7 white-container p-4 text-left"
+            style="background-clip:padding-box; border: 10px solid transparent; border-radius: 2em;"
+            id="question_preview_column">
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#preview_tab">Preview</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="tab-content">
+                <div id="preview_tab" class="tab-pane fade in active">
+                    <div class="row mt-3 pl-2 pr-5">
+                        <div class="col-sm-12 col-md-12 col-lg-12" id="question_preview_container">
+                            <p id="question_preview"></p>
+                        </div>
+                    </div>
+                    {% if question_data.get('question_image') != "#" %}
+                    <div class="row mt-3 pl-2 pr-5">
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="question_image_preview_container">
+                            <img src="{{question_data.get('question_image')}}" />
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="row mt-3 pl-2 pr-5">
+                        {% if "amazonaws" not in question_data.get("option_a") %}
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_a_preview_container">
+                            <p id="option_a_preview">{{question_data.get("option_a")}}</p>
+                        </div>
+                        {% else %}
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_a_image_preview_container">
+                            <img src="{{question_data.get('option_a')}}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="row mt-3 pl-2 pr-5">
+                        {% if "amazonaws" not in question_data.get("option_b") %}
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_b_preview_container">
+                            <p id="option_b_preview">{{question_data.get("option_b")}}</p>
+                        </div>
+                        {% else %}
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_b_image_preview_container">
+                            <img src="{{question_data.get('option_b')}}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="row mt-3 pl-2 pr-5">
+                        {% if "amazonaws" not in question_data.get("option_c") %}
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_c_preview_container">
+                            <p id="option_c_preview">{{question_data.get("option_c")}}</p>
+                        </div>
+                        {% else %}
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_c_image_preview_container">
+                            <img src="{{question_data.get('option_c')}}">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="row mt-3 pl-2 pr-5">
+                        {% if "amazonaws" not in question_data.get("option_d") %}
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_d_preview_container">
+                            <p id="option_d_preview">{{question_data.get("option_d")}}</p>
+                        </div>
+                        {% else %}
+                        <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="option_d_image_preview_container">
+                            <img src="{{question_data.get('option_d')}}">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row p-2 mt-5">
+        <div class="col-sm-12 col-md-6 col-lg-6 text-center">
+            <button class='action-button-style' id="save_question" style="width: 90%">Save</button>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6 text-center">
+            <button class='action-button-style' id="graphics_issue" style="width: 90%">Graphics issue</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

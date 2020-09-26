@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify
 from app.utils.role_util import *
 from app.db_controllers.super_admin_controller import *
+from app.db_controllers.main_db_controller import *
 from app.db_controllers.helper import *
 from app.data.grade_breakdown import data as grade_breakdown
 from app.data.formula import formula_list
@@ -157,9 +158,92 @@ def review_question():
 @super_admin.route("/student-reported")
 @required_role_as_super_admin()
 def student_reported():
-    return "Student Reported"
+    user_data = get_user_document_data(session.get('super_admin_id'))
+    try:
+        if not session.get("student_reported_list"):
+            question_document_ids = firebase_get_questions_student_reported()
+            if len(question_document_ids) == 0:
+                return jsonify({
+                    "status": "error",
+                    "message": "No questions for super admin!"
+                }), 400
+            session["student_reported_list"] = question_document_ids
+        student_reported_list = session.get("student_reported_list")
+        if not student_reported_list:
+            return redirect(url_for("super_admin.dashboard"))
+        elif len(student_reported_list) == 0:
+            return jsonify({
+                "status": "error",
+                "message": "No questions for review!"
+            }), 400
+        document_id = student_reported_list[0]
+        document_id = document_id.get("id")
+        question_data, grade, chapter, level = firebase_get_question_from_main(document_id)
+        question_data = question_data.get("data")
+        grade_dict, chapter_dict, level_dict = get_grade_breakdown_dict(grade, chapter, level)
+        sidebar_filter_based_on_requirement = firebase_get_approved_question_count()
+        return render_template( "/super_admin/reported_questions/student_reported/student_reported.html",
+                                grade=grade,
+                                chapter=chapter,
+                                level=level,
+                                level_name=level_dict.get("level_name"),
+                                grade_breakdown=grade_breakdown,
+                                document_id=document_id,
+                                question_data=question_data,
+                                formula_list=formula_list,
+                                sidebar_filter_based_on_requirement=sidebar_filter_based_on_requirement,
+                                total_questions=len(student_reported_list)
+                            )
+    except ValueError as e:
+        log_error("view", "super_admin", str(e), "student_reported")
+        return jsonify({
+            "status": "error",
+            "message": "Do not tamper with the URL. Go to dashboard and try again!"
+        }), 400
+
 
 @super_admin.route("/teacher-reported")
 @required_role_as_super_admin()
 def teacher_reported():
-    return "Teacher Reported"
+    user_data = get_user_document_data(session.get('super_admin_id'))
+    try:
+        if not session.get("teacher_reported_list"):
+            question_document_ids = firebase_get_questions_teacher_reported()
+            if len(question_document_ids) == 0:
+                return jsonify({
+                    "status": "error",
+                    "message": "No questions for super admin!"
+                }), 400
+            session["teacher_reported_list"] = question_document_ids
+        teacher_reported_list = session.get("teacher_reported_list")
+        if not teacher_reported_list:
+            return redirect(url_for("super_admin.dashboard"))
+        elif len(teacher_reported_list) == 0:
+            return jsonify({
+                "status": "error",
+                "message": "No questions for review!"
+            }), 400
+        document_id = teacher_reported_list[0]
+        document_id = document_id.get("id")
+        question_data, grade, chapter, level = firebase_get_question_from_main(document_id)
+        question_data = question_data.get("data")
+        grade_dict, chapter_dict, level_dict = get_grade_breakdown_dict(grade, chapter, level)
+        sidebar_filter_based_on_requirement = firebase_get_approved_question_count()
+        return render_template( "/super_admin/reported_questions/teacher_reported/teacher_reported.html",
+                                grade=grade,
+                                chapter=chapter,
+                                level=level,
+                                level_name=level_dict.get("level_name"),
+                                grade_breakdown=grade_breakdown,
+                                document_id=document_id,
+                                question_data=question_data,
+                                formula_list=formula_list,
+                                sidebar_filter_based_on_requirement=sidebar_filter_based_on_requirement,
+                                total_questions=len(teacher_reported_list)
+                            )
+    except ValueError as e:
+        log_error("view", "super_admin", str(e), "teacher_reported")
+        return jsonify({
+            "status": "error",
+            "message": "Do not tamper with the URL. Go to dashboard and try again!"
+        }), 400
