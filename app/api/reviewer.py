@@ -91,7 +91,7 @@ def get_question():
     try:
         question_id = request.args.get("question_id")
         question_meta_data = firebase_get_question_meta_data(question_id)
-        question_data = firebase_get_question(question_meta_data.get("question_id"), question_meta_data.get("grade"), question_meta_data.get("chapter"), question_meta_data.get("level"))
+        question_data = firebase_get_question(question_meta_data.get("question_doc_id"))
         return jsonify({
             "data": question_data,
             "status": "success"
